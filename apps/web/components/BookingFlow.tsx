@@ -213,7 +213,7 @@ export function BookingFlow() {
   return (
     <>
       <button className="mobile-booking-cta" type="button" data-booking="open">
-        Plan je sessie <span aria-hidden="true">↗</span>
+        Kies room &amp; moment <span aria-hidden="true">↗</span>
       </button>
 
       {open && (
@@ -222,7 +222,7 @@ export function BookingFlow() {
             <header className="booking-topbar">
               <div>
                 <span>SoundDistrict · Antwerp</span>
-                <strong id={titleId}>Plan je sessie</strong>
+                <strong id={titleId}>Vraag je sessie aan</strong>
               </div>
               <button ref={closeRef} type="button" onClick={closeBooking} aria-label="Sluit boekingsaanvraag">Sluiten <span aria-hidden="true">×</span></button>
             </header>
@@ -248,7 +248,7 @@ export function BookingFlow() {
                   {step === 0 && (
                     <div className="booking-step">
                       <p className="booking-eyebrow">Stap 1 · Jouw sessie</p>
-                      <h2 tabIndex={-1} data-step-heading>Waar wil je werken?</h2>
+                      <h2 tabIndex={-1} data-step-heading>Kies je room en moment.</h2>
                       <p className="booking-intro">Kies een room en voorkeursmoment. We bevestigen de beschikbaarheid persoonlijk.</p>
 
                       <fieldset>
@@ -355,7 +355,7 @@ export function BookingFlow() {
                       </div>
                       <div className="booking-truth">
                         <strong>Wat gebeurt hierna?</strong>
-                        <p>Je e-mailapp opent met alle sessiedetails ingevuld. Verstuur de aanvraag; het team bevestigt daarna beschikbaarheid en prijs.</p>
+                        <p>Je aanvraag is pas verstuurd nadat jij de ingevulde e-mail verzendt. Daarna bevestigt het team beschikbaarheid en prijs.</p>
                       </div>
                       <label className="terms-check">
                         <input type="checkbox" checked={termsAccepted} onChange={(event) => setTermsAccepted(event.target.checked)} />
@@ -395,7 +395,7 @@ export function BookingFlow() {
                         disabled={!canContinue()}
                         onClick={() => step === 2 ? openEmailRequest() : goToStep(step + 1)}
                       >
-                        {step === 2 ? "Open e-mailaanvraag" : "Verder"} <span aria-hidden="true">→</span>
+                        {step === 0 ? "Naar je gegevens" : step === 1 ? "Controleer je aanvraag" : "Open ingevulde e-mail"} <span aria-hidden="true">→</span>
                       </button>
                     </div>
                   </footer>

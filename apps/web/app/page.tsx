@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { ROOMS, type RoomId } from "@sounddistrict/booking-core";
 import { BookingFlow } from "../components/BookingFlow";
+import { MotionEnhancer } from "../components/MotionEnhancer";
 
 const roomEditorial: Record<RoomId, { image: string; bestFor: string; tone: string }> = {
   blue: {
@@ -44,57 +45,98 @@ export default function HomePage() {
           <a href="#visit">Visit</a>
         </nav>
         <button className="header-cta" type="button" data-booking="open">
-          Plan je sessie <span aria-hidden="true">↗</span>
+          Kies room &amp; moment <span aria-hidden="true">↗</span>
         </button>
       </header>
 
-      <section className="hero-private" aria-labelledby="hero-title">
-        <div className="hero-private-copy">
-          <p className="locator"><span aria-hidden="true" /> Stadswaag 20 · Antwerpen</p>
-          <h1 id="hero-title">Een private plek voor <em>sound &amp; image.</em></h1>
+      <section className="hero-cinematic" aria-labelledby="hero-title" data-hero>
+        <div className="hero-media" aria-hidden="true">
+          {ROOMS.map((room, index) => (
+            <Image
+              className={`hero-frame hero-frame-${index + 1}`}
+              src={asset(roomEditorial[room.id].image)}
+              alt=""
+              fill
+              priority={index === 0}
+              sizes="100vw"
+              key={room.id}
+            />
+          ))}
+        </div>
+        <div className="hero-shade" aria-hidden="true" />
+
+        <div className="hero-cinematic-copy">
+          <p className="hero-kicker">Recording · Production · Visuals</p>
+          <h1 id="hero-title">Maak ruimte voor <em>je beste werk.</em></h1>
           <p className="hero-lede">
-            Drie ruimtes in het hart van Antwerpen. Voor opnames, producties en beeld dat blijft hangen.
+            Recording, productie en visuals in drie karaktervolle ruimtes in Antwerpen. Kies je room en stuur je voorkeursmoment door.
           </p>
           <div className="hero-actions">
             <button className="button button-bone" type="button" data-booking="open">
-              Plan je sessie <span aria-hidden="true">↗</span>
+              Kies je room &amp; moment <span aria-hidden="true">↗</span>
             </button>
-            <a className="quiet-link" href="#rooms">Ontdek de rooms <span aria-hidden="true">↓</span></a>
+            <a className="quiet-link" href="#rooms">Bekijk de 3 rooms <span aria-hidden="true">↓</span></a>
           </div>
+          <p className="hero-assurance">Geen directe betaling · beschikbaarheid en prijs volgen per e-mail</p>
         </div>
 
-        <figure className="hero-private-visual">
-          <Image
-            src={asset("room-red-editorial.webp")}
-            alt="De warme Red Room van SoundDistrict met platenwand en On Air-verlichting"
-            fill
-            priority
-            sizes="(max-width: 800px) 100vw, 58vw"
-          />
-          <figcaption><span>Studio 02</span> The Red Room</figcaption>
-        </figure>
-      </section>
-
-      <section className="session-launch" aria-label="Start je boekingsaanvraag">
-        <div className="session-launch-inner section-shell">
-          <div><span>Rooms</span><strong>Blue · Red · Infinity</strong></div>
-          <div><span>Locatie</span><strong>Stadswaag 20, Antwerpen</strong></div>
-          <div><span>Reservatie</span><strong>Kies je voorkeursmoment</strong></div>
-          <button type="button" data-booking="open">Start je aanvraag <span aria-hidden="true">→</span></button>
+        <div className="hero-room-note">
+          <span>Blue · Red · Infinity</span>
+          <small>3 rooms · 1 creative house</small>
         </div>
       </section>
 
-      <section className="house" id="house">
+      <div className="signal-strip" aria-hidden="true">
+        <div className="signal-track">
+          <span>Recording · Production · Visuals · Mixing · Content · Antwerp ·</span>
+          <span>Recording · Production · Visuals · Mixing · Content · Antwerp ·</span>
+        </div>
+      </div>
+
+      <section className="room-quicklook" id="rooms" data-reveal>
+        <div className="room-quicklook-head section-shell">
+          <div>
+            <p className="section-label">Choose your room</p>
+            <h2>Drie ruimtes.<br /><em>Elk een eigen energie.</em></h2>
+          </div>
+          <p>Swipe, vergelijk en kies de setting die past bij wat je wilt maken.</p>
+        </div>
+
+        <div className="room-rail" aria-label="Vergelijk de drie SoundDistrict rooms">
+          {ROOMS.map((room, index) => {
+            const editorial = roomEditorial[room.id];
+            return (
+              <article className={`room-preview-card ${editorial.tone}`} key={room.id}>
+                <Image
+                  src={asset(editorial.image)}
+                  alt={`${room.name} bij SoundDistrict Antwerpen`}
+                  fill
+                  sizes="(max-width: 800px) 84vw, 32vw"
+                />
+                <div className="room-preview-shade" />
+                <span className="room-preview-index">0{index + 1}</span>
+                <div className="room-preview-copy">
+                  <p>{editorial.bestFor}</p>
+                  <h3>{room.name}</h3>
+                  <button type="button" data-booking={room.id} aria-label={`Bekijk momenten voor ${room.name}`}>
+                    Bekijk momenten <span aria-hidden="true">↗</span>
+                  </button>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+        <a className="room-rail-more" href="#room-details">Bekijk alle roomdetails <span aria-hidden="true">↓</span></a>
+      </section>
+
+      <section className="house" id="house" data-reveal>
         <div className="section-shell house-grid">
           <p className="section-label">The house</p>
           <div>
             <h2>Alles wat je sessie nodig heeft.<br /><em>Niets wat afleidt.</em></h2>
             <div className="house-copy">
               <p>
-                SoundDistrict brengt sound, beeld en creatieve begeleiding samen onder één dak. Iedere room heeft een eigen karakter; de aandacht blijft altijd bij het werk.
-              </p>
-              <p>
-                Kies je ruimte en voorkeursmoment. Wij stemmen de praktische details persoonlijk met je af, zodat je voorbereid binnenkomt en meteen kunt beginnen.
+                SoundDistrict brengt sound, beeld en creatieve begeleiding samen. Iedere room heeft een eigen karakter; wij stemmen de praktische details persoonlijk af zodat jij meteen kunt beginnen.
               </p>
             </div>
           </div>
@@ -106,7 +148,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="rooms-editorial" id="rooms">
+      <section className="rooms-editorial" id="room-details">
         <div className="section-shell rooms-intro">
           <p className="section-label section-label-light">The rooms</p>
           <h2>Three rooms.<br /><em>Three frequencies.</em></h2>
@@ -116,7 +158,7 @@ export default function HomePage() {
           {ROOMS.map((room, index) => {
             const editorial = roomEditorial[room.id];
             return (
-              <article className={`room-story ${index % 2 ? "room-story-reverse" : ""}`} key={room.id}>
+              <article className={`room-story ${index % 2 ? "room-story-reverse" : ""}`} data-reveal key={room.id}>
                 <figure className={`room-story-image ${editorial.tone}`}>
                   <Image
                     src={asset(editorial.image)}
@@ -134,7 +176,7 @@ export default function HomePage() {
                     {room.features.map((feature) => <li key={feature}>{feature}</li>)}
                   </ul>
                   <button type="button" className="room-link" data-booking={room.id}>
-                    Plan deze room <span aria-hidden="true">↗</span>
+                    Bekijk momenten voor {room.name} <span aria-hidden="true">↗</span>
                   </button>
                 </div>
               </article>
@@ -143,7 +185,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="services-editorial" id="services">
+      <section className="services-editorial" id="services" data-reveal>
         <div className="section-shell services-layout">
           <div className="services-title">
             <p className="section-label">Services</p>
@@ -162,12 +204,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="process-minimal" aria-labelledby="process-title">
+      <section className="process-minimal" aria-labelledby="process-title" data-reveal>
         <div className="section-shell">
           <p className="section-label section-label-light">The process</p>
           <div className="process-heading">
             <h2 id="process-title">Van idee naar sessie,<br /><em>zonder ruis.</em></h2>
-            <button className="button button-outline" type="button" data-booking="open">Start je aanvraag <span aria-hidden="true">↗</span></button>
+            <button className="button button-outline" type="button" data-booking="open">Kies room &amp; moment <span aria-hidden="true">↗</span></button>
           </div>
           <ol>
             <li><span>01</span><h3>Kies</h3><p>Selecteer de room die past bij wat je wilt maken.</p></li>
@@ -177,7 +219,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="returning-strip" aria-label="SoundDistrict app voor terugkerende artiesten">
+      <section className="returning-strip" aria-label="SoundDistrict app voor terugkerende artiesten" data-reveal>
         <div className="section-shell returning-grid">
           <p className="section-label">For returning artists</p>
           <h2>Je volgende sessie.<br /><em>Nog sneller geregeld.</em></h2>
@@ -186,13 +228,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="visit-final" id="visit">
+      <section className="visit-final" id="visit" data-reveal>
         <div className="visit-copy">
           <p className="section-label section-label-light">Visit the district</p>
           <h2>Vind jouw <em>frequency.</em></h2>
           <p>Stadswaag 20<br />2000 Antwerpen</p>
-          <button className="button button-bone" type="button" data-booking="open">Plan je sessie <span aria-hidden="true">↗</span></button>
-          <a href="mailto:team@sounddistrict.be">Liever eerst overleggen? team@sounddistrict.be</a>
+          <button className="button button-bone" type="button" data-booking="open">Kies je room &amp; moment <span aria-hidden="true">↗</span></button>
+          <a href="mailto:team@sounddistrict.be">Bespreek je project eerst per e-mail →<small>team@sounddistrict.be</small></a>
         </div>
         <figure>
           <Image src={asset("final.jpg")} alt="Een SoundDistrict productiesessie in uitvoering" fill sizes="(max-width: 800px) 100vw, 50vw" />
@@ -209,6 +251,7 @@ export default function HomePage() {
         <div className="footer-legal"><span>© 2026 SoundDistrict Antwerp</span><span>VAT BE 1023.309.121</span><a href={`${basePath}/privacy/`}>Privacy</a></div>
       </footer>
 
+      <MotionEnhancer />
       <BookingFlow />
     </main>
   );
