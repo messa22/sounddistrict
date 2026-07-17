@@ -17,24 +17,24 @@ export default function ConceptsPage() {
     <main className={styles.gallery}>
       <header className={styles.galleryHeader}>
         <Link href="/" aria-label="Terug naar de huidige SoundDistrict-site">Sound District</Link>
-        <span>Design directions · 01—04</span>
+        <span>Vier volledige websites · 01—04</span>
       </header>
 
       <section className={styles.galleryIntro}>
-        <p>Choose the feeling</p>
-        <h1>Vier richtingen.<br /><em>Eén nieuwe SoundDistrict.</em></h1>
+        <p>Four complete websites</p>
+        <h1>Vier websites.<br /><em>Vier totaal andere ervaringen.</em></h1>
         <div>
           <p>
-            Niet vier kleuren van dezelfde website, maar vier verschillende manieren waarop het merk kan voelen, bewegen en converteren.
+            Iedere versie heeft een eigen navigatie, homepage-opbouw, rooms, services, werkwijze, booking, app-verhaal en contactervaring.
           </p>
-          <span>Open elk concept op volledig scherm en kies de richting die je het sterkst aantrekt.</span>
+          <span>Open iedere website afzonderlijk en beoordeel ze alsof dit de echte SoundDistrict-site is.</span>
         </div>
       </section>
 
-      <section className={styles.galleryList} aria-label="Vier visuele richtingen">
+      <section className={styles.galleryList} aria-label="Vier volledige SoundDistrict-websites">
         {conceptDirections.map((concept, index) => (
           <article className={`${styles.galleryCard} ${styles[`galleryCard${index + 1}`]}`} key={concept.slug}>
-            <Link href={`/concepts/${concept.slug}/`} aria-label={`Open concept ${concept.id}: ${concept.name}`}>
+            <Link href={`/websites/${concept.slug}/`} aria-label={`Open website ${concept.id}: ${concept.name}`}>
               <div className={styles.galleryCardVisual}>
                 <Image
                   src={`${basePath}/${previewImages[index]}`}
@@ -45,7 +45,7 @@ export default function ConceptsPage() {
                 />
                 <div className={styles.galleryMockNav}>
                   <span>Sound District</span>
-                  <span>Concept {concept.id}</span>
+                  <span>Website {concept.id}</span>
                 </div>
                 <div className={styles.galleryMockCopy}>
                   <span>{concept.mood}</span>
@@ -59,7 +59,7 @@ export default function ConceptsPage() {
                   <h2>{concept.name}</h2>
                   <span>{concept.summary}</span>
                 </div>
-                <b>Open fullscreen ↗</b>
+                <b>Open volledige website ↗</b>
               </div>
             </Link>
           </article>
@@ -68,7 +68,7 @@ export default function ConceptsPage() {
 
       <footer className={styles.galleryFooter}>
         <span>SoundDistrict · Antwerp</span>
-        <p>Kies eerst het gevoel. Daarna combineren en verfijnen we de beste onderdelen.</p>
+        <p>Kies de volledige website die het dichtst bij jouw ideale SoundDistrict komt.</p>
         <Link href="/">Huidige website bekijken ↗</Link>
       </footer>
     </main>
