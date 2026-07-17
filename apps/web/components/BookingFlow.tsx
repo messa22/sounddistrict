@@ -1,41 +1,71 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
+import Image from "next/image";
 import {
   ADD_ONS,
   ROOMS,
   TIME_SLOTS,
-  buildBookingReference,
-  calculateQuote,
-  formatCurrency,
   getRoom,
-  type RoomId,
-  type StoredBooking
+  type RoomId
 } from "@sounddistrict/booking-core";
 
-const steps = ["Room", "Moment", "Extra's", "Gegevens", "Check"];
+const steps = ["Sessie", "Details", "Controle"];
+
+const editorialImages: Record<RoomId, string> = {
+  blue: "room-blue-editorial.webp",
+  red: "room-red-editorial.webp",
+  infinity: "room-infinity-editorial.webp"
+};
 
 function upcomingDates() {
-  return Array.from({ length: 7 }, (_, index) => {
+  return Array.from({ length: 10 }, (_, index) => {
     const date = new Date();
+    date.setHours(12, 0, 0, 0);
     date.setDate(date.getDate() + index + 1);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
     return {
-      value: `${year}-${month}-${day}`,
+      value: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`,
       weekday: new Intl.DateTimeFormat("nl-BE", { weekday: "short" }).format(date),
       day: date.getDate(),
-      month: new Intl.DateTimeFormat("nl-BE", { month: "short" }).format(date)
+      month: new Intl.DateTimeFormat("nl-BE", { month: "short" }).format(date),
+      fullLabel: new Intl.DateTimeFormat("nl-BE", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(date)
     };
   });
 }
 
+function validEmail(value: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+}
+
+function dateDetails(value: string) {
+  if (!value) return undefined;
+  const parsed = new Date(`${value}T12:00:00`);
+  if (Number.isNaN(parsed.getTime())) return undefined;
+
+  return {
+    value,
+    weekday: new Intl.DateTimeFormat("nl-BE", { weekday: "short" }).format(parsed),
+    day: parsed.getDate(),
+    month: new Intl.DateTimeFormat("nl-BE", { month: "short" }).format(parsed),
+    fullLabel: new Intl.DateTimeFormat("nl-BE", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    }).format(parsed)
+  };
+}
+
 export function BookingFlow() {
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+  const titleId = useId();
+  const dialogRef = useRef<HTMLElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const returnFocusRef = useRef<HTMLElement | null>(null);
+
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
-  const [roomId, setRoomId] = useState<RoomId>("blue");
+  const [roomId, setRoomId] = useState<RoomId | null>(null);
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [duration, setDuration] = useState(2);
@@ -44,71 +74,25 @@ export function BookingFlow() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [note, setNote] = useState("");
-  const [reference, setReference] = useState("");
-  const dateOptions = useMemo(upcomingDates, []);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
-  const total = useMemo(() => calculateQuote(roomId, duration, addOnIds), [roomId, duration, addOnIds]);
-  const room = getRoom(roomId);
+  const dateOptions = useMemo(upcomingDates, []);
+  const room = getRoom(roomId ?? "red");
+  const selectedDate = useMemo(
+    () => dateOptions.find((item) => item.value === date) ?? dateDetails(date),
+    [date, dateOptions]
+  );
 
   useEffect(() => {
     function handleBookingClick(event: MouseEvent) {
       const target = event.target as HTMLElement;
       const trigger = target.closest<HTMLElement>("[data-booking]");
       if (!trigger) return;
+
       event.preventDefault();
-      const requestedRoom = trigger.dataset.booking as RoomId | undefined;
-      if (requestedRoom && ROOMS.some((item) => item.id === requestedRoom)) setRoomId(requestedRoom);
-      setOpen(true);
-      setStep(0);
-    }
-
-    document.addEventListener("click", handleBookingClick);
-    return () => document.removeEventListener("click", handleBookingClick);
-  }, []);
-
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
-  }, [open]);
-
-  function toggleAddOn(id: string) {
-    setAddOnIds((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id]);
-  }
-
-  function canContinue() {
-    if (step === 0) return Boolean(roomId);
-    if (step === 1) return Boolean(date && time && duration);
-    if (step === 3) return name.trim().length > 1 && email.includes("@");
-    return true;
-  }
-
-  function confirmBooking() {
-    const bookingReference = buildBookingReference();
-    const booking: StoredBooking = {
-      roomId,
-      date,
-      time,
-      duration,
-      addOnIds,
-      name,
-      email,
-      phone,
-      note,
-      reference: bookingReference,
-      total,
-      createdAt: new Date().toISOString(),
-      status: "pending"
-    };
-    const previous = JSON.parse(localStorage.getItem("sounddistrict-bookings") ?? "[]") as StoredBooking[];
-    localStorage.setItem("sounddistrict-bookings", JSON.stringify([booking, ...previous]));
-    setReference(bookingReference);
-    setStep(5);
-  }
-
-  function resetAndClose() {
-    setOpen(false);
-    setTimeout(() => {
-      setStep(0);
+      returnFocusRef.current = trigger;
+      const requestedRoom = trigger.dataset.booking as RoomId | "open" | undefined;
+      setRoomId(requestedRoom && ROOMS.some((item) => item.id === requestedRoom) ? requestedRoom as RoomId : null);
       setDate("");
       setTime("");
       setDuration(2);
@@ -117,160 +101,307 @@ export function BookingFlow() {
       setEmail("");
       setPhone("");
       setNote("");
-      setReference("");
-    }, 250);
+      setTermsAccepted(false);
+      setStep(0);
+      setOpen(true);
+    }
+
+    document.addEventListener("click", handleBookingClick);
+    return () => document.removeEventListener("click", handleBookingClick);
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+
+    document.body.style.overflow = "hidden";
+    window.setTimeout(() => closeRef.current?.focus(), 20);
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeBooking();
+        return;
+      }
+
+      if (event.key !== "Tab" || !dialogRef.current) return;
+      const focusable = Array.from(dialogRef.current.querySelectorAll<HTMLElement>(
+        "button:not([disabled]), a[href], input:not([disabled]), textarea:not([disabled]), summary, [tabindex]:not([tabindex='-1'])"
+      ));
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = "";
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
+
+  function closeBooking() {
+    setOpen(false);
+    window.setTimeout(() => returnFocusRef.current?.focus(), 0);
+  }
+
+  function toggleAddOn(id: string) {
+    setAddOnIds((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id]);
+  }
+
+  function canContinue() {
+    if (step === 0) return Boolean(roomId && date && time && duration);
+    if (step === 1) return name.trim().length >= 2 && validEmail(email);
+    if (step === 2) return termsAccepted;
+    return false;
+  }
+
+  function buildEmailRequest() {
+    if (!roomId || !selectedDate) return null;
+    const extras = addOnIds.length
+      ? ADD_ONS.filter((item) => addOnIds.includes(item.id)).map((item) => item.name).join(", ")
+      : "Geen extra support gekozen";
+    const subject = `Boekingsaanvraag ${room.name} — ${selectedDate.fullLabel}`;
+    const body = [
+      "Hallo SoundDistrict,",
+      "",
+      "Ik wil graag deze sessie aanvragen:",
+      `Room: ${room.name}`,
+      `Voorkeursmoment: ${selectedDate.fullLabel} om ${time}`,
+      `Duur: ${duration} uur`,
+      `Extra support: ${extras}`,
+      "",
+      `Naam: ${name.trim()}`,
+      `E-mail: ${email.trim()}`,
+      `Telefoon: ${phone.trim() || "Niet opgegeven"}`,
+      `Project: ${note.trim() || "Geen extra informatie"}`,
+      "",
+      "Graag ontvang ik een bevestiging van beschikbaarheid en prijs.",
+      ""
+    ].join("\n");
+
+    return `mailto:team@sounddistrict.be?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  }
+
+  function openEmailRequest() {
+    const emailRequest = buildEmailRequest();
+    if (!emailRequest) return;
+    goToStep(3);
+    window.setTimeout(() => {
+      window.location.href = emailRequest;
+    }, 0);
+  }
+
+  function retryEmailRequest() {
+    const emailRequest = buildEmailRequest();
+    if (emailRequest) window.location.href = emailRequest;
+  }
+
+  function goToStep(nextStep: number) {
+    setStep(nextStep);
+    window.setTimeout(() => {
+      dialogRef.current?.querySelector<HTMLElement>("[data-step-heading]")?.focus();
+    }, 0);
   }
 
   return (
     <>
-      <button className="mobile-booking-cta" type="button" data-booking="blue" data-release="pages-2">Boek nu <span>↗</span></button>
+      <button className="mobile-booking-cta" type="button" data-booking="open">
+        Plan je sessie <span aria-hidden="true">↗</span>
+      </button>
+
       {open && (
-        <div className="booking-overlay" role="presentation" onMouseDown={(event) => {
-          if (event.target === event.currentTarget) resetAndClose();
-        }}>
-          <section className="booking-panel" role="dialog" aria-modal="true" aria-label="Boek je SoundDistrict sessie">
-            <header className="booking-header">
+        <div className="booking-overlay">
+          <section className="booking-dialog" role="dialog" aria-modal="true" aria-labelledby={titleId} ref={dialogRef}>
+            <header className="booking-topbar">
               <div>
-                <span>SoundDistrict Antwerp</span>
-                <strong>{step === 5 ? "Booking ready" : "Book your session"}</strong>
+                <span>SoundDistrict · Antwerp</span>
+                <strong id={titleId}>Plan je sessie</strong>
               </div>
-              <button type="button" onClick={resetAndClose} aria-label="Sluit boekingsvenster">×</button>
+              <button ref={closeRef} type="button" onClick={closeBooking} aria-label="Sluit boekingsaanvraag">Sluiten <span aria-hidden="true">×</span></button>
             </header>
 
-            {step < 5 && (
-              <div className="booking-progress" aria-label={`Stap ${step + 1} van ${steps.length}`}>
-                {steps.map((label, index) => (
-                  <div className={index <= step ? "active" : ""} key={label}>
-                    <span>{index < step ? "✓" : index + 1}</span><small>{label}</small>
-                  </div>
-                ))}
-              </div>
-            )}
+            <div className="booking-layout">
+              <aside className="booking-art" aria-hidden="true">
+                <Image src={`${basePath}/${editorialImages[room.id]}`} alt="" fill sizes="38vw" />
+                <div><span>{roomId ? room.name : "SoundDistrict"}</span><small>Stadswaag 20 · Antwerpen</small></div>
+              </aside>
 
-            <div className="booking-body">
-              {step === 0 && (
-                <div className="booking-step">
-                  <p className="booking-eyebrow">Stap 1 · Kies je space</p>
-                  <h2>Welke room past bij je sessie?</h2>
-                  <div className="booking-room-list">
-                    {ROOMS.map((item) => (
+              <div className="booking-interface">
+                {step < 3 && (
+                  <ol className="booking-progress" aria-label={`Stap ${step + 1} van ${steps.length}`}>
+                    {steps.map((label, index) => (
+                      <li className={index <= step ? "active" : ""} aria-current={index === step ? "step" : undefined} key={label}>
+                        <span>0{index + 1}</span>{label}
+                      </li>
+                    ))}
+                  </ol>
+                )}
+
+                <div className="booking-scroll" aria-live="polite">
+                  {step === 0 && (
+                    <div className="booking-step">
+                      <p className="booking-eyebrow">Stap 1 · Jouw sessie</p>
+                      <h2 tabIndex={-1} data-step-heading>Waar wil je werken?</h2>
+                      <p className="booking-intro">Kies een room en voorkeursmoment. We bevestigen de beschikbaarheid persoonlijk.</p>
+
+                      <fieldset>
+                        <legend>Room</legend>
+                        <div className="booking-room-grid">
+                          {ROOMS.map((item) => (
+                            <button
+                              type="button"
+                              className={roomId === item.id ? "selected" : ""}
+                              aria-pressed={roomId === item.id}
+                              onClick={() => setRoomId(item.id)}
+                              key={item.id}
+                            >
+                              <span className="booking-room-thumb" style={{ backgroundImage: `url(${basePath}/${editorialImages[item.id]})` }} />
+                              <span><strong>{item.name}</strong><small>{item.features[0]}</small></span>
+                              <i aria-hidden="true">{roomId === item.id ? "✓" : ""}</i>
+                            </button>
+                          ))}
+                        </div>
+                      </fieldset>
+
+                      <fieldset>
+                        <legend>Voorkeursdatum</legend>
+                        <div className="date-options">
+                          {dateOptions.map((item) => (
+                            <button
+                              type="button"
+                              className={date === item.value ? "selected" : ""}
+                              aria-pressed={date === item.value}
+                              onClick={() => setDate(item.value)}
+                              key={item.value}
+                              aria-label={item.fullLabel}
+                            >
+                              <small>{item.weekday}</small><strong>{item.day}</strong><span>{item.month}</span>
+                            </button>
+                          ))}
+                        </div>
+                        <label className="custom-date">
+                          <span>Of kies een latere datum</span>
+                          <input
+                            type="date"
+                            min={dateOptions[0]?.value}
+                            value={date}
+                            onChange={(event) => setDate(event.target.value)}
+                          />
+                        </label>
+                      </fieldset>
+
+                      <div className="moment-grid">
+                        <fieldset>
+                          <legend>Startuur</legend>
+                          <div className="choice-grid times">
+                            {TIME_SLOTS.map((slot) => (
+                              <button type="button" className={time === slot ? "selected" : ""} aria-pressed={time === slot} onClick={() => setTime(slot)} key={slot}>{slot}</button>
+                            ))}
+                          </div>
+                        </fieldset>
+                        <fieldset>
+                          <legend>Duur</legend>
+                          <div className="choice-grid duration">
+                            {[1, 2, 3, 4].map((hours) => (
+                              <button type="button" className={duration === hours ? "selected" : ""} aria-pressed={duration === hours} onClick={() => setDuration(hours)} key={hours}>{hours}u</button>
+                            ))}
+                          </div>
+                        </fieldset>
+                      </div>
+                    </div>
+                  )}
+
+                  {step === 1 && (
+                    <div className="booking-step">
+                      <p className="booking-eyebrow">Stap 2 · Details</p>
+                      <h2 tabIndex={-1} data-step-heading>Vertel ons wat je komt maken.</h2>
+                      <div className="form-grid">
+                        <label className="field-label">Volledige naam *<input value={name} onChange={(event) => setName(event.target.value)} autoComplete="name" required /></label>
+                        <label className="field-label">E-mail *<input value={email} onChange={(event) => setEmail(event.target.value)} type="email" autoComplete="email" required aria-invalid={Boolean(email) && !validEmail(email)} /></label>
+                        <label className="field-label full">Telefoon <span>optioneel</span><input value={phone} onChange={(event) => setPhone(event.target.value)} type="tel" autoComplete="tel" /></label>
+                        <label className="field-label full">Over je sessie <span>optioneel</span><textarea value={note} onChange={(event) => setNote(event.target.value)} placeholder="Wat wil je opnemen of maken?" maxLength={500} rows={4} /></label>
+                      </div>
+
+                      <details className="extras-disclosure">
+                        <summary>Extra support toevoegen <span>{addOnIds.length ? `${addOnIds.length} gekozen` : "Optioneel"}</span></summary>
+                        <div className="addon-list">
+                          {ADD_ONS.map((addOn) => (
+                            <button type="button" className={addOnIds.includes(addOn.id) ? "selected" : ""} aria-pressed={addOnIds.includes(addOn.id)} onClick={() => toggleAddOn(addOn.id)} key={addOn.id}>
+                              <i aria-hidden="true">{addOnIds.includes(addOn.id) ? "✓" : "+"}</i>
+                              <span><strong>{addOn.name}</strong><small>{addOn.description}</small></span>
+                            </button>
+                          ))}
+                        </div>
+                      </details>
+                    </div>
+                  )}
+
+                  {step === 2 && (
+                    <div className="booking-step review-step">
+                      <p className="booking-eyebrow">Stap 3 · Controle</p>
+                      <h2 tabIndex={-1} data-step-heading>Klaar om aan te vragen.</h2>
+                      <div className="booking-summary">
+                        <div><span>Room</span><strong>{room.name}</strong><button type="button" onClick={() => goToStep(0)}>Wijzig</button></div>
+                        <div><span>Moment</span><strong>{selectedDate?.fullLabel} · {time} · {duration} uur</strong><button type="button" onClick={() => goToStep(0)}>Wijzig</button></div>
+                        <div><span>Support</span><strong>{addOnIds.length ? ADD_ONS.filter((item) => addOnIds.includes(item.id)).map((item) => item.name).join(", ") : "Geen extra support"}</strong><button type="button" onClick={() => goToStep(1)}>Wijzig</button></div>
+                        <div><span>Contact</span><strong>{name} · {email}</strong><button type="button" onClick={() => goToStep(1)}>Wijzig</button></div>
+                      </div>
+                      <div className="booking-truth">
+                        <strong>Wat gebeurt hierna?</strong>
+                        <p>Je e-mailapp opent met alle sessiedetails ingevuld. Verstuur de aanvraag; het team bevestigt daarna beschikbaarheid en prijs.</p>
+                      </div>
+                      <label className="terms-check">
+                        <input type="checkbox" checked={termsAccepted} onChange={(event) => setTermsAccepted(event.target.checked)} />
+                        <span>
+                          Ik ga akkoord dat mijn gegevens worden gebruikt om deze boekingsaanvraag te beantwoorden.{" "}
+                          <a href={`${basePath}/privacy/`} target="_blank" rel="noreferrer">Lees de privacy-info.</a>
+                        </span>
+                      </label>
+                    </div>
+                  )}
+
+                  {step === 3 && (
+                    <div className="booking-success" role="status">
+                      <span className="success-index">Aanvraag voorbereid</span>
+                      <h2 tabIndex={-1} data-step-heading>Rond af in je e-mailapp.</h2>
+                      <p>Als je e-mailapp opende, hoef je de aanvraag alleen nog te versturen. Niets gebeurd? Probeer opnieuw of mail rechtstreeks naar <a href="mailto:team@sounddistrict.be">team@sounddistrict.be</a>.</p>
+                      <div className="success-card"><span>{room.name}</span><span>{selectedDate?.fullLabel} · {time}</span><span>{duration} uur</span></div>
+                      <div className="success-actions">
+                        <button type="button" className="button button-dark" onClick={retryEmailRequest}>Open e-mail opnieuw</button>
+                        <button type="button" className="quiet-action" onClick={closeBooking}>Terug naar de website</button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {step < 3 && (
+                  <footer className="booking-footer">
+                    <div>
+                      <span>{step === 0 ? "Voorkeursmoment" : "Jouw sessie"}</span>
+                      <strong>{roomId ? room.name : "Kies een room"}{date && time ? ` · ${selectedDate?.day} ${selectedDate?.month} · ${time}` : ""}</strong>
+                    </div>
+                    <div>
+                      {step > 0 && <button className="back-button" type="button" onClick={() => goToStep(step - 1)}>Terug</button>}
                       <button
+                        className="next-button"
                         type="button"
-                        className={item.id === roomId ? "selected" : ""}
-                        onClick={() => setRoomId(item.id)}
-                        key={item.id}
+                        disabled={!canContinue()}
+                        onClick={() => step === 2 ? openEmailRequest() : goToStep(step + 1)}
                       >
-                        <span className="booking-room-image" style={{ backgroundImage: `url(${basePath}/${item.image})` }} />
-                        <span><small>{item.eyebrow}</small><strong>{item.name}</strong><em>{formatCurrency(item.pricePerHour)}/uur</em></span>
-                        <i>{item.id === roomId ? "✓" : ""}</i>
+                        {step === 2 ? "Open e-mailaanvraag" : "Verder"} <span aria-hidden="true">→</span>
                       </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {step === 1 && (
-                <div className="booking-step">
-                  <p className="booking-eyebrow">Stap 2 · Kies je moment</p>
-                  <h2>Wanneer wil je komen maken?</h2>
-                  <fieldset>
-                    <legend>Datum</legend>
-                    <div className="date-options">
-                      {dateOptions.map((item) => (
-                        <button type="button" className={date === item.value ? "selected" : ""} onClick={() => setDate(item.value)} key={item.value} aria-label={`${item.weekday} ${item.day} ${item.month}`}>
-                          <small>{item.weekday}</small><strong>{item.day}</strong><span>{item.month}</span>
-                        </button>
-                      ))}
                     </div>
-                  </fieldset>
-                  <fieldset>
-                    <legend>Startuur</legend>
-                    <div className="choice-grid times">
-                      {TIME_SLOTS.map((slot) => <button type="button" className={time === slot ? "selected" : ""} onClick={() => setTime(slot)} key={slot}>{slot}</button>)}
-                    </div>
-                  </fieldset>
-                  <fieldset>
-                    <legend>Duur</legend>
-                    <div className="choice-grid duration">
-                      {[1, 2, 3, 4].map((hours) => <button type="button" className={duration === hours ? "selected" : ""} onClick={() => setDuration(hours)} key={hours}>{hours} uur</button>)}
-                    </div>
-                  </fieldset>
-                </div>
-              )}
-
-              {step === 2 && (
-                <div className="booking-step">
-                  <p className="booking-eyebrow">Stap 3 · Extra support</p>
-                  <h2>Make the session complete.</h2>
-                  <p className="booking-intro">Optioneel. Je kunt deze ook later nog bespreken met het team.</p>
-                  <div className="addon-list">
-                    {ADD_ONS.map((addOn) => (
-                      <button type="button" className={addOnIds.includes(addOn.id) ? "selected" : ""} onClick={() => toggleAddOn(addOn.id)} key={addOn.id}>
-                        <i>{addOnIds.includes(addOn.id) ? "✓" : "+"}</i>
-                        <span><strong>{addOn.name}</strong><small>{addOn.description}</small></span>
-                        <em>+ {formatCurrency(addOn.price)}</em>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {step === 3 && (
-                <div className="booking-step">
-                  <p className="booking-eyebrow">Stap 4 · Jouw gegevens</p>
-                  <h2>Wie mogen we verwachten?</h2>
-                  <div className="form-grid">
-                    <label className="field-label">Naam *<input value={name} onChange={(event) => setName(event.target.value)} placeholder="Je volledige naam" autoComplete="name" /></label>
-                    <label className="field-label">E-mail *<input value={email} onChange={(event) => setEmail(event.target.value)} placeholder="naam@email.be" type="email" autoComplete="email" /></label>
-                    <label className="field-label">Telefoon<input value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="+32 ..." type="tel" autoComplete="tel" /></label>
-                    <label className="field-label full">Iets dat we moeten weten?<textarea value={note} onChange={(event) => setNote(event.target.value)} placeholder="Vertel kort wat je wilt opnemen of maken." rows={3} /></label>
-                  </div>
-                </div>
-              )}
-
-              {step === 4 && (
-                <div className="booking-step review-step">
-                  <p className="booking-eyebrow">Stap 5 · Check & confirm</p>
-                  <h2>Alles klaar voor je sessie.</h2>
-                  <div className="booking-summary">
-                    <div><span>Room</span><strong>{room.name}</strong><button type="button" onClick={() => setStep(0)}>Wijzig</button></div>
-                    <div><span>Moment</span><strong>{date} · {time} · {duration} uur</strong><button type="button" onClick={() => setStep(1)}>Wijzig</button></div>
-                    <div><span>Extra&apos;s</span><strong>{addOnIds.length ? ADD_ONS.filter((item) => addOnIds.includes(item.id)).map((item) => item.name).join(", ") : "Geen"}</strong><button type="button" onClick={() => setStep(2)}>Wijzig</button></div>
-                    <div><span>Contact</span><strong>{name} · {email}</strong><button type="button" onClick={() => setStep(3)}>Wijzig</button></div>
-                  </div>
-                  <div className="total-row"><span>Totaal indicatie<small>Definitief na bevestiging door het team</small></span><strong>{formatCurrency(total)}</strong></div>
-                </div>
-              )}
-
-              {step === 5 && (
-                <div className="booking-success">
-                  <div className="success-mark">✓</div>
-                  <p>Booking request ready</p>
-                  <h2>See you in the district.</h2>
-                  <span>Referentie</span><strong>{reference}</strong>
-                  <div className="success-card"><span>{room.name}</span><span>{date} · {time}</span><span>{duration} uur · {formatCurrency(total)}</span></div>
-                  <p className="prototype-note">Deze prototypeboeking is lokaal opgeslagen. Koppel de productieversie aan de agenda- en betaalbackend voor live bevestiging.</p>
-                  <button type="button" className="button" onClick={resetAndClose}>Terug naar de website</button>
-                </div>
-              )}
+                  </footer>
+                )}
+              </div>
             </div>
-
-            {step < 5 && (
-              <footer className="booking-footer">
-                <div><span>Indicatief totaal</span><strong>{formatCurrency(total)}</strong></div>
-                <div>
-                  {step > 0 && <button className="back-button" type="button" onClick={() => setStep((current) => current - 1)}>Terug</button>}
-                  <button
-                    className="next-button"
-                    type="button"
-                    disabled={!canContinue()}
-                    onClick={() => step === 4 ? confirmBooking() : setStep((current) => current + 1)}
-                  >
-                    {step === 4 ? "Bevestig aanvraag" : "Verder"} <span>→</span>
-                  </button>
-                </div>
-              </footer>
-            )}
           </section>
         </div>
       )}
