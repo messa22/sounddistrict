@@ -123,7 +123,7 @@ export function BookingFlow() {
 
   return (
     <>
-      <button className="mobile-booking-cta" type="button" data-booking="blue">Boek nu <span>↗</span></button>
+      <button className="mobile-booking-cta" type="button" data-booking="blue" data-release="pages-2">Boek nu <span>↗</span></button>
       {open && (
         <div className="booking-overlay" role="presentation" onMouseDown={(event) => {
           if (event.target === event.currentTarget) resetAndClose();
