@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const isGitHubPages = process.env.GITHUB_PAGES === "true";
-const basePath = isGitHubPages ? "/sounddistrict-preview" : "";
+const basePath = isGitHubPages ? "/sounddistrict" : "";
 
 const nextConfig: NextConfig = {
   transpilePackages: ["@sounddistrict/booking-core"],
