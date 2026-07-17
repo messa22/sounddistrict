@@ -1,0 +1,34 @@
+{
+  "expo": {
+    "name": "SoundDistrict",
+    "slug": "sounddistrict",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "sounddistrict",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "be.sounddistrict.app"
+    },
+    "android": {
+      "package": "be.sounddistrict.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#020304"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#020304",
+          "image": "./assets/new-logo2.png",
+          "imageWidth": 220
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
