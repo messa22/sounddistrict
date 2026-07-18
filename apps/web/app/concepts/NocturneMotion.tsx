@@ -17,7 +17,14 @@ export function NocturneMotion() {
     const revealItems = Array.from(motionRoot.querySelectorAll<HTMLElement>("[data-nocturne-reveal]"));
     const parallaxItems = Array.from(motionRoot.querySelectorAll<HTMLElement>("[data-nocturne-parallax]"));
     const finalScene = motionRoot.querySelector<HTMLElement>("[data-nocturne-final]");
+    const roomRail = motionRoot.querySelector<HTMLElement>(`[class*="${styles.nocturneRail}"]`);
+    const roomCards = roomRail ? Array.from(roomRail.querySelectorAll<HTMLElement>("article")) : [];
+    const roomCurrent = motionRoot.querySelector<HTMLElement>("[data-nocturne-room-current]");
+    const roomPrevious = motionRoot.querySelector<HTMLButtonElement>("[data-nocturne-room-previous]");
+    const roomNext = motionRoot.querySelector<HTMLButtonElement>("[data-nocturne-room-next]");
     let frame = 0;
+    let roomFrame = 0;
+    let activeRoomIndex = 0;
     let activeMagnetic: HTMLElement | null = null;
 
     if (!reduceMotion) {
@@ -68,6 +75,49 @@ export function NocturneMotion() {
     function requestScrollMotion() {
       if (frame) return;
       frame = window.requestAnimationFrame(updateScrollMotion);
+    }
+
+    function updateRoomRail() {
+      roomFrame = 0;
+      if (!roomRail || !roomCards.length) return;
+
+      const railCenter = roomRail.scrollLeft + roomRail.clientWidth / 2;
+      activeRoomIndex = roomCards.reduce((closest, card, index) => {
+        const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+        const closestCard = roomCards[closest];
+        const closestCenter = closestCard.offsetLeft + closestCard.offsetWidth / 2;
+        return Math.abs(cardCenter - railCenter) < Math.abs(closestCenter - railCenter) ? index : closest;
+      }, 0);
+
+      roomCards.forEach((card, index) => {
+        card.dataset.nocturneRoomActive = index === activeRoomIndex ? "true" : "false";
+      });
+      if (roomCurrent) roomCurrent.textContent = `0${activeRoomIndex + 1}`;
+      motionRoot.style.setProperty("--nocturne-room-progress", String((activeRoomIndex + 1) / roomCards.length));
+      if (roomPrevious) roomPrevious.disabled = activeRoomIndex === 0;
+      if (roomNext) roomNext.disabled = activeRoomIndex === roomCards.length - 1;
+    }
+
+    function requestRoomRailUpdate() {
+      if (roomFrame) return;
+      roomFrame = window.requestAnimationFrame(updateRoomRail);
+    }
+
+    function moveRoom(direction: number) {
+      if (!roomRail || !roomCards.length) return;
+      const nextIndex = Math.max(0, Math.min(roomCards.length - 1, activeRoomIndex + direction));
+      roomRail.scrollTo({
+        left: roomCards[nextIndex].offsetLeft,
+        behavior: reduceMotion ? "auto" : "smooth"
+      });
+    }
+
+    function showPreviousRoom() {
+      moveRoom(-1);
+    }
+
+    function showNextRoom() {
+      moveRoom(1);
     }
 
     function resetMagnetic() {
@@ -121,18 +171,26 @@ export function NocturneMotion() {
 
     window.addEventListener("scroll", requestScrollMotion, { passive: true });
     window.addEventListener("resize", requestScrollMotion, { passive: true });
+    roomRail?.addEventListener("scroll", requestRoomRailUpdate, { passive: true });
+    roomPrevious?.addEventListener("click", showPreviousRoom);
+    roomNext?.addEventListener("click", showNextRoom);
     motionRoot.addEventListener("pointermove", handlePointerMove);
     motionRoot.addEventListener("pointerout", handlePointerOut);
     updateScrollMotion();
+    updateRoomRail();
 
     return () => {
       window.removeEventListener("scroll", requestScrollMotion);
       window.removeEventListener("resize", requestScrollMotion);
+      roomRail?.removeEventListener("scroll", requestRoomRailUpdate);
+      roomPrevious?.removeEventListener("click", showPreviousRoom);
+      roomNext?.removeEventListener("click", showNextRoom);
       motionRoot.removeEventListener("pointermove", handlePointerMove);
       motionRoot.removeEventListener("pointerout", handlePointerOut);
       revealObserver.disconnect();
       finalObserver?.disconnect();
       if (frame) window.cancelAnimationFrame(frame);
+      if (roomFrame) window.cancelAnimationFrame(roomFrame);
       resetMagnetic();
       delete motionRoot.dataset.nocturneMotion;
       delete motionRoot.dataset.nocturneFinalVisible;

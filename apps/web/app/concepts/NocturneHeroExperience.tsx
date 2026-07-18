@@ -30,7 +30,7 @@ const scenes = [
 
 export function NocturneHeroExperience({ basePath }: { basePath: string }) {
   const sectionRef = useRef<HTMLElement>(null);
-  const touchStartRef = useRef<number | null>(null);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [manualSelection, setManualSelection] = useState(false);
   const [inView, setInView] = useState(true);
@@ -69,10 +69,11 @@ export function NocturneHeroExperience({ basePath }: { basePath: string }) {
   function handleTouchEnd(event: React.TouchEvent<HTMLElement>) {
     const start = touchStartRef.current;
     if (start === null) return;
-    const distance = event.changedTouches[0].clientX - start;
+    const distanceX = event.changedTouches[0].clientX - start.x;
+    const distanceY = event.changedTouches[0].clientY - start.y;
     touchStartRef.current = null;
-    if (Math.abs(distance) < 45) return;
-    const direction = distance < 0 ? 1 : -1;
+    if (Math.abs(distanceX) < 45 || Math.abs(distanceX) <= Math.abs(distanceY) * 1.2) return;
+    const direction = distanceX < 0 ? 1 : -1;
     selectScene((activeIndex + direction + scenes.length) % scenes.length);
   }
 
@@ -82,7 +83,12 @@ export function NocturneHeroExperience({ basePath }: { basePath: string }) {
       data-concept-hero
       data-nocturne-pointer-stage
       ref={sectionRef}
-      onTouchStart={(event) => { touchStartRef.current = event.touches[0].clientX; }}
+      onTouchStart={(event) => {
+        touchStartRef.current = {
+          x: event.touches[0].clientX,
+          y: event.touches[0].clientY
+        };
+      }}
       onTouchEnd={handleTouchEnd}
     >
       <div className={styles.nocturneMedia} aria-hidden="true">

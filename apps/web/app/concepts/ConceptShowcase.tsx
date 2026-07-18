@@ -4,6 +4,7 @@ import { BookingFlow } from "../../components/BookingFlow";
 import { ConciergeExperience } from "./ConciergeExperience";
 import { ConceptStickyController } from "./ConceptStickyController";
 import { NocturneHeroExperience } from "./NocturneHeroExperience";
+import { NocturneMobileNavigation } from "./NocturneMobileNavigation";
 import { NocturneMotion } from "./NocturneMotion";
 import styles from "./concepts.module.css";
 
@@ -119,8 +120,13 @@ function Nocturne({ asset, basePath }: { asset: (name: string) => string; basePa
             </article>
           ))}
         </div>
-        <div className={styles.nocturneRailProgress} aria-hidden="true">
-          <span>Swipe to explore</span><i /><b>03 rooms</b>
+        <div className={styles.nocturneRailProgress} aria-label="Roomgallery bedienen">
+          <span><b data-nocturne-room-current>01</b> / 03</span>
+          <i><b /></i>
+          <div>
+            <button type="button" data-nocturne-room-previous aria-label="Vorige room">←</button>
+            <button type="button" data-nocturne-room-next aria-label="Volgende room">→</button>
+          </div>
         </div>
       </section>
 
@@ -228,6 +234,7 @@ function Nocturne({ asset, basePath }: { asset: (name: string) => string; basePa
         <span><i /> Session request</span>
         <button type="button" data-booking="open" data-nocturne-magnetic>Kies room &amp; moment <b>↗</b></button>
       </aside>
+      <NocturneMobileNavigation />
       <NocturneMotion />
       <ConceptStickyController />
       <BookingFlow />

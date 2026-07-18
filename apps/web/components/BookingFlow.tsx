@@ -37,6 +37,11 @@ function validEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 }
 
+function naturalList(items: string[]) {
+  if (items.length < 2) return items[0] ?? "";
+  return `${items.slice(0, -1).join(", ")} en ${items.at(-1)}`;
+}
+
 function dateDetails(value: string) {
   if (!value) return undefined;
   const parsed = new Date(`${value}T12:00:00`);
@@ -59,6 +64,8 @@ function dateDetails(value: string) {
 export function BookingFlow() {
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
   const titleId = useId();
+  const nameErrorId = useId();
+  const emailErrorId = useId();
   const dialogRef = useRef<HTMLElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const returnFocusRef = useRef<HTMLElement | null>(null);
@@ -75,6 +82,10 @@ export function BookingFlow() {
   const [phone, setPhone] = useState("");
   const [note, setNote] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [roomChooserOpen, setRoomChooserOpen] = useState(true);
+  const [sessionAttempted, setSessionAttempted] = useState(false);
+  const [detailsAttempted, setDetailsAttempted] = useState(false);
+  const [termsAttempted, setTermsAttempted] = useState(false);
 
   const dateOptions = useMemo(upcomingDates, []);
   const room = getRoom(roomId ?? "red");
@@ -82,6 +93,13 @@ export function BookingFlow() {
     () => dateOptions.find((item) => item.value === date) ?? dateDetails(date),
     [date, dateOptions]
   );
+  const nameInvalid = detailsAttempted && name.trim().length < 2;
+  const emailInvalid = (detailsAttempted || Boolean(email)) && !validEmail(email);
+  const missingSessionFields = [
+    !roomId ? "een room" : "",
+    !date ? "een datum" : "",
+    !time ? "een startuur" : ""
+  ].filter(Boolean);
 
   useEffect(() => {
     function handleBookingClick(event: MouseEvent) {
@@ -90,9 +108,16 @@ export function BookingFlow() {
       if (!trigger) return;
 
       event.preventDefault();
-      returnFocusRef.current = trigger;
+      const returnFocusSelector = trigger.dataset.bookingReturnFocus;
+      returnFocusRef.current = returnFocusSelector
+        ? document.querySelector<HTMLElement>(returnFocusSelector) ?? trigger
+        : trigger;
       const requestedRoom = trigger.dataset.booking as RoomId | "open" | undefined;
-      setRoomId(requestedRoom && ROOMS.some((item) => item.id === requestedRoom) ? requestedRoom as RoomId : null);
+      const requestedRoomId = requestedRoom && ROOMS.some((item) => item.id === requestedRoom)
+        ? requestedRoom as RoomId
+        : null;
+      setRoomId(requestedRoomId);
+      setRoomChooserOpen(!requestedRoomId);
       setDate("");
       setTime("");
       setDuration(2);
@@ -102,6 +127,9 @@ export function BookingFlow() {
       setPhone("");
       setNote("");
       setTermsAccepted(false);
+      setSessionAttempted(false);
+      setDetailsAttempted(false);
+      setTermsAttempted(false);
       setStep(0);
       setOpen(true);
     }
@@ -113,7 +141,21 @@ export function BookingFlow() {
   useEffect(() => {
     if (!open) return;
 
+    const previousOverflow = document.body.style.overflow;
+    const rootStyle = document.documentElement.style;
+    const previousViewportHeight = rootStyle.getPropertyValue("--booking-viewport-height");
+    const previousViewportTop = rootStyle.getPropertyValue("--booking-viewport-top");
+    const visualViewport = window.visualViewport;
+
+    function updateViewport() {
+      const height = visualViewport?.height ?? window.innerHeight;
+      const top = visualViewport?.offsetTop ?? 0;
+      rootStyle.setProperty("--booking-viewport-height", `${Math.round(height)}px`);
+      rootStyle.setProperty("--booking-viewport-top", `${Math.round(top)}px`);
+    }
+
     document.body.style.overflow = "hidden";
+    updateViewport();
     window.setTimeout(() => closeRef.current?.focus(), 20);
 
     function onKeyDown(event: KeyboardEvent) {
@@ -140,9 +182,19 @@ export function BookingFlow() {
     }
 
     document.addEventListener("keydown", onKeyDown);
+    visualViewport?.addEventListener("resize", updateViewport);
+    visualViewport?.addEventListener("scroll", updateViewport);
+    window.addEventListener("resize", updateViewport);
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
+      if (previousViewportHeight) rootStyle.setProperty("--booking-viewport-height", previousViewportHeight);
+      else rootStyle.removeProperty("--booking-viewport-height");
+      if (previousViewportTop) rootStyle.setProperty("--booking-viewport-top", previousViewportTop);
+      else rootStyle.removeProperty("--booking-viewport-top");
       document.removeEventListener("keydown", onKeyDown);
+      visualViewport?.removeEventListener("resize", updateViewport);
+      visualViewport?.removeEventListener("scroll", updateViewport);
+      window.removeEventListener("resize", updateViewport);
     };
   }, [open]);
 
@@ -210,6 +262,44 @@ export function BookingFlow() {
     }, 0);
   }
 
+  function continueBooking() {
+    if (step === 0 && !canContinue()) {
+      setSessionAttempted(true);
+      window.setTimeout(() => {
+        const missingField = dialogRef.current?.querySelector<HTMLElement>("[data-booking-missing='true']");
+        const focusTarget = missingField?.querySelector<HTMLElement>("button, input");
+        missingField?.scrollIntoView({
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+          block: "center"
+        });
+        focusTarget?.focus({ preventScroll: true });
+      }, 0);
+      return;
+    }
+
+    if (step === 1 && !canContinue()) {
+      setDetailsAttempted(true);
+      window.setTimeout(() => {
+        dialogRef.current?.querySelector<HTMLElement>("[data-booking-invalid='true']")?.focus();
+      }, 0);
+      return;
+    }
+
+    if (step === 2 && !canContinue()) {
+      setTermsAttempted(true);
+      window.setTimeout(() => {
+        dialogRef.current?.querySelector<HTMLInputElement>(".terms-check input")?.focus();
+      }, 0);
+      return;
+    }
+
+    setSessionAttempted(false);
+    setDetailsAttempted(false);
+    setTermsAttempted(false);
+    if (step === 2) openEmailRequest();
+    else goToStep(step + 1);
+  }
+
   return (
     <>
       <button className="mobile-booking-cta" type="button" data-booking="open">
@@ -250,27 +340,43 @@ export function BookingFlow() {
                       <p className="booking-eyebrow">Stap 1 · Jouw sessie</p>
                       <h2 tabIndex={-1} data-step-heading>Kies je room en moment.</h2>
                       <p className="booking-intro">Kies een room en voorkeursmoment. We bevestigen de beschikbaarheid persoonlijk.</p>
+                      {sessionAttempted && missingSessionFields.length > 0 && (
+                        <p className="booking-error-summary" role="alert">
+                          Kies nog {naturalList(missingSessionFields)}.
+                        </p>
+                      )}
 
-                      <fieldset>
+                      <fieldset data-booking-missing={sessionAttempted && !roomId ? "true" : undefined}>
                         <legend>Room</legend>
-                        <div className="booking-room-grid">
-                          {ROOMS.map((item) => (
-                            <button
-                              type="button"
-                              className={roomId === item.id ? "selected" : ""}
-                              aria-pressed={roomId === item.id}
-                              onClick={() => setRoomId(item.id)}
-                              key={item.id}
-                            >
-                              <span className="booking-room-thumb" style={{ backgroundImage: `url(${basePath}/${editorialImages[item.id]})` }} />
-                              <span><strong>{item.name}</strong><small>{item.features[0]}</small></span>
-                              <i aria-hidden="true">{roomId === item.id ? "✓" : ""}</i>
-                            </button>
-                          ))}
-                        </div>
+                        {roomId && !roomChooserOpen ? (
+                          <div className="booking-room-selected">
+                            <span className="booking-room-thumb" style={{ backgroundImage: `url(${basePath}/${editorialImages[roomId]})` }} />
+                            <span><small>Gekozen room</small><strong>{room.name}</strong></span>
+                            <button type="button" onClick={() => setRoomChooserOpen(true)}>Wijzig</button>
+                          </div>
+                        ) : (
+                          <div className="booking-room-grid">
+                            {ROOMS.map((item) => (
+                              <button
+                                type="button"
+                                className={roomId === item.id ? "selected" : ""}
+                                aria-pressed={roomId === item.id}
+                                onClick={() => {
+                                  setRoomId(item.id);
+                                  setRoomChooserOpen(false);
+                                }}
+                                key={item.id}
+                              >
+                                <span className="booking-room-thumb" style={{ backgroundImage: `url(${basePath}/${editorialImages[item.id]})` }} />
+                                <span><strong>{item.name}</strong><small>{item.features[0]}</small></span>
+                                <i aria-hidden="true">{roomId === item.id ? "✓" : ""}</i>
+                              </button>
+                            ))}
+                          </div>
+                        )}
                       </fieldset>
 
-                      <fieldset>
+                      <fieldset data-booking-missing={sessionAttempted && !date ? "true" : undefined}>
                         <legend>Voorkeursdatum</legend>
                         <div className="date-options">
                           {dateOptions.map((item) => (
@@ -298,7 +404,7 @@ export function BookingFlow() {
                       </fieldset>
 
                       <div className="moment-grid">
-                        <fieldset>
+                        <fieldset data-booking-missing={sessionAttempted && !time ? "true" : undefined}>
                           <legend>Startuur</legend>
                           <div className="choice-grid times">
                             {TIME_SLOTS.map((slot) => (
@@ -323,8 +429,33 @@ export function BookingFlow() {
                       <p className="booking-eyebrow">Stap 2 · Details</p>
                       <h2 tabIndex={-1} data-step-heading>Vertel ons wat je komt maken.</h2>
                       <div className="form-grid">
-                        <label className="field-label">Volledige naam *<input value={name} onChange={(event) => setName(event.target.value)} autoComplete="name" required /></label>
-                        <label className="field-label">E-mail *<input value={email} onChange={(event) => setEmail(event.target.value)} type="email" autoComplete="email" required aria-invalid={Boolean(email) && !validEmail(email)} /></label>
+                        <label className="field-label">
+                          Volledige naam *
+                          <input
+                            value={name}
+                            onChange={(event) => setName(event.target.value)}
+                            autoComplete="name"
+                            required
+                            aria-invalid={nameInvalid}
+                            aria-describedby={nameInvalid ? nameErrorId : undefined}
+                            data-booking-invalid={nameInvalid ? "true" : undefined}
+                          />
+                          {nameInvalid && <span className="field-error" id={nameErrorId} role="alert">Vul minstens 2 tekens in.</span>}
+                        </label>
+                        <label className="field-label">
+                          E-mail *
+                          <input
+                            value={email}
+                            onChange={(event) => setEmail(event.target.value)}
+                            type="email"
+                            autoComplete="email"
+                            required
+                            aria-invalid={emailInvalid}
+                            aria-describedby={emailInvalid ? emailErrorId : undefined}
+                            data-booking-invalid={emailInvalid ? "true" : undefined}
+                          />
+                          {emailInvalid && <span className="field-error" id={emailErrorId} role="alert">Vul een geldig e-mailadres in.</span>}
+                        </label>
                         <label className="field-label full">Telefoon <span>optioneel</span><input value={phone} onChange={(event) => setPhone(event.target.value)} type="tel" autoComplete="tel" /></label>
                         <label className="field-label full">Over je sessie <span>optioneel</span><textarea value={note} onChange={(event) => setNote(event.target.value)} placeholder="Wat wil je opnemen of maken?" maxLength={500} rows={4} /></label>
                       </div>
@@ -364,6 +495,7 @@ export function BookingFlow() {
                           <a href={`${basePath}/privacy/`} target="_blank" rel="noreferrer">Lees de privacy-info.</a>
                         </span>
                       </label>
+                      {termsAttempted && !termsAccepted && <p className="terms-error" role="alert">Vink dit aan om je aanvraag voor te bereiden.</p>}
                     </div>
                   )}
 
@@ -392,8 +524,7 @@ export function BookingFlow() {
                       <button
                         className="next-button"
                         type="button"
-                        disabled={!canContinue()}
-                        onClick={() => step === 2 ? openEmailRequest() : goToStep(step + 1)}
+                        onClick={continueBooking}
                       >
                         {step === 0 ? "Naar je gegevens" : step === 1 ? "Controleer je aanvraag" : "Open ingevulde e-mail"} <span aria-hidden="true">→</span>
                       </button>
