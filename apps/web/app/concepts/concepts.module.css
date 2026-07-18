@@ -3293,6 +3293,771 @@
   from { opacity: 0; transform: translateY(18px); }
 }
 
+/* Nocturne — modern cinematic motion layer */
+.nocturne {
+  --nocturne-scroll-progress: 0;
+  --nocturne-pointer-x: 0;
+  --nocturne-pointer-y: 0;
+  overflow-x: clip;
+}
+
+.nocturneRooms,
+.nocturneHouse,
+.nocturneProcess,
+.nocturneVisit {
+  scroll-margin-top: 30px;
+}
+
+.nocturneMedia {
+  transform:
+    translate3d(
+      calc(var(--nocturne-pointer-x) * -14px),
+      calc(var(--nocturne-pointer-y) * -9px),
+      0
+    )
+    scale(1.025);
+  transition: transform 1.1s cubic-bezier(.16, 1, .3, 1);
+}
+
+.nocturneFrame {
+  z-index: 0;
+  opacity: 0;
+  clip-path: inset(2.5% 2.5% 2.5% 2.5%);
+  transform: scale(1.085);
+  animation: none;
+  will-change: opacity, transform, clip-path;
+}
+
+.nocturneFrameActive {
+  z-index: 1;
+  opacity: 1;
+  animation: nocturneSceneIn 1.15s cubic-bezier(.16, 1, .3, 1) both;
+}
+
+.nocturneLightLeak,
+.nocturneGrain {
+  position: absolute;
+  z-index: 0;
+  inset: -12%;
+  pointer-events: none;
+}
+
+.nocturneLightLeak {
+  background:
+    radial-gradient(circle at 74% 36%, rgba(180, 19, 90, .18), transparent 22%),
+    radial-gradient(circle at 32% 62%, rgba(194, 169, 130, .11), transparent 25%);
+  mix-blend-mode: screen;
+  transform:
+    translate3d(
+      calc(var(--nocturne-pointer-x) * 32px),
+      calc(var(--nocturne-pointer-y) * 24px),
+      0
+    );
+  transition: transform 1.4s cubic-bezier(.16, 1, .3, 1);
+}
+
+.nocturneGrain {
+  inset: -50%;
+  background:
+    repeating-radial-gradient(circle at 17% 32%, rgba(255, 255, 255, .16) 0 .55px, transparent .8px 3px);
+  background-size: 8px 8px;
+  opacity: .065;
+  mix-blend-mode: soft-light;
+  animation: nocturneGrainShift .38s steps(2) infinite;
+}
+
+.nocturneHeader {
+  position: relative;
+  z-index: 6;
+}
+
+.nocturneHeader button,
+.nocturnePrimary,
+.nocturneRoomMeta button,
+.nocturneProcess > button,
+.nocturneVisit button,
+.nocturneFinal button,
+.nocturneBookingDock button {
+  transition:
+    transform .28s cubic-bezier(.16, 1, .3, 1),
+    background-color .28s ease,
+    color .28s ease,
+    border-color .28s ease;
+}
+
+.nocturneHeader button:hover span,
+.nocturnePrimary:hover span,
+.nocturneRoomMeta button:hover b,
+.nocturneProcess > button:hover span,
+.nocturneVisit button:hover b,
+.nocturneFinal button:hover span,
+.nocturneBookingDock button:hover b {
+  transform: translate(4px, -2px);
+}
+
+.nocturnePrimary:hover,
+.nocturneProcess > button:hover,
+.nocturneVisit button:hover,
+.nocturneFinal button:hover {
+  border-color: #b4135a;
+  background: #b4135a;
+  color: #fff;
+}
+
+.nocturneCopy {
+  z-index: 3;
+  animation: none;
+}
+
+.nocturneCopy > p {
+  animation: nocturneCopyLift .65s .12s cubic-bezier(.16, 1, .3, 1) both;
+}
+
+.nocturneCopy h1 {
+  overflow: hidden;
+}
+
+.nocturneCopy h1 > span,
+.nocturneCopy h1 > em {
+  display: block;
+  animation: nocturneLineReveal .9s cubic-bezier(.16, 1, .3, 1) both;
+}
+
+.nocturneCopy h1 > em {
+  animation-delay: .08s;
+}
+
+.nocturneIntro,
+.nocturneCopy .nocturnePrimary,
+.nocturneCopy > a,
+.nocturneCopy > small {
+  animation: nocturneCopyLift .7s .24s cubic-bezier(.16, 1, .3, 1) both;
+}
+
+.nocturneCopy > a {
+  animation-delay: .3s;
+}
+
+.nocturneCopy > small {
+  animation-delay: .36s;
+}
+
+.nocturneSceneNav {
+  position: absolute;
+  z-index: 5;
+  top: 50%;
+  right: clamp(18px, 4vw, 64px);
+  width: 150px;
+  display: grid;
+  gap: 4px;
+  transform: translateY(-50%);
+}
+
+.nocturneSceneNav button {
+  min-height: 46px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 8px;
+  align-items: center;
+  border: 0;
+  background: transparent;
+  color: rgba(241, 236, 228, .46);
+  text-align: left;
+  cursor: pointer;
+  transition: color .28s ease;
+}
+
+.nocturneSceneNav button > span {
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+
+.nocturneSceneNav button > strong {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.nocturneSceneNav button > i {
+  position: relative;
+  grid-column: 1 / -1;
+  height: 1px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, .18);
+}
+
+.nocturneSceneNav button > i::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: #b4135a;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.nocturneSceneNav .nocturneSceneActive {
+  color: #fff;
+}
+
+.nocturneSceneActive > i::after {
+  animation: nocturneSceneProgress 5.2s linear both;
+}
+
+.nocturneScrollCue {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: rgba(241, 236, 228, .62);
+  transform: translateX(-50%);
+}
+
+.nocturneScrollCue > span {
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+}
+
+.nocturneScrollCue > i {
+  position: relative;
+  width: 1px;
+  height: 38px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, .18);
+}
+
+.nocturneScrollCue > i::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: #b4135a;
+  animation: nocturneScrollCue 1.8s cubic-bezier(.16, 1, .3, 1) infinite;
+}
+
+.nocturneSignal {
+  height: 52px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, .12);
+  border-bottom: 1px solid rgba(255, 255, 255, .12);
+  background: #080808;
+}
+
+.nocturneSignal > div {
+  width: max-content;
+  display: flex;
+  animation: nocturneSignalMove 22s linear infinite;
+  will-change: transform;
+}
+
+.nocturneSignal span {
+  padding-right: 34px;
+  color: #8e857c;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.nocturne[data-nocturne-motion="ready"] [data-nocturne-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 26px, 0);
+  transition:
+    opacity .75s ease,
+    transform .9s cubic-bezier(.16, 1, .3, 1),
+    clip-path 1.05s cubic-bezier(.16, 1, .3, 1);
+}
+
+.nocturne[data-nocturne-motion="ready"] [data-nocturne-reveal="image"] {
+  clip-path: inset(10% 0 10% 0);
+  transform: translate3d(0, 24px, 0) scale(.985);
+}
+
+.nocturne[data-nocturne-motion="ready"] [data-nocturne-reveal="card"] {
+  clip-path: inset(0 0 18% 0);
+  transform: translate3d(0, 34px, 0);
+}
+
+.nocturne[data-nocturne-motion="ready"] [data-nocturne-reveal="row"] {
+  transform: translate3d(18px, 0, 0);
+}
+
+.nocturne[data-nocturne-motion="ready"] [data-nocturne-reveal="app"] {
+  transform: perspective(1000px) rotateY(-7deg) rotateX(4deg) translate3d(0, 44px, 0);
+}
+
+.nocturne[data-nocturne-motion="ready"] [data-nocturne-reveal][data-nocturne-visible="true"] {
+  opacity: 1;
+  clip-path: inset(0);
+  transform: translate3d(0, 0, 0);
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneRail article:nth-child(2),
+.nocturne[data-nocturne-motion="ready"] .nocturneMadeGrid figure:nth-child(2),
+.nocturne[data-nocturne-motion="ready"] .nocturneHouseCopy article:nth-child(2),
+.nocturne[data-nocturne-motion="ready"] .nocturneProcess li:nth-child(2) {
+  transition-delay: .09s;
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneRail article:nth-child(3),
+.nocturne[data-nocturne-motion="ready"] .nocturneMadeGrid figure:nth-child(3),
+.nocturne[data-nocturne-motion="ready"] .nocturneHouseCopy article:nth-child(3),
+.nocturne[data-nocturne-motion="ready"] .nocturneProcess li:nth-child(3) {
+  transition-delay: .18s;
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneHouseCopy article:nth-child(4) {
+  transition-delay: .27s;
+}
+
+.nocturne [data-nocturne-parallax] img {
+  top: -4% !important;
+  height: 108% !important;
+  transform: translate3d(0, var(--nocturne-parallax, 0), 0) scale(1.035);
+  will-change: transform;
+}
+
+.nocturneRail {
+  display: flex;
+  gap: 10px;
+}
+
+.nocturneRail article {
+  position: relative;
+  flex: 1 1 0;
+  overflow: hidden;
+  background: #0c0b0b;
+  transition:
+    flex .75s cubic-bezier(.16, 1, .3, 1),
+    opacity .45s ease,
+    border-color .35s ease;
+}
+
+.nocturneRoomImage {
+  height: min(62vw, 620px);
+}
+
+.nocturneRoomMeta {
+  position: relative;
+  z-index: 2;
+  background: linear-gradient(180deg, #0c0b0b, #080808);
+}
+
+.nocturneRoomMeta > p {
+  min-height: 38px;
+  margin: -12px 0 20px;
+  color: #8e867d;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.nocturneRoomMeta button {
+  overflow: hidden;
+}
+
+.nocturneRoomMeta button:hover {
+  color: #d56b98;
+}
+
+.nocturneRailProgress {
+  width: min(1380px, calc(100% - 32px));
+  margin: 22px auto 0;
+  display: none;
+  grid-template-columns: auto 1fr auto;
+  gap: 18px;
+  align-items: center;
+  color: #776f67;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.nocturneRailProgress > i {
+  position: relative;
+  height: 1px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, .14);
+}
+
+.nocturneRailProgress > i::after {
+  position: absolute;
+  inset: 0;
+  width: 36%;
+  content: "";
+  background: #b4135a;
+  animation: nocturneRailHint 2.4s cubic-bezier(.16, 1, .3, 1) infinite;
+}
+
+.nocturneRailProgress > b {
+  font-weight: inherit;
+}
+
+.nocturneHouseImage {
+  position: sticky;
+  top: 0;
+  min-height: 100svh;
+}
+
+.nocturneHouseCopy article {
+  position: relative;
+  overflow: hidden;
+  transition: padding .35s cubic-bezier(.16, 1, .3, 1);
+}
+
+.nocturneHouseCopy article::after {
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: 0;
+  height: 2px;
+  content: "";
+  background: #7c2840;
+  transition: right .6s cubic-bezier(.16, 1, .3, 1);
+}
+
+.nocturneHouseCopy article:hover {
+  padding-left: 12px;
+}
+
+.nocturneHouseCopy article:hover::after {
+  right: 0;
+}
+
+.nocturneMade {
+  position: relative;
+}
+
+.nocturneMadeGrid {
+  position: relative;
+  z-index: 2;
+}
+
+.nocturneWordLoop {
+  width: 100%;
+  margin-top: -14px;
+  overflow: hidden;
+  color: rgba(241, 236, 228, .09);
+  font-family: var(--concept-serif);
+  font-size: clamp(74px, 12vw, 180px);
+  font-style: italic;
+  line-height: .8;
+  white-space: nowrap;
+}
+
+.nocturneWordLoop span {
+  display: block;
+  width: max-content;
+  animation: nocturneWordMove 34s linear infinite;
+}
+
+.nocturneProcess > div:first-child {
+  position: sticky;
+  top: 120px;
+  align-self: start;
+}
+
+.nocturneProcess li {
+  position: relative;
+  opacity: .72;
+  transition: opacity .35s ease, padding-left .45s cubic-bezier(.16, 1, .3, 1);
+}
+
+.nocturneProcess li::before {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 0;
+  height: 2px;
+  content: "";
+  background: #b4135a;
+  transition: width .7s cubic-bezier(.16, 1, .3, 1);
+}
+
+.nocturneProcess li:hover {
+  padding-left: 12px;
+  opacity: 1;
+}
+
+.nocturneProcess li:hover::before {
+  width: 100%;
+}
+
+.nocturneAppMock {
+  position: relative;
+  overflow: hidden;
+  transform: perspective(1000px) rotateY(-5deg) rotateX(2deg);
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneAppMock[data-nocturne-visible="true"] {
+  transform: perspective(1000px) rotateY(-5deg) rotateX(2deg);
+}
+
+.nocturneAppMock::before {
+  position: absolute;
+  inset: -30%;
+  content: "";
+  background: conic-gradient(from 180deg, transparent, rgba(180, 19, 90, .2), transparent 32%);
+  animation: nocturneAppGlow 9s linear infinite;
+}
+
+.nocturneAppMock > * {
+  position: relative;
+  z-index: 1;
+}
+
+.nocturneAppVisual {
+  height: 170px;
+  margin: auto 0 28px;
+  padding: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 1px solid rgba(255, 255, 255, .13);
+  background: rgba(8, 12, 18, .55);
+}
+
+.nocturneAppVisual i {
+  width: 3px;
+  height: 20%;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #d86696, #b7a477);
+  animation: nocturneWave 1.8s ease-in-out infinite alternate;
+}
+
+.nocturneAppVisual i:nth-child(2),
+.nocturneAppVisual i:nth-child(8) { height: 36%; animation-delay: -.25s; }
+.nocturneAppVisual i:nth-child(3),
+.nocturneAppVisual i:nth-child(7) { height: 62%; animation-delay: -.65s; }
+.nocturneAppVisual i:nth-child(4),
+.nocturneAppVisual i:nth-child(6) { height: 44%; animation-delay: -.9s; }
+.nocturneAppVisual i:nth-child(5) { height: 82%; animation-delay: -.45s; }
+
+.nocturneVisit {
+  position: relative;
+}
+
+.nocturneFinal {
+  position: relative;
+  z-index: 3;
+  margin-top: -70px;
+  border-radius: 54px 54px 0 0;
+  box-shadow: 0 -30px 80px rgba(0, 0, 0, .32);
+}
+
+.nocturneFinal > a {
+  margin-top: 24px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(255, 255, 255, .32);
+  color: #b8ada4;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.nocturneBookingDock {
+  position: fixed;
+  z-index: 72;
+  right: 22px;
+  bottom: 22px;
+  width: min(410px, calc(100vw - 44px));
+  padding: 9px 9px 9px 16px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 18px;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, .16);
+  background: rgba(8, 8, 8, .78);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, .35);
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  pointer-events: none;
+  transition: opacity .35s ease, transform .5s cubic-bezier(.16, 1, .3, 1);
+}
+
+:global(body.past-hero) .nocturneBookingDock {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  pointer-events: auto;
+}
+
+.nocturne[data-nocturne-final-visible="true"] .nocturneBookingDock {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  pointer-events: none;
+}
+
+.nocturneBookingDock > span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #918981;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.nocturneBookingDock > span i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #b4135a;
+  box-shadow: 0 0 0 0 rgba(180, 19, 90, .48);
+  animation: nocturneDockPulse 2.4s ease-out infinite;
+}
+
+.nocturneBookingDock button {
+  min-height: 48px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 0;
+  background: #f1ece4;
+  color: #11100f;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.nocturneScrollProgress {
+  position: fixed;
+  z-index: 180;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  pointer-events: none;
+}
+
+.nocturneScrollProgress > i {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: linear-gradient(90deg, #b4135a, #c2a982);
+  transform: scaleX(var(--nocturne-scroll-progress));
+  transform-origin: left;
+}
+
+.nocturneCursor {
+  position: fixed;
+  z-index: 190;
+  top: 0;
+  left: 0;
+  width: 72px;
+  height: 72px;
+  display: none;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, .38);
+  border-radius: 50%;
+  background: rgba(180, 19, 90, .74);
+  color: #fff;
+  backdrop-filter: blur(7px);
+  opacity: 0;
+  pointer-events: none;
+  transition: width .25s ease, height .25s ease, opacity .2s ease;
+}
+
+.nocturneCursor[data-visible="true"] {
+  opacity: 1;
+}
+
+.nocturneCursor span {
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+@media (hover: hover) and (pointer: fine) and (min-width: 801px) {
+  .nocturneCursor {
+    display: grid;
+  }
+
+  .nocturneRail:has(article:hover) article:not(:hover) {
+    opacity: .52;
+  }
+
+  .nocturneRail article:hover {
+    flex: 1.38 1 0;
+    border-color: rgba(180, 19, 90, .72);
+  }
+
+  .nocturneRail article:hover [data-nocturne-parallax] img,
+  .nocturneMadeGrid figure:hover img {
+    transform: translate3d(0, var(--nocturne-parallax, 0), 0) scale(1.075);
+  }
+}
+
+@keyframes nocturneSceneIn {
+  from { opacity: 0; clip-path: inset(3.5%); transform: scale(1.085); }
+  to { opacity: 1; clip-path: inset(0); transform: scale(1.025); }
+}
+
+@keyframes nocturneSceneProgress {
+  to { transform: scaleX(1); }
+}
+
+@keyframes nocturneLineReveal {
+  from { opacity: 0; transform: translate3d(0, 112%, 0) rotate(1.2deg); }
+}
+
+@keyframes nocturneCopyLift {
+  from { opacity: 0; transform: translate3d(0, 16px, 0); }
+}
+
+@keyframes nocturneScrollCue {
+  0% { transform: translateY(-100%); }
+  55%, 100% { transform: translateY(100%); }
+}
+
+@keyframes nocturneSignalMove {
+  to { transform: translateX(-50%); }
+}
+
+@keyframes nocturneGrainShift {
+  0% { transform: translate3d(-2%, -1%, 0); }
+  50% { transform: translate3d(1%, 2%, 0); }
+  100% { transform: translate3d(2%, -2%, 0); }
+}
+
+@keyframes nocturneRailHint {
+  from { transform: translateX(-120%); }
+  to { transform: translateX(290%); }
+}
+
+@keyframes nocturneWordMove {
+  to { transform: translateX(-50%); }
+}
+
+@keyframes nocturneAppGlow {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes nocturneWave {
+  to { transform: scaleY(.34); opacity: .54; }
+}
+
+@keyframes nocturneDockPulse {
+  65%, 100% { box-shadow: 0 0 0 9px rgba(180, 19, 90, 0); }
+}
+
 @media (max-width: 800px) {
   .galleryHeader {
     height: 64px;
@@ -4171,6 +4936,151 @@
   }
 }
 
+@media (max-width: 800px) {
+  .nocturneMedia {
+    transform: scale(1.015);
+  }
+
+  .nocturneFrame {
+    object-position: center;
+  }
+
+  .nocturneLightLeak {
+    background:
+      radial-gradient(circle at 76% 32%, rgba(180, 19, 90, .18), transparent 26%),
+      radial-gradient(circle at 24% 58%, rgba(194, 169, 130, .1), transparent 28%);
+    transform: none;
+  }
+
+  .nocturneGrain {
+    opacity: .045;
+  }
+
+  .nocturneSceneNav {
+    top: 82px;
+    left: 18px;
+    right: 18px;
+    width: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    transform: none;
+  }
+
+  .nocturneSceneNav button {
+    min-height: 44px;
+    padding: 0 9px;
+    grid-template-columns: 18px 1fr;
+    gap: 5px;
+    border: 1px solid rgba(255, 255, 255, .15);
+    background: rgba(5, 5, 5, .28);
+    backdrop-filter: blur(10px);
+  }
+
+  .nocturneSceneNav button > strong {
+    font-size: 7px;
+  }
+
+  .nocturneSceneNav button > i {
+    margin: 0 -9px;
+  }
+
+  .nocturneSceneNav .nocturneSceneActive {
+    border-color: rgba(194, 169, 130, .6);
+    background: rgba(5, 5, 5, .58);
+  }
+
+  .nocturneCopy h1 {
+    overflow: visible;
+  }
+
+  .nocturnePrimary {
+    padding: 0 18px;
+  }
+
+  .nocturneScrollCue {
+    display: none;
+  }
+
+  .nocturneSignal {
+    height: 46px;
+  }
+
+  .nocturneSignal span {
+    font-size: 7px;
+  }
+
+  .nocturneRail article {
+    flex: 0 0 84vw;
+  }
+
+  .nocturneRoomMeta > p {
+    min-height: 0;
+    margin: -8px 0 18px;
+  }
+
+  .nocturneRailProgress {
+    width: calc(100% - 36px);
+    display: grid;
+  }
+
+  .nocturneHouseImage {
+    position: relative;
+    top: auto;
+    min-height: 58svh;
+  }
+
+  .nocturneHouseCopy article:hover {
+    padding-left: 0;
+  }
+
+  .nocturneWordLoop {
+    margin-top: 32px;
+    font-size: 76px;
+  }
+
+  .nocturneProcess > div:first-child {
+    position: static;
+  }
+
+  .nocturneProcess li {
+    opacity: 1;
+  }
+
+  .nocturneProcess li:hover {
+    padding-left: 0;
+  }
+
+  .nocturneAppMock {
+    width: 100%;
+    transform: perspective(900px) rotateX(2deg);
+  }
+
+  .nocturne[data-nocturne-motion="ready"] .nocturneAppMock[data-nocturne-visible="true"] {
+    transform: perspective(900px) rotateX(2deg);
+  }
+
+  .nocturneAppVisual {
+    height: 145px;
+  }
+
+  .nocturneFinal {
+    margin-top: -34px;
+    border-radius: 30px 30px 0 0;
+  }
+
+  .nocturneBookingDock,
+  .nocturneCursor {
+    display: none;
+  }
+
+  .nocturne [data-nocturne-parallax] img {
+    top: -3% !important;
+    height: 106% !important;
+    transform: translate3d(0, var(--nocturne-parallax, 0), 0) scale(1.025);
+  }
+}
+
 @media (max-width: 360px) {
   .nocturneCopy h1,
   .issueHeroCopy h1,
@@ -4197,6 +5107,15 @@
   .nocturneFrame,
   .nocturneCopy,
   .nocturneProgress i::after,
+  .nocturneLightLeak,
+  .nocturneGrain,
+  .nocturneSceneActive > i::after,
+  .nocturneScrollCue > i::after,
+  .nocturneSignal > div,
+  .nocturneWordLoop span,
+  .nocturneAppMock::before,
+  .nocturneAppVisual i,
+  .nocturneBookingDock > span i,
   .issueMainImage,
   .issueHeroCopy,
   .conciergeVisual,
@@ -4214,10 +5133,18 @@
 
   .nocturneFrame {
     opacity: 0;
+    clip-path: none;
     transform: none;
   }
 
-  .nocturneFrame1 {
+  .nocturneFrameActive {
     opacity: 1;
+  }
+
+  .nocturne [data-nocturne-parallax] img {
+    top: 0 !important;
+    height: 100% !important;
+    transform: none;
+    will-change: auto;
   }
 }

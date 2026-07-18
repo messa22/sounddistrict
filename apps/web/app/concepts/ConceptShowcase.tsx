@@ -3,6 +3,8 @@ import Link from "next/link";
 import { BookingFlow } from "../../components/BookingFlow";
 import { ConciergeExperience } from "./ConciergeExperience";
 import { ConceptStickyController } from "./ConceptStickyController";
+import { NocturneHeroExperience } from "./NocturneHeroExperience";
+import { NocturneMotion } from "./NocturneMotion";
 import styles from "./concepts.module.css";
 
 export const conceptDirections = [
@@ -45,7 +47,8 @@ const rooms = [
     name: "Blue Room",
     image: "room-blue-editorial.webp",
     use: "Record · Produce · Write",
-    capacity: "Tot 5 personen"
+    capacity: "Tot 5 personen",
+    focus: "Diepe focus voor vocals, writing en productie."
   },
   {
     id: "red",
@@ -53,7 +56,8 @@ const rooms = [
     name: "Red Room",
     image: "room-red-editorial.webp",
     use: "Record · Listen · Direct",
-    capacity: "Tot 6 personen"
+    capacity: "Tot 6 personen",
+    focus: "Warm karakter voor recording en creative direction."
   },
   {
     id: "infinity",
@@ -61,7 +65,8 @@ const rooms = [
     name: "Infinity",
     image: "room-infinity-editorial.webp",
     use: "Shoot · Perform · Create",
-    capacity: "Tot 10 personen"
+    capacity: "Tot 10 personen",
+    focus: "Een open canvas voor covers, content en performance."
   }
 ] as const;
 
@@ -78,87 +83,64 @@ const bookingSteps = [
   ["03", "Ontvang bevestiging", "Wij controleren beschikbaarheid en bevestigen prijs en details persoonlijk."]
 ] as const;
 
-function Nocturne({ asset }: { asset: (name: string) => string }) {
-  const nocturneScenes = ["hero.png", "room-red-editorial.webp", "room-blue-editorial.webp"];
-
+function Nocturne({ asset, basePath }: { asset: (name: string) => string; basePath: string }) {
   return (
-    <main className={`${styles.preview} ${styles.nocturne}`}>
-      <section className={styles.nocturneHero} data-concept-hero>
-        <div className={styles.nocturneMedia} aria-hidden="true">
-          {nocturneScenes.map((image, index) => (
-            <Image
-              className={`${styles.nocturneFrame} ${styles[`nocturneFrame${index + 1}`]}`}
-              src={asset(image)}
-              alt=""
-              fill
-              priority={index === 0}
-              sizes="100vw"
-              key={image}
-            />
-          ))}
-        </div>
-        <div className={styles.nocturneShade} />
+    <main className={`${styles.preview} ${styles.nocturne}`} data-nocturne-root>
+      <NocturneHeroExperience basePath={basePath} />
 
-        <header className={styles.nocturneHeader}>
-          <span className={styles.wordmark}>Sound District</span>
-          <nav aria-label="Nocturne navigatie">
-            <a href="#nocturne-rooms">Rooms</a>
-            <a href="#nocturne-services">Services</a>
-            <a href="#nocturne-process">Werkwijze</a>
-            <a href="#nocturne-visit">Visit</a>
-          </nav>
-          <button type="button" data-booking="open">Plan <span>↗</span></button>
-        </header>
-
-        <div className={styles.nocturneCopy}>
-          <p>Stadswaag 20 · Antwerpen</p>
-          <h1>Maak iets dat <em>blijft hangen.</em></h1>
-          <span className={styles.nocturneIntro}>Recording, productie en visuals in drie private rooms.</span>
-          <button className={styles.nocturnePrimary} type="button" data-booking="open">
-            Plan je sessie <span>↗</span>
-          </button>
-          <a href="#nocturne-rooms">Vergelijk de rooms <span>↓</span></a>
-          <small>Aanvraag in ±2 minuten · persoonlijke bevestiging</small>
+      <div className={styles.nocturneSignal} aria-hidden="true">
+        <div>
+          <span>Recording · Production · Visuals · Antwerp · Private sessions ·</span>
+          <span>Recording · Production · Visuals · Antwerp · Private sessions ·</span>
         </div>
-
-        <div className={styles.nocturneProgress} aria-hidden="true">
-          <span>01</span><i /><span>03</span>
-        </div>
-      </section>
+      </div>
 
       <section className={styles.nocturneRooms} id="nocturne-rooms">
-        <div className={styles.nocturneSectionHead}>
+        <div className={styles.nocturneSectionHead} data-nocturne-reveal="copy">
           <p>Choose your atmosphere</p>
           <h2>Drie rooms.<br />Drie <em>frequencies.</em></h2>
         </div>
         <div className={styles.nocturneRail}>
           {rooms.map((room) => (
-            <article key={room.id}>
-              <div className={styles.nocturneRoomImage}>
-                <Image src={asset(room.image)} alt={room.name} fill sizes="84vw" />
+            <article
+              key={room.id}
+              data-nocturne-reveal="card"
+              data-nocturne-cursor-label="Open room"
+            >
+              <div className={styles.nocturneRoomImage} data-nocturne-parallax>
+                <Image src={asset(room.image)} alt={room.name} fill sizes="(max-width: 800px) 84vw, 38vw" />
               </div>
               <div className={styles.nocturneRoomMeta}>
                 <span>{room.number} · {room.use}</span>
                 <h3>{room.name}</h3>
-                <button type="button" data-booking={room.id}>Plan in {room.name} <b>↗</b></button>
+                <p>{room.focus}</p>
+                <button type="button" data-booking={room.id} data-nocturne-magnetic>Plan in {room.name} <b>↗</b></button>
               </div>
             </article>
           ))}
         </div>
+        <div className={styles.nocturneRailProgress} aria-hidden="true">
+          <span>Swipe to explore</span><i /><b>03 rooms</b>
+        </div>
       </section>
 
       <section className={styles.nocturneHouse} id="nocturne-services">
-        <div className={styles.nocturneHouseImage}>
+        <div
+          className={styles.nocturneHouseImage}
+          data-nocturne-reveal="image"
+          data-nocturne-parallax
+          data-nocturne-cursor-label="Inside"
+        >
           <Image src={asset("Untitled-2.jpg")} alt="Infinity Room wordt klaargezet voor een visual session" fill sizes="(max-width: 800px) 100vw, 48vw" />
           <span>Private house · Stadswaag 20</span>
         </div>
-        <div className={styles.nocturneHouseCopy}>
+        <div className={styles.nocturneHouseCopy} data-nocturne-reveal="copy">
           <p>Beyond the room</p>
           <h2>Van eerste take tot <em>final form.</em></h2>
           <span>Boek alleen de room, of voeg precies de ondersteuning toe die je project nodig heeft.</span>
           <div>
             {fullServices.map(([number, title, copy]) => (
-              <article key={number}>
+              <article key={number} data-nocturne-reveal="row">
                 <b>{number}</b>
                 <h3>{title}</h3>
                 <p>{copy}</p>
@@ -169,7 +151,7 @@ function Nocturne({ asset }: { asset: (name: string) => string }) {
       </section>
 
       <section className={styles.nocturneMade}>
-        <div className={styles.nocturneMadeCopy}>
+        <div className={styles.nocturneMadeCopy} data-nocturne-reveal="copy">
           <p>Inside the district</p>
           <h2>Een plek die je werk <em>ruimte geeft.</em></h2>
           <span>
@@ -177,33 +159,39 @@ function Nocturne({ asset }: { asset: (name: string) => string }) {
           </span>
         </div>
         <div className={styles.nocturneMadeGrid}>
-          <figure><Image src={asset("space2-new.jpg")} alt="On air-detail in de Red Room" fill sizes="34vw" /></figure>
-          <figure><Image src={asset("blueroom-new1.jpg")} alt="Productiesessie in de Blue Room" fill sizes="42vw" /></figure>
-          <figure><Image src={asset("room-infinity-editorial.webp")} alt="Visual session in de Infinity Room" fill sizes="34vw" /></figure>
+          <figure data-nocturne-reveal="image" data-nocturne-parallax data-nocturne-cursor-label="Record"><Image src={asset("space2-new.jpg")} alt="On air-detail in de Red Room" fill sizes="34vw" /></figure>
+          <figure data-nocturne-reveal="image" data-nocturne-parallax data-nocturne-cursor-label="Create"><Image src={asset("blueroom-new1.jpg")} alt="Productiesessie in de Blue Room" fill sizes="42vw" /></figure>
+          <figure data-nocturne-reveal="image" data-nocturne-parallax data-nocturne-cursor-label="Shoot"><Image src={asset("room-infinity-editorial.webp")} alt="Visual session in de Infinity Room" fill sizes="34vw" /></figure>
+        </div>
+        <div className={styles.nocturneWordLoop} aria-hidden="true">
+          <span>Sound × Image × Culture × Antwerp × Sound × Image × Culture × Antwerp ×</span>
         </div>
       </section>
 
       <section className={styles.nocturneProcess} id="nocturne-process">
-        <div>
+        <div data-nocturne-reveal="copy">
           <p>The process</p>
           <h2>Kies. Plan.<br /><em>Create.</em></h2>
         </div>
         <ol>
           {bookingSteps.map(([number, title, copy]) => (
-            <li key={number}><span>{number}</span><h3>{title}</h3><p>{copy}</p></li>
+            <li key={number} data-nocturne-reveal="row"><span>{number}</span><h3>{title}</h3><p>{copy}</p></li>
           ))}
         </ol>
-        <button type="button" data-booking="open">Start je aanvraag <span>↗</span></button>
+        <button type="button" data-booking="open" data-nocturne-magnetic>Start je aanvraag <span>↗</span></button>
       </section>
 
       <section className={styles.nocturneApp}>
-        <div className={styles.nocturneAppMock} aria-hidden="true">
+        <div className={styles.nocturneAppMock} aria-hidden="true" data-nocturne-reveal="app" data-nocturne-cursor-label="App preview">
           <span>SD / Sessions</span>
+          <div className={styles.nocturneAppVisual}>
+            <i /><i /><i /><i /><i /><i /><i /><i /><i />
+          </div>
           <strong>Blue Room</strong>
           <small>Za 25 jul · 14:00—17:00</small>
           <i>Confirmed</i>
         </div>
-        <div>
+        <div data-nocturne-reveal="copy">
           <p>For returning artists</p>
           <h2>Je volgende sessie.<br /><em>Nog sneller geregeld.</em></h2>
           <span>De SoundDistrict-app wordt je plek voor rebooking, sessiebeheer en updates.</span>
@@ -212,22 +200,23 @@ function Nocturne({ asset }: { asset: (name: string) => string }) {
       </section>
 
       <section className={styles.nocturneVisit} id="nocturne-visit">
-        <div className={styles.nocturneVisitImage}>
-          <Image src={asset("hero.png")} alt="Entree van SoundDistrict in Antwerpen" fill sizes="(max-width: 800px) 100vw, 55vw" />
+        <div className={styles.nocturneVisitImage} data-nocturne-reveal="image" data-nocturne-parallax data-nocturne-cursor-label="Visit">
+          <Image src={asset("final.jpg")} alt="SoundDistrict in Antwerpen" fill sizes="(max-width: 800px) 100vw, 55vw" />
         </div>
-        <div>
+        <div data-nocturne-reveal="copy">
           <p>Visit the district</p>
           <h2>Stadswaag 20<br /><em>2000 Antwerpen.</em></h2>
           <span>Alle sessies zijn op afspraak. Eerst je project bespreken? Mail ons rechtstreeks.</span>
           <a href="mailto:team@sounddistrict.be">team@sounddistrict.be ↗</a>
-          <button type="button" data-booking="open">Plan je sessie <b>→</b></button>
+          <button type="button" data-booking="open" data-nocturne-magnetic>Plan je sessie <b>→</b></button>
         </div>
       </section>
 
-      <section className={styles.nocturneFinal}>
+      <section className={styles.nocturneFinal} data-nocturne-final data-nocturne-reveal="copy">
         <p>Sound · Production · Visuals</p>
         <h2>Your next session<br />starts <em>here.</em></h2>
-        <button type="button" data-booking="open">Plan je sessie <span>→</span></button>
+        <button type="button" data-booking="open" data-nocturne-magnetic>Plan je sessie <span>→</span></button>
+        <a href="mailto:team@sounddistrict.be">Bespreek je project eerst ↗</a>
       </section>
       <footer className={styles.nocturneFooter}>
         <strong>Sound District</strong>
@@ -235,6 +224,11 @@ function Nocturne({ asset }: { asset: (name: string) => string }) {
         <div><a href="mailto:team@sounddistrict.be">Contact</a><a href="https://www.instagram.com/sounddistrict.be">Instagram ↗</a><Link href="/privacy/">Privacy</Link></div>
         <small>© 2026 SoundDistrict Antwerp · VAT BE 1023.309.121</small>
       </footer>
+      <aside className={styles.nocturneBookingDock} aria-label="Snel boeken">
+        <span><i /> Session request</span>
+        <button type="button" data-booking="open" data-nocturne-magnetic>Kies room &amp; moment <b>↗</b></button>
+      </aside>
+      <NocturneMotion />
       <ConceptStickyController />
       <BookingFlow />
     </main>
@@ -646,7 +640,7 @@ export function ConceptShowcase({ slug }: { slug: ConceptSlug }) {
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
   const asset = (name: string) => `${basePath}/${name}`;
 
-  if (slug === "nocturne") return <Nocturne asset={asset} />;
+  if (slug === "nocturne") return <Nocturne asset={asset} basePath={basePath} />;
   if (slug === "sound-issue") return <SoundIssue asset={asset} />;
   if (slug === "concierge") return <Concierge asset={asset} basePath={basePath} />;
   return <Pulse asset={asset} />;
