@@ -91,7 +91,7 @@ function Nocturne({ asset, basePath }: { asset: (name: string) => string; basePa
 
       <section className={styles.nocturneRooms} id="nocturne-rooms">
         <div className={styles.nocturneSectionHead} data-nocturne-reveal="copy">
-          <h2>Choose your district.</h2>
+          <h2><span>Choose your district.</span></h2>
         </div>
         <div className={styles.nocturneRail}>
           {rooms.map((room) => (
@@ -100,7 +100,7 @@ function Nocturne({ asset, basePath }: { asset: (name: string) => string; basePa
               data-nocturne-reveal="card"
               data-nocturne-cursor-label="View district"
             >
-              <div className={styles.nocturneRoomImage} data-nocturne-parallax>
+              <div className={styles.nocturneRoomImage} data-nocturne-parallax="room">
                 <Image src={asset(room.image)} alt={room.name} fill sizes="(max-width: 800px) 84vw, 38vw" />
               </div>
               <div className={styles.nocturneRoomMeta}>
@@ -124,11 +124,11 @@ function Nocturne({ asset, basePath }: { asset: (name: string) => string; basePa
 
       <section className={styles.nocturneBeyond} id="nocturne-beyond">
         <div className={styles.nocturneBeyondHead} data-nocturne-reveal="copy">
-          <h2>Beyond the district</h2>
+          <h2><span>Beyond the district</span></h2>
         </div>
         <div className={styles.nocturneBeyondGrid}>
           <article className={styles.nocturneBeyondCard} data-nocturne-reveal="card" data-nocturne-cursor-label="Explore">
-            <div className={styles.nocturneBeyondMedia} data-nocturne-parallax>
+            <div className={styles.nocturneBeyondMedia} data-nocturne-parallax="feature">
               <Image
                 src={asset("feature-management-distribution.webp")}
                 alt="Sound District management and distribution meeting"
@@ -137,12 +137,12 @@ function Nocturne({ asset, basePath }: { asset: (name: string) => string; basePa
               />
             </div>
             <div className={styles.nocturneBeyondOverlay}>
-              <h3>Management<br />&amp; distribution</h3>
+              <h3><span>Management</span><span>&amp; distribution</span></h3>
             </div>
           </article>
 
           <article className={styles.nocturneBeyondCard} data-nocturne-reveal="card" data-nocturne-cursor-label="Explore">
-            <div className={styles.nocturneBeyondMedia} data-nocturne-parallax>
+            <div className={styles.nocturneBeyondMedia} data-nocturne-parallax="feature">
               <Image
                 src={asset("feature-quality-process.webp")}
                 alt="Producer refining a music project at Sound District"
@@ -151,7 +151,7 @@ function Nocturne({ asset, basePath }: { asset: (name: string) => string; basePa
               />
             </div>
             <div className={styles.nocturneBeyondOverlay}>
-              <h3>Quality<br />&amp; process</h3>
+              <h3><span>Quality</span><span>&amp; process</span></h3>
             </div>
           </article>
 
@@ -160,14 +160,14 @@ function Nocturne({ asset, basePath }: { asset: (name: string) => string; basePa
             data-nocturne-reveal="card"
             data-nocturne-final
           >
-            <div className={styles.nocturneBeyondCollage} aria-hidden="true">
+            <div className={styles.nocturneBeyondCollage} data-nocturne-parallax="feature" aria-hidden="true">
               <span><Image src={asset("room-blue-editorial.webp")} alt="" fill sizes="(max-width: 800px) 30vw, 11vw" /></span>
               <span><Image src={asset("room-red-editorial.webp")} alt="" fill sizes="(max-width: 800px) 30vw, 11vw" /></span>
               <span><Image src={asset("room-infinity-editorial.webp")} alt="" fill sizes="(max-width: 800px) 30vw, 11vw" /></span>
             </div>
             <div className={styles.nocturneBeyondOverlay}>
               <span>03 · Compilation video · Coming soon</span>
-              <h3>Sound District,<br />more than just<br />a studio!</h3>
+              <h3><span>Sound District,</span><span>more than just</span><span>a studio!</span></h3>
             </div>
           </article>
         </div>

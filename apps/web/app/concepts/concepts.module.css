@@ -6125,3 +6125,311 @@
     display: none;
   }
 }
+
+/* Nocturne — premium scroll choreography */
+.nocturneMedia {
+  transform:
+    translate3d(
+      calc(var(--nocturne-pointer-x) * -14px),
+      calc((var(--nocturne-pointer-y) * -9px) + var(--nocturne-hero-media-y, 0px)),
+      0
+    )
+    scale(var(--nocturne-hero-media-scale, 1.025));
+}
+
+.nocturneSectionHead h2,
+.nocturneBeyondHead h2 {
+  overflow: hidden;
+}
+
+.nocturneSectionHead h2 > span,
+.nocturneBeyondHead h2 > span,
+.nocturneBeyondOverlay h3 > span {
+  display: block;
+}
+
+.nocturneBeyondHead {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nocturneBeyondHead::after {
+  height: 1px;
+  flex: 1;
+  content: "";
+  background: linear-gradient(90deg, rgba(242, 216, 95, .62), rgba(255, 255, 255, .08));
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneSectionHead[data-nocturne-reveal],
+.nocturne[data-nocturne-motion="ready"] .nocturneBeyondHead[data-nocturne-reveal] {
+  opacity: 1;
+  clip-path: none;
+  transform: none;
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneSectionHead[data-nocturne-reveal] h2 > span,
+.nocturne[data-nocturne-motion="ready"] .nocturneBeyondHead[data-nocturne-reveal] h2 > span {
+  opacity: 0;
+  transform: translate3d(0, 112%, 0) rotate(1deg);
+  transform-origin: left bottom;
+  transition:
+    opacity .48s ease,
+    transform .78s cubic-bezier(.16, 1, .3, 1);
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneBeyondHead[data-nocturne-reveal]::after {
+  transform: scaleX(0);
+  transition: transform .95s .2s cubic-bezier(.16, 1, .3, 1);
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneSectionHead[data-nocturne-visible="true"] h2 > span,
+.nocturne[data-nocturne-motion="ready"] .nocturneBeyondHead[data-nocturne-visible="true"] h2 > span {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) rotate(0);
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneBeyondHead[data-nocturne-visible="true"]::after {
+  transform: scaleX(1);
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneRail article[data-nocturne-reveal],
+.nocturne[data-nocturne-motion="ready"] .nocturneBeyondCard[data-nocturne-reveal] {
+  opacity: 0;
+  clip-path: none;
+  transform: translate3d(0, 36px, 0) scale(.97);
+  transition:
+    opacity .64s ease,
+    transform .88s cubic-bezier(.16, 1, .3, 1),
+    border-color .45s ease,
+    box-shadow .55s ease;
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneRail article[data-nocturne-visible="true"],
+.nocturne[data-nocturne-motion="ready"] .nocturneBeyondCard[data-nocturne-visible="true"] {
+  opacity: 1;
+  clip-path: none;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.nocturneRoomImage::after,
+.nocturneBeyondMedia::after,
+.nocturneBeyondCollage::after {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  content: "";
+  background:
+    linear-gradient(135deg, rgba(20, 20, 24, .99), rgba(7, 7, 9, .99) 72%),
+    #09090b;
+  box-shadow: inset 0 1px rgba(255, 255, 255, .08);
+  transform: translate3d(0, -102%, 0);
+  pointer-events: none;
+}
+
+.nocturne[data-nocturne-motion="ready"] article[data-nocturne-reveal]:not([data-nocturne-visible="true"]) .nocturneRoomImage::after,
+.nocturne[data-nocturne-motion="ready"] article[data-nocturne-reveal]:not([data-nocturne-visible="true"]) .nocturneBeyondMedia::after,
+.nocturne[data-nocturne-motion="ready"] article[data-nocturne-reveal]:not([data-nocturne-visible="true"]) .nocturneBeyondCollage::after {
+  transform: translate3d(0, 0, 0);
+}
+
+.nocturne[data-nocturne-motion="ready"] article[data-nocturne-reveal] .nocturneRoomImage::after,
+.nocturne[data-nocturne-motion="ready"] article[data-nocturne-reveal] .nocturneBeyondMedia::after,
+.nocturne[data-nocturne-motion="ready"] article[data-nocturne-reveal] .nocturneBeyondCollage::after {
+  transition: transform 1.02s .08s cubic-bezier(.16, 1, .3, 1);
+}
+
+.nocturne [data-nocturne-parallax] img {
+  --nocturne-media-scale: 1.055;
+  top: -5% !important;
+  height: 110% !important;
+  opacity: 1;
+  transform: translate3d(0, var(--nocturne-parallax, 0), 0) scale(var(--nocturne-media-scale));
+  transition:
+    opacity .72s ease,
+    transform 1.16s cubic-bezier(.16, 1, .3, 1);
+  will-change: auto;
+}
+
+.nocturne [data-nocturne-parallax-active="true"] img {
+  will-change: transform;
+}
+
+.nocturne[data-nocturne-motion="ready"] article[data-nocturne-reveal]:not([data-nocturne-visible="true"]) [data-nocturne-parallax] img {
+  --nocturne-media-scale: 1.13;
+  opacity: .62;
+}
+
+.nocturne[data-nocturne-motion="ready"] article[data-nocturne-visible="true"] [data-nocturne-parallax] img {
+  --nocturne-media-scale: 1.055;
+  opacity: 1;
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneRoomMeta > span,
+.nocturne[data-nocturne-motion="ready"] .nocturneRoomMeta > h3,
+.nocturne[data-nocturne-motion="ready"] .nocturneRoomMeta > p,
+.nocturne[data-nocturne-motion="ready"] .nocturneRoomMeta > button {
+  opacity: 0;
+  transform: translate3d(0, 22px, 0);
+  transition:
+    opacity .52s ease,
+    transform .68s cubic-bezier(.16, 1, .3, 1),
+    color .28s ease,
+    border-color .28s ease;
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneRail article[data-nocturne-visible="true"] .nocturneRoomMeta > span,
+.nocturne[data-nocturne-motion="ready"] .nocturneRail article[data-nocturne-visible="true"] .nocturneRoomMeta > h3,
+.nocturne[data-nocturne-motion="ready"] .nocturneRail article[data-nocturne-visible="true"] .nocturneRoomMeta > p,
+.nocturne[data-nocturne-motion="ready"] .nocturneRail article[data-nocturne-visible="true"] .nocturneRoomMeta > button {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneRoomMeta > span {
+  transition-delay: .28s;
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneRoomMeta > h3 {
+  transition-delay: .35s;
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneRoomMeta > p {
+  transition-delay: .42s;
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneRoomMeta > button {
+  transition-delay: .49s;
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneBeyondOverlay > span,
+.nocturne[data-nocturne-motion="ready"] .nocturneBeyondOverlay h3 > span {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+  transition:
+    opacity .52s ease,
+    transform .7s cubic-bezier(.16, 1, .3, 1);
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneBeyondCard[data-nocturne-visible="true"] .nocturneBeyondOverlay > span,
+.nocturne[data-nocturne-motion="ready"] .nocturneBeyondCard[data-nocturne-visible="true"] .nocturneBeyondOverlay h3 > span {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneBeyondOverlay > span {
+  transition-delay: .32s;
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneBeyondOverlay h3 > span:nth-child(1) {
+  transition-delay: .38s;
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneBeyondOverlay h3 > span:nth-child(2) {
+  transition-delay: .45s;
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneBeyondOverlay h3 > span:nth-child(3) {
+  transition-delay: .52s;
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneBeyondCollage > span {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+  transition:
+    opacity .58s ease,
+    transform .8s cubic-bezier(.16, 1, .3, 1);
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneBeyondCard[data-nocturne-visible="true"] .nocturneBeyondCollage > span {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneBeyondCard[data-nocturne-visible="true"] .nocturneBeyondCollage > span:nth-child(1) {
+  transition-delay: .12s;
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneBeyondCard[data-nocturne-visible="true"] .nocturneBeyondCollage > span:nth-child(2) {
+  transition-delay: .21s;
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneBeyondCard[data-nocturne-visible="true"] .nocturneBeyondCollage > span:nth-child(3) {
+  transition-delay: .3s;
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneBeyondVideo:not([data-nocturne-visible="true"])::before {
+  opacity: 0;
+  animation-play-state: paused;
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneBeyondVideo[data-nocturne-visible="true"]::before {
+  animation-play-state: running;
+}
+
+@media (max-width: 800px) {
+  .nocturneMedia {
+    transition-duration: .2s;
+    transition-timing-function: linear;
+  }
+
+  .nocturne[data-nocturne-motion="ready"] .nocturneBeyondCard[data-nocturne-reveal]:nth-child(odd):not([data-nocturne-visible="true"]) {
+    transform: translate3d(-22px, 40px, 0) scale(.965) rotate(-.65deg);
+  }
+
+  .nocturne[data-nocturne-motion="ready"] .nocturneBeyondCard[data-nocturne-reveal]:nth-child(even):not([data-nocturne-visible="true"]) {
+    transform: translate3d(22px, 40px, 0) scale(.965) rotate(.65deg);
+  }
+
+  .nocturne[data-nocturne-motion="ready"] .nocturneBeyondCard[data-nocturne-reveal]:nth-child(2),
+  .nocturne[data-nocturne-motion="ready"] .nocturneBeyondCard[data-nocturne-reveal]:nth-child(3) {
+    transition-delay: 0s;
+  }
+
+  .nocturne[data-nocturne-motion="ready"] .nocturneRail article[data-nocturne-visible="true"][data-nocturne-room-active="false"] {
+    opacity: .62;
+    transform: translate3d(0, 0, 0) scale(.955);
+  }
+
+  .nocturne[data-nocturne-motion="ready"] .nocturneRail article[data-nocturne-visible="true"][data-nocturne-room-active="true"] {
+    opacity: 1;
+    border-color: var(--card-accent);
+    box-shadow:
+      0 24px 66px rgba(0, 0, 0, .42),
+      0 0 0 1px var(--card-accent);
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nocturneRoomImage::after,
+  .nocturneBeyondMedia::after,
+  .nocturneBeyondCollage::after {
+    display: none;
+  }
+
+  .nocturne [data-nocturne-parallax] img {
+    top: 0 !important;
+    height: 100% !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+
+  .nocturneSectionHead h2 > span,
+  .nocturneBeyondHead h2 > span,
+  .nocturneBeyondOverlay > span,
+  .nocturneBeyondOverlay h3 > span,
+  .nocturneRoomMeta > span,
+  .nocturneRoomMeta > h3,
+  .nocturneRoomMeta > p,
+  .nocturneRoomMeta > button,
+  .nocturneBeyondCollage > span {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
