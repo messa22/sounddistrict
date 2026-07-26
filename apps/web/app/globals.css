@@ -660,3 +660,70 @@ footer { padding: 82px 5vw 28px; background: #070706; }
   .signal-track { transform: none; animation: none !important; }
   .motion-ready [data-reveal] { opacity: 1; transform: none; }
 }
+
+/* Modern district booking and legal surfaces */
+.booking-topbar div strong,
+.booking-art span,
+.booking-progress li span,
+.booking-step h2,
+.booking-success h2,
+.booking-room-grid strong,
+.booking-room-selected strong,
+.booking-truth strong,
+.booking-footer > div:first-child strong,
+.legal-page h1,
+.legal-copy h2 {
+  font-family: var(--font-sans);
+  font-style: normal;
+}
+
+.booking-step h2,
+.booking-success h2 {
+  font-size: clamp(42px, 4vw, 64px);
+  font-weight: 650;
+  line-height: .92;
+  letter-spacing: -.055em;
+}
+
+.booking-room-grid strong,
+.booking-room-selected strong,
+.booking-truth strong,
+.booking-footer > div:first-child strong {
+  font-weight: 650;
+  letter-spacing: -.025em;
+}
+
+.legal-page h1 {
+  font-size: clamp(52px, 7vw, 92px);
+  font-weight: 650;
+  line-height: .9;
+  letter-spacing: -.06em;
+}
+
+.legal-page h1 em {
+  font-style: normal;
+  font-weight: 720;
+}
+
+.legal-copy h2 {
+  font-weight: 650;
+  letter-spacing: -.035em;
+}
+
+@media (max-width: 800px) {
+  .booking-step h2,
+  .booking-success h2 {
+    font-size: 37px;
+  }
+
+  .legal-page h1 {
+    font-size: clamp(44px, 13vw, 58px);
+  }
+}
+
+@media (max-width: 480px) {
+  .booking-step h2,
+  .booking-success h2 {
+    font-size: 33px;
+  }
+}

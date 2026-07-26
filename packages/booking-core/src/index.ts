@@ -40,33 +40,33 @@ export type StoredBooking = BookingDraft & {
 export const ROOMS: Room[] = [
   {
     id: "blue",
-    name: "Blue Room",
-    eyebrow: "Studio 01 · Hip-hop",
-    description: "Een gefocuste ruimte voor vocal recording, productie en writing in een diepe, immersieve sfeer.",
+    name: "Blue District",
+    eyebrow: "District 01 · Recording",
+    description: "XL, high end, modern music studio with an underwater touch.",
     pricePerHour: 55,
     image: "blueroom-new1.jpg",
     accent: "#3C72FF",
-    features: ["Recording booth", "Engineer optioneel", "Tot 5 personen"]
+    features: ["XL studio", "Sound engineer optional", "Up to 5 people"]
   },
   {
     id: "red",
-    name: "Red Room",
-    eyebrow: "Studio 02 · Recording",
-    description: "Warme tonen en een eigen karakter voor recording, listening en creatieve richting.",
+    name: "2000’s District",
+    eyebrow: "District 02 · Recording",
+    description: "high end, retro, warm music studio with a separate booth",
     pricePerHour: 65,
     image: "space2-new.jpg",
     accent: "#FF4B3E",
-    features: ["Vocal chain", "Producer setup", "Tot 6 personen"]
+    features: ["Separate booth", "Producer setup", "Up to 6 people"]
   },
   {
     id: "infinity",
-    name: "Infinity Room",
-    eyebrow: "Studio 03 · Visuals",
-    description: "Een flexibele infinity space voor covers, campagnes, content en live sessions.",
+    name: "White District",
+    eyebrow: "District 03 · Visuals",
+    description: "endless, white, clean photo studio for creators",
     pricePerHour: 75,
     image: "Untitled-2.jpg",
     accent: "#C8A955",
-    features: ["Infinity wall", "Basisbelichting", "Tot 10 personen"]
+    features: ["Infinity wall", "Basic lighting", "Up to 10 people"]
   }
 ];
 
@@ -74,19 +74,19 @@ export const ADD_ONS: AddOn[] = [
   {
     id: "engineer",
     name: "Sound engineer",
-    description: "Technische begeleiding tijdens je volledige sessie.",
+    description: "Technical support throughout your session.",
     price: 35
   },
   {
     id: "mix",
     name: "Quick mix",
-    description: "Een nette rough mix om meteen mee naar huis te nemen.",
+    description: "A polished rough mix to take with you immediately.",
     price: 45
   },
   {
     id: "content",
     name: "Content clip",
-    description: "Een verticale behind-the-scenes clip van je sessie.",
+    description: "A vertical behind-the-scenes clip from your session.",
     price: 60
   }
 ];
@@ -104,7 +104,7 @@ export function calculateQuote(roomId: RoomId, duration: number, addOnIds: strin
 }
 
 export function formatCurrency(value: number): string {
-  return new Intl.NumberFormat("nl-BE", {
+  return new Intl.NumberFormat("en-BE", {
     style: "currency",
     currency: "EUR",
     maximumFractionDigits: 0

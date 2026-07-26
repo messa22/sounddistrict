@@ -14,28 +14,28 @@ export const conceptDirections = [
     slug: "nocturne",
     name: "Nocturne",
     mood: "Cinematic · Private club · After dark",
-    summary: "Een filmische entrance met één sterke hoofdactie en rooms als verschillende sferen."
+    summary: "A cinematic entrance with one strong primary action and three distinct districts."
   },
   {
     id: "02",
     slug: "sound-issue",
     name: "The Sound Issue",
     mood: "Editorial · Fashion · Cultured",
-    summary: "Een rustig fashion-magazine waarin beeld, typografie en booking als één coververhaal voelen."
+    summary: "A calm fashion editorial where imagery, typography and booking feel like one cover story."
   },
   {
     id: "03",
     slug: "concierge",
     name: "Private Concierge",
     mood: "Booking-first · Boutique · Precise",
-    summary: "De luxe van een boutique hotelbooking, vertaald naar een creatieve studiosessie."
+    summary: "The ease of boutique hotel booking, translated into a creative studio session."
   },
   {
     id: "04",
     slug: "pulse",
     name: "Pulse",
     mood: "Artist-led · Bold · Contemporary",
-    summary: "Een energieke, culturele richting met bewegende beelden en een onmisbare boekingsactie."
+    summary: "An energetic cultural direction with moving imagery and an unmistakable booking action."
   }
 ] as const;
 
@@ -45,43 +45,43 @@ const rooms = [
   {
     id: "blue",
     number: "01",
-    name: "Blue Room",
+    name: "Blue District",
     image: "room-blue-editorial.webp",
-    use: "Record · Produce · Write",
-    capacity: "Tot 5 personen",
-    focus: "Diepe focus voor vocals, writing en productie."
+    use: "Recording · Production · Engineering",
+    capacity: "Up to 5 people",
+    focus: "XL, high end, modern music studio with an underwater touch."
   },
   {
     id: "red",
     number: "02",
-    name: "Red Room",
+    name: "2000’s District",
     image: "room-red-editorial.webp",
-    use: "Record · Listen · Direct",
-    capacity: "Tot 6 personen",
-    focus: "Warm karakter voor recording en creative direction."
+    use: "Recording · Production · Engineering",
+    capacity: "Up to 6 people",
+    focus: "high end, retro, warm music studio with a separate booth"
   },
   {
     id: "infinity",
     number: "03",
-    name: "Infinity",
+    name: "White District",
     image: "room-infinity-editorial.webp",
-    use: "Shoot · Perform · Create",
-    capacity: "Tot 10 personen",
-    focus: "Een open canvas voor covers, content en performance."
+    use: "Visuals · Shoots · Content",
+    capacity: "Up to 10 people",
+    focus: "endless, white, clean photo studio for creators"
   }
 ] as const;
 
 const fullServices = [
-  ["01", "Recording & productie", "Van vocal chain en engineering tot een sessie die creatief vooruitgaat."],
-  ["02", "Mixing & mastering", "Een heldere afwerking die de identiteit van je muziek bewaart."],
-  ["03", "Visual sessions", "Covers, performancebeelden en content in de Infinity Room."],
-  ["04", "Creative support", "Gerichte begeleiding voor planning, A&R en release-ready materiaal."]
+  ["01", "Recording & production", "From vocal chain and engineering to a session that keeps moving creatively."],
+  ["02", "Mixing & mastering", "A polished finish that keeps the identity of your music intact."],
+  ["03", "Visual sessions", "Covers, performance imagery and content in the White District."],
+  ["04", "Creative support", "Focused guidance for planning, A&R and release-ready material."]
 ] as const;
 
 const bookingSteps = [
-  ["01", "Kies je room", "Vergelijk de sfeer, setup en capaciteit van de drie ruimtes."],
-  ["02", "Geef je moment door", "Selecteer datum, startuur, duur en eventuele ondersteuning."],
-  ["03", "Ontvang bevestiging", "Wij controleren beschikbaarheid en bevestigen prijs en details persoonlijk."]
+  ["01", "Choose your district", "Compare the atmosphere, setup and capacity of all three spaces."],
+  ["02", "Choose your time", "Select a date, start time, duration and any additional support."],
+  ["03", "Receive confirmation", "We check availability and personally confirm pricing and details."]
 ] as const;
 
 function Nocturne({ asset, basePath }: { asset: (name: string) => string; basePath: string }) {
@@ -89,24 +89,16 @@ function Nocturne({ asset, basePath }: { asset: (name: string) => string; basePa
     <main className={`${styles.preview} ${styles.nocturne}`} data-nocturne-root>
       <NocturneHeroExperience basePath={basePath} />
 
-      <div className={styles.nocturneSignal} aria-hidden="true">
-        <div>
-          <span>Recording · Production · Visuals · Antwerp · Private sessions ·</span>
-          <span>Recording · Production · Visuals · Antwerp · Private sessions ·</span>
-        </div>
-      </div>
-
       <section className={styles.nocturneRooms} id="nocturne-rooms">
         <div className={styles.nocturneSectionHead} data-nocturne-reveal="copy">
-          <p>Choose your atmosphere</p>
-          <h2>Drie rooms.<br />Drie <em>frequencies.</em></h2>
+          <h2>Choose your district.</h2>
         </div>
         <div className={styles.nocturneRail}>
           {rooms.map((room) => (
             <article
               key={room.id}
               data-nocturne-reveal="card"
-              data-nocturne-cursor-label="Open room"
+              data-nocturne-cursor-label="View district"
             >
               <div className={styles.nocturneRoomImage} data-nocturne-parallax>
                 <Image src={asset(room.image)} alt={room.name} fill sizes="(max-width: 800px) 84vw, 38vw" />
@@ -115,124 +107,75 @@ function Nocturne({ asset, basePath }: { asset: (name: string) => string; basePa
                 <span>{room.number} · {room.use}</span>
                 <h3>{room.name}</h3>
                 <p>{room.focus}</p>
-                <button type="button" data-booking={room.id} data-nocturne-magnetic>Plan in {room.name} <b>↗</b></button>
+                <button type="button" data-booking={room.id} data-nocturne-magnetic>Book {room.name} <b>↗</b></button>
               </div>
             </article>
           ))}
         </div>
-        <div className={styles.nocturneRailProgress} aria-label="Roomgallery bedienen">
+        <div className={styles.nocturneRailProgress} aria-label="District gallery controls">
           <span><b data-nocturne-room-current>01</b> / 03</span>
           <i><b /></i>
           <div>
-            <button type="button" data-nocturne-room-previous aria-label="Vorige room">←</button>
-            <button type="button" data-nocturne-room-next aria-label="Volgende room">→</button>
+            <button type="button" data-nocturne-room-previous aria-label="Previous district">←</button>
+            <button type="button" data-nocturne-room-next aria-label="Next district">→</button>
           </div>
         </div>
       </section>
 
-      <section className={styles.nocturneHouse} id="nocturne-services">
-        <div
-          className={styles.nocturneHouseImage}
-          data-nocturne-reveal="image"
-          data-nocturne-parallax
-          data-nocturne-cursor-label="Inside"
-        >
-          <Image src={asset("Untitled-2.jpg")} alt="Infinity Room wordt klaargezet voor een visual session" fill sizes="(max-width: 800px) 100vw, 48vw" />
-          <span>Private house · Stadswaag 20</span>
+      <section className={styles.nocturneBeyond} id="nocturne-beyond">
+        <div className={styles.nocturneBeyondHead} data-nocturne-reveal="copy">
+          <h2>Beyond the district</h2>
         </div>
-        <div className={styles.nocturneHouseCopy} data-nocturne-reveal="copy">
-          <p>Beyond the room</p>
-          <h2>Van eerste take tot <em>final form.</em></h2>
-          <span>Boek alleen de room, of voeg precies de ondersteuning toe die je project nodig heeft.</span>
-          <div>
-            {fullServices.map(([number, title, copy]) => (
-              <article key={number} data-nocturne-reveal="row">
-                <b>{number}</b>
-                <h3>{title}</h3>
-                <p>{copy}</p>
-              </article>
-            ))}
-          </div>
+        <div className={styles.nocturneBeyondGrid}>
+          <article className={styles.nocturneBeyondCard} data-nocturne-reveal="card" data-nocturne-cursor-label="Explore">
+            <div className={styles.nocturneBeyondMedia} data-nocturne-parallax>
+              <Image
+                src={asset("feature-management-distribution.webp")}
+                alt="Sound District management and distribution meeting"
+                fill
+                sizes="(max-width: 800px) 90vw, 32vw"
+              />
+            </div>
+            <div className={styles.nocturneBeyondOverlay}>
+              <h3>Management<br />&amp; distribution</h3>
+            </div>
+          </article>
+
+          <article className={styles.nocturneBeyondCard} data-nocturne-reveal="card" data-nocturne-cursor-label="Explore">
+            <div className={styles.nocturneBeyondMedia} data-nocturne-parallax>
+              <Image
+                src={asset("feature-quality-process.webp")}
+                alt="Producer refining a music project at Sound District"
+                fill
+                sizes="(max-width: 800px) 90vw, 32vw"
+              />
+            </div>
+            <div className={styles.nocturneBeyondOverlay}>
+              <h3>Quality<br />&amp; process</h3>
+            </div>
+          </article>
+
+          <article
+            className={`${styles.nocturneBeyondCard} ${styles.nocturneBeyondVideo}`}
+            data-nocturne-reveal="card"
+            data-nocturne-final
+          >
+            <div className={styles.nocturneBeyondCollage} aria-hidden="true">
+              <span><Image src={asset("room-blue-editorial.webp")} alt="" fill sizes="(max-width: 800px) 30vw, 11vw" /></span>
+              <span><Image src={asset("room-red-editorial.webp")} alt="" fill sizes="(max-width: 800px) 30vw, 11vw" /></span>
+              <span><Image src={asset("room-infinity-editorial.webp")} alt="" fill sizes="(max-width: 800px) 30vw, 11vw" /></span>
+            </div>
+            <div className={styles.nocturneBeyondOverlay}>
+              <span>03 · Compilation video · Coming soon</span>
+              <h3>Sound District,<br />more than just<br />a studio!</h3>
+            </div>
+          </article>
         </div>
       </section>
 
-      <section className={styles.nocturneMade}>
-        <div className={styles.nocturneMadeCopy} data-nocturne-reveal="copy">
-          <p>Inside the district</p>
-          <h2>Een plek die je werk <em>ruimte geeft.</em></h2>
-          <span>
-            SoundDistrict brengt sound, beeld en creatieve begeleiding samen in een private setting in het hart van Antwerpen.
-          </span>
-        </div>
-        <div className={styles.nocturneMadeGrid}>
-          <figure data-nocturne-reveal="image" data-nocturne-parallax data-nocturne-cursor-label="Record"><Image src={asset("space2-new.jpg")} alt="On air-detail in de Red Room" fill sizes="34vw" /></figure>
-          <figure data-nocturne-reveal="image" data-nocturne-parallax data-nocturne-cursor-label="Create"><Image src={asset("blueroom-new1.jpg")} alt="Productiesessie in de Blue Room" fill sizes="42vw" /></figure>
-          <figure data-nocturne-reveal="image" data-nocturne-parallax data-nocturne-cursor-label="Shoot"><Image src={asset("room-infinity-editorial.webp")} alt="Visual session in de Infinity Room" fill sizes="34vw" /></figure>
-        </div>
-        <div className={styles.nocturneWordLoop} aria-hidden="true">
-          <span>Sound × Image × Culture × Antwerp × Sound × Image × Culture × Antwerp ×</span>
-        </div>
-      </section>
-
-      <section className={styles.nocturneProcess} id="nocturne-process">
-        <div data-nocturne-reveal="copy">
-          <p>The process</p>
-          <h2>Kies. Plan.<br /><em>Create.</em></h2>
-        </div>
-        <ol>
-          {bookingSteps.map(([number, title, copy]) => (
-            <li key={number} data-nocturne-reveal="row"><span>{number}</span><h3>{title}</h3><p>{copy}</p></li>
-          ))}
-        </ol>
-        <button type="button" data-booking="open" data-nocturne-magnetic>Start je aanvraag <span>↗</span></button>
-      </section>
-
-      <section className={styles.nocturneApp}>
-        <div className={styles.nocturneAppMock} aria-hidden="true" data-nocturne-reveal="app" data-nocturne-cursor-label="App preview">
-          <span>SD / Sessions</span>
-          <div className={styles.nocturneAppVisual}>
-            <i /><i /><i /><i /><i /><i /><i /><i /><i />
-          </div>
-          <strong>Blue Room</strong>
-          <small>Za 25 jul · 14:00—17:00</small>
-          <i>Confirmed</i>
-        </div>
-        <div data-nocturne-reveal="copy">
-          <p>For returning artists</p>
-          <h2>Je volgende sessie.<br /><em>Nog sneller geregeld.</em></h2>
-          <span>De SoundDistrict-app wordt je plek voor rebooking, sessiebeheer en updates.</span>
-          <small>App in ontwikkeling</small>
-        </div>
-      </section>
-
-      <section className={styles.nocturneVisit} id="nocturne-visit">
-        <div className={styles.nocturneVisitImage} data-nocturne-reveal="image" data-nocturne-parallax data-nocturne-cursor-label="Visit">
-          <Image src={asset("final.jpg")} alt="SoundDistrict in Antwerpen" fill sizes="(max-width: 800px) 100vw, 55vw" />
-        </div>
-        <div data-nocturne-reveal="copy">
-          <p>Visit the district</p>
-          <h2>Stadswaag 20<br /><em>2000 Antwerpen.</em></h2>
-          <span>Alle sessies zijn op afspraak. Eerst je project bespreken? Mail ons rechtstreeks.</span>
-          <a href="mailto:team@sounddistrict.be">team@sounddistrict.be ↗</a>
-          <button type="button" data-booking="open" data-nocturne-magnetic>Plan je sessie <b>→</b></button>
-        </div>
-      </section>
-
-      <section className={styles.nocturneFinal} data-nocturne-final data-nocturne-reveal="copy">
-        <p>Sound · Production · Visuals</p>
-        <h2>Your next session<br />starts <em>here.</em></h2>
-        <button type="button" data-booking="open" data-nocturne-magnetic>Plan je sessie <span>→</span></button>
-        <a href="mailto:team@sounddistrict.be">Bespreek je project eerst ↗</a>
-      </section>
-      <footer className={styles.nocturneFooter}>
-        <strong>Sound District</strong>
-        <span>A private house for sound &amp; image.</span>
-        <div><a href="mailto:team@sounddistrict.be">Contact</a><a href="https://www.instagram.com/sounddistrict.be">Instagram ↗</a><Link href="/privacy/">Privacy</Link></div>
-        <small>© 2026 SoundDistrict Antwerp · VAT BE 1023.309.121</small>
-      </footer>
-      <aside className={styles.nocturneBookingDock} aria-label="Snel boeken">
+      <aside className={styles.nocturneBookingDock} aria-label="Quick booking">
         <span><i /> Session request</span>
-        <button type="button" data-booking="open" data-nocturne-magnetic>Kies room &amp; moment <b>↗</b></button>
+        <button type="button" data-booking="open" data-nocturne-magnetic>Book your district <b>↗</b></button>
       </aside>
       <NocturneMobileNavigation />
       <NocturneMotion />

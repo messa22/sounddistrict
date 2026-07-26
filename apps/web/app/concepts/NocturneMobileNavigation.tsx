@@ -4,10 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import styles from "./concepts.module.css";
 
 const mobileLinks = [
-  ["Rooms", "#nocturne-rooms", "01"],
-  ["Services", "#nocturne-services", "02"],
-  ["Werkwijze", "#nocturne-process", "03"],
-  ["Visit", "#nocturne-visit", "04"]
+  ["Home", "#nocturne-home", "01"],
+  ["Districts", "#nocturne-rooms", "02"],
+  ["Beyond", "#nocturne-beyond", "03"]
 ] as const;
 
 export function NocturneMobileNavigation() {
@@ -25,7 +24,7 @@ export function NocturneMobileNavigation() {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         event.preventDefault();
-        setOpen(false);
+        closeMenu(true);
         return;
       }
       if (event.key !== "Tab" || !panelRef.current) return;
@@ -64,19 +63,19 @@ export function NocturneMobileNavigation() {
         data-open={open ? "true" : "false"}
         role="dialog"
         aria-modal="true"
-        aria-label="Nocturne navigatie"
+        aria-label="Nocturne navigation"
         aria-hidden={!open}
         ref={panelRef}
       >
         <header>
           <strong>Sound District</strong>
           <button type="button" onClick={() => closeMenu(true)} ref={closeRef}>
-            Sluiten <span aria-hidden="true">×</span>
+            Close <span aria-hidden="true">×</span>
           </button>
         </header>
 
         <div className={styles.nocturneMobileMenuBody}>
-          <p>Ga direct naar</p>
+          <p>Go directly to</p>
           <nav>
             {mobileLinks.map(([label, href, number]) => (
               <a href={href} onClick={() => closeMenu()} key={href}>
@@ -87,19 +86,19 @@ export function NocturneMobileNavigation() {
         </div>
 
         <footer>
-          <span>Stadswaag 20 · Antwerpen</span>
+          <span>Stadswaag 20 · Antwerp</span>
           <button
             type="button"
             data-booking="open"
             data-booking-return-focus="#nocturne-mobile-menu-trigger"
             onClick={() => closeMenu()}
           >
-            Kies room &amp; moment <b aria-hidden="true">↗</b>
+            Book your district <b aria-hidden="true">↗</b>
           </button>
         </footer>
       </section>
 
-      <aside className={styles.nocturneMobileDock} aria-label="Mobiele snelacties">
+      <aside className={styles.nocturneMobileDock} aria-label="Mobile quick actions">
         <button
           className={styles.nocturneMobileMenuTrigger}
           type="button"
@@ -112,7 +111,7 @@ export function NocturneMobileNavigation() {
           Menu
         </button>
         <button type="button" data-booking="open">
-          Kies room &amp; moment <b aria-hidden="true">↗</b>
+          Book your district <b aria-hidden="true">↗</b>
         </button>
       </aside>
     </>

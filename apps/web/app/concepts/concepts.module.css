@@ -5423,3 +5423,705 @@
     will-change: auto;
   }
 }
+
+/* Nocturne — Sound District mobile-first district edition */
+.nocturne {
+  --district-accent: #507cff;
+  --district-accent-rgb: 80, 124, 255;
+  background: #050506;
+}
+
+.nocturneHero[data-nocturne-scene="red"] {
+  --district-accent: #a63a56;
+  --district-accent-rgb: 166, 58, 86;
+}
+
+.nocturneHero[data-nocturne-scene="infinity"] {
+  --district-accent: #f7f4ee;
+  --district-accent-rgb: 247, 244, 238;
+}
+
+.nocturneHero {
+  background: #050506;
+}
+
+.nocturneHero::after {
+  position: absolute;
+  z-index: 1;
+  right: -18%;
+  bottom: -25%;
+  width: 58vw;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  content: "";
+  background: radial-gradient(circle, rgba(var(--district-accent-rgb), .17), transparent 66%);
+  filter: blur(28px);
+  pointer-events: none;
+  transition: background .65s ease;
+}
+
+.nocturneHeader .wordmark {
+  color: #f2d85f;
+  text-shadow: 0 0 22px rgba(242, 216, 95, .22);
+}
+
+.nocturneHeader button {
+  border-color: rgba(var(--district-accent-rgb), .7);
+  white-space: nowrap;
+}
+
+.nocturneHeader button span,
+.nocturnePrimary span,
+.nocturneCopy > a span {
+  color: var(--district-accent);
+  transition: color .45s ease, transform .28s cubic-bezier(.16, 1, .3, 1);
+}
+
+.nocturneSceneNav button > strong {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1;
+}
+
+.nocturneSceneNav button > strong > span {
+  font: inherit;
+}
+
+.nocturneSceneNav button > strong > small {
+  color: rgba(241, 236, 228, .5);
+  font-size: .72em;
+  font-weight: 650;
+  letter-spacing: .16em;
+}
+
+.nocturneSceneNav button > i::after,
+.nocturneScrollCue > i::after {
+  background: var(--district-accent);
+}
+
+.nocturneSceneNav .nocturneSceneActive {
+  color: #fff;
+}
+
+.nocturneSceneNav .nocturneSceneActive > strong > small {
+  color: var(--district-accent);
+}
+
+.nocturneCopy {
+  width: min(720px, calc(100% - 36px));
+}
+
+.nocturneCopy h1,
+.nocturneSectionHead h2,
+.nocturneRoomMeta h3,
+.nocturneBeyondHead h2,
+.nocturneBeyondOverlay h3,
+.nocturneMobileMenuBody nav strong {
+  font-family: var(--font-sans);
+  font-style: normal;
+}
+
+.nocturneCopy h1 {
+  margin: 18px 0 24px;
+  font-size: clamp(54px, 6.4vw, 92px);
+  font-weight: 570;
+  line-height: .9;
+  letter-spacing: -.065em;
+}
+
+.nocturneCopy h1 > span {
+  white-space: nowrap;
+}
+
+.nocturneCopy h1 em {
+  color: var(--district-accent);
+  font-style: normal;
+  font-weight: 720;
+  text-shadow: 0 0 34px rgba(var(--district-accent-rgb), .22);
+  transition: color .55s ease, text-shadow .55s ease;
+}
+
+.nocturneHero[data-nocturne-scene="infinity"] .nocturneCopy h1 em {
+  text-shadow:
+    0 0 10px rgba(255, 255, 255, .55),
+    0 0 36px rgba(255, 255, 255, .28);
+}
+
+.nocturnePrimary {
+  position: relative;
+  overflow: hidden;
+  border: 0;
+  border-radius: 12px;
+  box-shadow: 0 14px 38px rgba(0, 0, 0, .24);
+}
+
+.nocturnePrimary::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: linear-gradient(105deg, transparent 30%, rgba(var(--district-accent-rgb), .2), transparent 70%);
+  transform: translateX(-120%);
+  transition: transform .7s cubic-bezier(.16, 1, .3, 1);
+}
+
+.nocturnePrimary:hover::before {
+  transform: translateX(120%);
+}
+
+.nocturnePrimary:hover {
+  border-color: var(--district-accent);
+  background: var(--district-accent);
+  color: #070708;
+}
+
+.nocturneCopy > a {
+  border-color: rgba(var(--district-accent-rgb), .34);
+}
+
+.nocturneRooms {
+  padding: clamp(88px, 10vw, 142px) 0 clamp(98px, 11vw, 156px);
+  background:
+    radial-gradient(circle at 10% 16%, rgba(80, 124, 255, .08), transparent 26%),
+    radial-gradient(circle at 86% 82%, rgba(166, 58, 86, .09), transparent 28%),
+    #070708;
+}
+
+.nocturneSectionHead {
+  display: block;
+}
+
+.nocturneSectionHead h2 {
+  font-size: clamp(48px, 6.3vw, 88px);
+  font-weight: 620;
+  line-height: .92;
+  letter-spacing: -.065em;
+}
+
+.nocturneRail {
+  gap: 16px;
+}
+
+.nocturneRail article {
+  --card-accent: #507cff;
+  border-color: rgba(80, 124, 255, .28);
+  border-radius: 22px;
+  background: #0a0a0c;
+  box-shadow: 0 22px 70px rgba(0, 0, 0, .16);
+}
+
+.nocturneRail article:nth-child(2) {
+  --card-accent: #a63a56;
+  border-color: rgba(166, 58, 86, .34);
+}
+
+.nocturneRail article:nth-child(3) {
+  --card-accent: #f7f4ee;
+  border-color: rgba(247, 244, 238, .22);
+}
+
+.nocturneRoomImage {
+  height: auto;
+  aspect-ratio: 4 / 5;
+}
+
+.nocturneRoomMeta {
+  padding: 25px 23px 26px;
+  background: linear-gradient(180deg, rgba(14, 14, 17, .98), #08080a);
+}
+
+.nocturneRoomMeta > span {
+  color: var(--card-accent);
+  line-height: 1.5;
+}
+
+.nocturneRoomMeta h3 {
+  margin: 15px 0 21px;
+  font-size: clamp(30px, 3.3vw, 45px);
+  font-weight: 590;
+  line-height: .98;
+  letter-spacing: -.05em;
+}
+
+.nocturneRoomMeta > p {
+  min-height: 52px;
+  margin: 0 0 23px;
+  color: #b9b2aa;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.nocturneRoomMeta button {
+  border-color: rgba(255, 255, 255, .17);
+}
+
+.nocturneRoomMeta b,
+.nocturneRoomMeta button:hover {
+  color: var(--card-accent);
+}
+
+.nocturneRailProgress > i > b {
+  background: linear-gradient(90deg, #507cff, #a63a56, #f7f4ee);
+}
+
+.nocturneBeyond {
+  position: relative;
+  padding: clamp(94px, 10vw, 150px) 20px clamp(110px, 12vw, 180px);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 92% 2%, rgba(242, 216, 95, .08), transparent 25%),
+    linear-gradient(180deg, #080809, #030304);
+}
+
+.nocturneBeyond::before {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: min(1380px, calc(100% - 40px));
+  height: 1px;
+  content: "";
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .24), transparent);
+  transform: translateX(-50%);
+}
+
+.nocturneBeyondHead,
+.nocturneBeyondGrid {
+  width: min(1380px, 100%);
+  margin-inline: auto;
+}
+
+.nocturneBeyondHead {
+  margin-bottom: 28px;
+}
+
+.nocturneBeyondHead h2 {
+  margin: 0;
+  color: #aaa29a;
+  font-size: 9px;
+  font-weight: 750;
+  line-height: 1.2;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.nocturneBeyondGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.nocturneBeyondCard {
+  position: relative;
+  min-width: 0;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 24px;
+  background: #111;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, .26);
+  isolation: isolate;
+}
+
+.nocturneBeyondMedia,
+.nocturneBeyondCollage {
+  position: absolute;
+  inset: 0;
+}
+
+.nocturneBeyondMedia img,
+.nocturneBeyondCollage img {
+  object-fit: cover;
+  transition: transform 1s cubic-bezier(.16, 1, .3, 1), filter .55s ease;
+}
+
+.nocturneBeyondCard:nth-child(1) .nocturneBeyondMedia img {
+  object-position: 53% center;
+}
+
+.nocturneBeyondCard:nth-child(2) .nocturneBeyondMedia img {
+  object-position: 51% center;
+}
+
+.nocturneBeyondCard::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  content: "";
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, .03) 24%, rgba(0, 0, 0, .82) 100%),
+    linear-gradient(90deg, rgba(0, 0, 0, .15), transparent 68%);
+  pointer-events: none;
+}
+
+.nocturneBeyondCard:hover .nocturneBeyondMedia img {
+  filter: saturate(1.08);
+  transform: translate3d(0, var(--nocturne-parallax, 0), 0) scale(1.075);
+}
+
+.nocturneBeyondOverlay {
+  position: absolute;
+  z-index: 2;
+  inset: auto 0 0;
+  padding: clamp(22px, 2.4vw, 34px);
+}
+
+.nocturneBeyondOverlay > span {
+  display: block;
+  margin-bottom: 12px;
+  color: #f2d85f;
+  font-size: 8px;
+  font-weight: 750;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+
+.nocturneBeyondOverlay h3 {
+  margin: 0;
+  font-size: clamp(27px, 2.9vw, 42px);
+  font-weight: 590;
+  line-height: .96;
+  letter-spacing: -.055em;
+  text-wrap: balance;
+}
+
+.nocturneBeyondCollage {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  background: #050506;
+}
+
+.nocturneBeyondCollage > span {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.nocturneBeyondCollage > span:nth-child(1) img {
+  object-position: 44% center;
+}
+
+.nocturneBeyondCollage > span:nth-child(2) img {
+  object-position: 55% center;
+}
+
+.nocturneBeyondCollage > span:nth-child(3) img {
+  object-position: 58% center;
+}
+
+.nocturneBeyondVideo::before {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  content: "";
+  background: linear-gradient(120deg, rgba(80, 124, 255, .18), rgba(166, 58, 86, .2), rgba(255, 255, 255, .08));
+  mix-blend-mode: screen;
+  animation: nocturneVideoWash 8s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneBeyondCard:nth-child(2) {
+  transition-delay: .09s;
+}
+
+.nocturne[data-nocturne-motion="ready"] .nocturneBeyondCard:nth-child(3) {
+  transition-delay: .18s;
+}
+
+.nocturneBookingDock {
+  border-radius: 16px;
+}
+
+.nocturneBookingDock button {
+  border-radius: 10px;
+}
+
+.nocturneMobileMenu > header strong {
+  color: #f2d85f;
+}
+
+.nocturneMobileMenuBody nav strong {
+  font-weight: 600;
+  letter-spacing: -.045em;
+}
+
+@keyframes nocturneVideoWash {
+  from { opacity: .35; transform: translateX(-4%); }
+  to { opacity: .85; transform: translateX(4%); }
+}
+
+@media (hover: hover) and (pointer: fine) and (min-width: 801px) {
+  .nocturneRail article:hover {
+    border-color: var(--card-accent);
+  }
+
+  .nocturneBeyondCard:hover .nocturneBeyondCollage img {
+    transform: scale(1.055);
+  }
+}
+
+@media (max-width: 800px) {
+  .nocturneHero::after {
+    right: -38%;
+    bottom: 10%;
+    width: 110vw;
+    filter: blur(20px);
+  }
+
+  .nocturneHeader {
+    height: 74px;
+    padding: 0 17px;
+  }
+
+  .nocturneHeader .wordmark {
+    font-size: 13px;
+    letter-spacing: .075em;
+  }
+
+  .nocturneHeader > button {
+    min-width: 106px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 8px;
+  }
+
+  .nocturneHeader > button span {
+    margin-left: 10px;
+  }
+
+  .nocturneSceneNav {
+    top: 84px;
+    left: 17px;
+    right: 17px;
+    gap: 5px;
+  }
+
+  .nocturneSceneNav button {
+    min-height: 57px;
+    padding: 8px 7px 6px;
+    grid-template-columns: 16px minmax(0, 1fr);
+    align-content: center;
+    gap: 5px;
+    border-radius: 9px;
+    background: rgba(5, 5, 7, .42);
+  }
+
+  .nocturneSceneNav button > span {
+    font-size: 7.5px;
+  }
+
+  .nocturneSceneNav button > strong {
+    gap: 4px;
+    overflow: hidden;
+    font-size: 8.5px;
+    letter-spacing: .08em;
+  }
+
+  .nocturneSceneNav button > strong > span,
+  .nocturneSceneNav button > strong > small {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .nocturneSceneNav button > strong > small {
+    font-size: 7px;
+    letter-spacing: .13em;
+  }
+
+  .nocturneSceneNav button > i {
+    margin: 1px -7px -6px;
+  }
+
+  .nocturneSceneNav .nocturneSceneActive {
+    border-color: rgba(var(--district-accent-rgb), .72);
+    box-shadow:
+      inset 0 0 0 1px rgba(var(--district-accent-rgb), .11),
+      0 8px 30px rgba(var(--district-accent-rgb), .1);
+  }
+
+  .nocturneCopy {
+    left: 17px;
+    bottom: 22px;
+    width: calc(100% - 34px);
+  }
+
+  .nocturneCopy > p {
+    overflow: hidden;
+    font-size: 8px;
+    letter-spacing: .12em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .nocturneCopy h1 {
+    max-width: none;
+    margin: 13px 0 17px;
+    font-size: clamp(31px, 9.8vw, 42px);
+    line-height: .91;
+  }
+
+  .nocturnePrimary {
+    min-height: 58px;
+    margin-top: 0;
+    border-radius: 11px;
+    font-size: 9px;
+  }
+
+  .nocturneCopy > a {
+    min-height: 44px;
+    margin-top: 5px;
+    font-size: 8px;
+  }
+
+  .nocturneCopy > small {
+    margin-top: 8px;
+    font-size: 8px;
+  }
+
+  .nocturneRooms {
+    padding: 84px 0 92px;
+  }
+
+  .nocturneSectionHead {
+    width: calc(100% - 34px);
+    margin-bottom: 30px;
+  }
+
+  .nocturneSectionHead h2 {
+    font-size: clamp(39px, 12vw, 52px);
+    line-height: .92;
+  }
+
+  .nocturneRail {
+    padding: 0 17px;
+    gap: 12px;
+    scroll-padding-inline: 17px;
+  }
+
+  .nocturneRail article {
+    flex-basis: min(86vw, 370px);
+    border-radius: 20px;
+  }
+
+  .nocturneRoomImage {
+    height: auto;
+    aspect-ratio: 4 / 5;
+  }
+
+  .nocturneRoomMeta {
+    padding: 22px 20px 23px;
+  }
+
+  .nocturneRoomMeta > span {
+    font-size: 8.25px;
+  }
+
+  .nocturneRoomMeta h3 {
+    margin: 13px 0 17px;
+    font-size: 34px;
+  }
+
+  .nocturneRoomMeta > p {
+    min-height: 0;
+    margin: 0 0 19px;
+    color: #c1bab2;
+    font-size: 11.5px;
+  }
+
+  .nocturneRoomMeta button {
+    min-height: 54px;
+    font-size: 8.5px;
+  }
+
+  .nocturneRailProgress {
+    width: calc(100% - 34px);
+  }
+
+  .nocturneBeyond {
+    padding: 86px 17px 116px;
+  }
+
+  .nocturneBeyond::before {
+    width: calc(100% - 34px);
+  }
+
+  .nocturneBeyondHead {
+    margin-bottom: 24px;
+  }
+
+  .nocturneBeyondHead h2 {
+    font-size: 8.5px;
+  }
+
+  .nocturneBeyondGrid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .nocturneBeyondCard {
+    border-radius: 21px;
+  }
+
+  .nocturneBeyondOverlay {
+    padding: 23px;
+  }
+
+  .nocturneBeyondOverlay > span {
+    margin-bottom: 10px;
+    font-size: 8px;
+  }
+
+  .nocturneBeyondOverlay h3 {
+    font-size: clamp(28px, 8.5vw, 38px);
+  }
+
+  .nocturneMobileDock {
+    border-radius: 17px;
+    box-shadow: 0 18px 54px rgba(0, 0, 0, .42);
+  }
+
+  .nocturneMobileDock > button:last-child,
+  .nocturneMobileMenu > footer > button {
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  .nocturneHeader .wordmark {
+    font-size: 12px;
+  }
+
+  .nocturneHeader > button {
+    min-width: 96px;
+    font-size: 7.5px;
+  }
+
+  .nocturneSceneNav button {
+    padding-inline: 5px;
+    grid-template-columns: 13px minmax(0, 1fr);
+    gap: 3px;
+  }
+
+  .nocturneSceneNav button > strong {
+    font-size: 7.5px;
+  }
+
+  .nocturneCopy h1 {
+    font-size: clamp(30px, 9.7vw, 35px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nocturneHero::after,
+  .nocturneBeyondVideo::before {
+    animation: none;
+    transition: none;
+  }
+
+  .nocturnePrimary::before {
+    display: none;
+  }
+}

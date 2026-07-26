@@ -8,23 +8,23 @@ const scenes = [
   {
     id: "blue",
     name: "Blue",
-    fullName: "Blue Room",
+    fullName: "Blue District",
     image: "room-blue-editorial.webp",
-    eyebrow: "Vocals · Production · Writing"
+    eyebrow: "Recording · Production · Engineering"
   },
   {
     id: "red",
-    name: "Red",
-    fullName: "Red Room",
+    name: "2000’s",
+    fullName: "2000’s District",
     image: "room-red-editorial.webp",
-    eyebrow: "Recording · Listening · Direction"
+    eyebrow: "Recording · Production · Engineering"
   },
   {
     id: "infinity",
-    name: "Infinity",
-    fullName: "Infinity Room",
+    name: "White",
+    fullName: "White District",
     image: "room-infinity-editorial.webp",
-    eyebrow: "Visuals · Performance · Content"
+    eyebrow: "Visuals · Shoots · Content"
   }
 ] as const;
 
@@ -80,8 +80,10 @@ export function NocturneHeroExperience({ basePath }: { basePath: string }) {
   return (
     <section
       className={styles.nocturneHero}
+      id="nocturne-home"
       data-concept-hero
       data-nocturne-pointer-stage
+      data-nocturne-scene={activeScene.id}
       ref={sectionRef}
       onTouchStart={(event) => {
         touchStartRef.current = {
@@ -110,18 +112,16 @@ export function NocturneHeroExperience({ basePath }: { basePath: string }) {
 
       <header className={styles.nocturneHeader}>
         <span className={styles.wordmark}>Sound District</span>
-        <nav aria-label="Nocturne navigatie">
-          <a href="#nocturne-rooms">Rooms</a>
-          <a href="#nocturne-services">Services</a>
-          <a href="#nocturne-process">Werkwijze</a>
-          <a href="#nocturne-visit">Visit</a>
+        <nav aria-label="Nocturne navigation">
+          <a href="#nocturne-rooms">Districts</a>
+          <a href="#nocturne-beyond">Beyond</a>
         </nav>
         <button type="button" data-booking={activeScene.id} data-nocturne-magnetic>
-          Plan <span>↗</span>
+          Book a space <span>↗</span>
         </button>
       </header>
 
-      <div className={styles.nocturneSceneNav} aria-label="Kies een hero-scène">
+      <div className={styles.nocturneSceneNav} aria-label="Choose a district">
         {scenes.map((scene, index) => (
           <button
             type="button"
@@ -131,26 +131,26 @@ export function NocturneHeroExperience({ basePath }: { basePath: string }) {
             key={scene.id}
           >
             <span>0{index + 1}</span>
-            <strong>{scene.name}</strong>
+            <strong><span>{scene.name}</span><small>District</small></strong>
             <i aria-hidden="true" />
           </button>
         ))}
       </div>
 
       <div className={styles.nocturneCopy}>
-        <p key={`${activeScene.id}-eyebrow`}>{activeScene.eyebrow} · Antwerpen</p>
-        <h1><span>Maak iets dat</span><em>blijft hangen.</em></h1>
-        <span className={styles.nocturneIntro}>Recording, productie en visuals in drie private rooms.</span>
+        <p key={`${activeScene.id}-eyebrow`}>{activeScene.eyebrow}</p>
+        <h1><span>Build around what</span><em>You make</em></h1>
         <button
           className={styles.nocturnePrimary}
           type="button"
           data-booking={activeScene.id}
           data-nocturne-magnetic
+          aria-label={`Book ${activeScene.fullName}`}
         >
-          Plan in {activeScene.fullName} <span>↗</span>
+          Book your district <span>↗</span>
         </button>
-        <a href="#nocturne-rooms">Vergelijk de rooms <span>↓</span></a>
-        <small>Aanvraag in ±2 minuten · persoonlijke bevestiging</small>
+        <a href="#nocturne-rooms">Compare districts <span>↓</span></a>
+        <small>Request in ±2 minutes · Personal confirmation</small>
       </div>
 
       <div className={styles.nocturneScrollCue} aria-hidden="true">

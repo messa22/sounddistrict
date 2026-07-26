@@ -10,7 +10,7 @@ import {
   type RoomId
 } from "@sounddistrict/booking-core";
 
-const steps = ["Sessie", "Details", "Controle"];
+const steps = ["Session", "Details", "Review"];
 
 const editorialImages: Record<RoomId, string> = {
   blue: "room-blue-editorial.webp",
@@ -25,10 +25,10 @@ function upcomingDates() {
     date.setDate(date.getDate() + index + 1);
     return {
       value: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`,
-      weekday: new Intl.DateTimeFormat("nl-BE", { weekday: "short" }).format(date),
+      weekday: new Intl.DateTimeFormat("en-GB", { weekday: "short" }).format(date),
       day: date.getDate(),
-      month: new Intl.DateTimeFormat("nl-BE", { month: "short" }).format(date),
-      fullLabel: new Intl.DateTimeFormat("nl-BE", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(date)
+      month: new Intl.DateTimeFormat("en-GB", { month: "short" }).format(date),
+      fullLabel: new Intl.DateTimeFormat("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(date)
     };
   });
 }
@@ -39,7 +39,7 @@ function validEmail(value: string) {
 
 function naturalList(items: string[]) {
   if (items.length < 2) return items[0] ?? "";
-  return `${items.slice(0, -1).join(", ")} en ${items.at(-1)}`;
+  return `${items.slice(0, -1).join(", ")} and ${items.at(-1)}`;
 }
 
 function dateDetails(value: string) {
@@ -49,10 +49,10 @@ function dateDetails(value: string) {
 
   return {
     value,
-    weekday: new Intl.DateTimeFormat("nl-BE", { weekday: "short" }).format(parsed),
+    weekday: new Intl.DateTimeFormat("en-GB", { weekday: "short" }).format(parsed),
     day: parsed.getDate(),
-    month: new Intl.DateTimeFormat("nl-BE", { month: "short" }).format(parsed),
-    fullLabel: new Intl.DateTimeFormat("nl-BE", {
+    month: new Intl.DateTimeFormat("en-GB", { month: "short" }).format(parsed),
+    fullLabel: new Intl.DateTimeFormat("en-GB", {
       weekday: "long",
       day: "numeric",
       month: "long",
@@ -93,12 +93,13 @@ export function BookingFlow() {
     () => dateOptions.find((item) => item.value === date) ?? dateDetails(date),
     [date, dateOptions]
   );
+  const durationLabel = `${duration} ${duration === 1 ? "hour" : "hours"}`;
   const nameInvalid = detailsAttempted && name.trim().length < 2;
   const emailInvalid = (detailsAttempted || Boolean(email)) && !validEmail(email);
   const missingSessionFields = [
-    !roomId ? "een room" : "",
-    !date ? "een datum" : "",
-    !time ? "een startuur" : ""
+    !roomId ? "a district" : "",
+    !date ? "a date" : "",
+    !time ? "a start time" : ""
   ].filter(Boolean);
 
   useEffect(() => {
@@ -218,23 +219,23 @@ export function BookingFlow() {
     if (!roomId || !selectedDate) return null;
     const extras = addOnIds.length
       ? ADD_ONS.filter((item) => addOnIds.includes(item.id)).map((item) => item.name).join(", ")
-      : "Geen extra support gekozen";
-    const subject = `Boekingsaanvraag ${room.name} — ${selectedDate.fullLabel}`;
+      : "No extra support selected";
+    const subject = `Booking request ${room.name} — ${selectedDate.fullLabel}`;
     const body = [
-      "Hallo SoundDistrict,",
+      "Hi SoundDistrict,",
       "",
-      "Ik wil graag deze sessie aanvragen:",
-      `Room: ${room.name}`,
-      `Voorkeursmoment: ${selectedDate.fullLabel} om ${time}`,
-      `Duur: ${duration} uur`,
-      `Extra support: ${extras}`,
+      "I would like to request this session:",
+      `District: ${room.name}`,
+      `Preferred date and time: ${selectedDate.fullLabel} at ${time}`,
+      `Duration: ${durationLabel}`,
+      `Additional support: ${extras}`,
       "",
-      `Naam: ${name.trim()}`,
-      `E-mail: ${email.trim()}`,
-      `Telefoon: ${phone.trim() || "Niet opgegeven"}`,
-      `Project: ${note.trim() || "Geen extra informatie"}`,
+      `Name: ${name.trim()}`,
+      `Email: ${email.trim()}`,
+      `Phone: ${phone.trim() || "Not provided"}`,
+      `Project: ${note.trim() || "No additional information"}`,
       "",
-      "Graag ontvang ik een bevestiging van beschikbaarheid en prijs.",
+      "Please confirm availability and price.",
       ""
     ].join("\n");
 
@@ -303,7 +304,7 @@ export function BookingFlow() {
   return (
     <>
       <button className="mobile-booking-cta" type="button" data-booking="open">
-        Kies room &amp; moment <span aria-hidden="true">↗</span>
+        Book your district <span aria-hidden="true">↗</span>
       </button>
 
       {open && (
@@ -312,20 +313,20 @@ export function BookingFlow() {
             <header className="booking-topbar">
               <div>
                 <span>SoundDistrict · Antwerp</span>
-                <strong id={titleId}>Vraag je sessie aan</strong>
+                <strong id={titleId}>Request your session</strong>
               </div>
-              <button ref={closeRef} type="button" onClick={closeBooking} aria-label="Sluit boekingsaanvraag">Sluiten <span aria-hidden="true">×</span></button>
+              <button ref={closeRef} type="button" onClick={closeBooking} aria-label="Close booking request">Close <span aria-hidden="true">×</span></button>
             </header>
 
             <div className="booking-layout">
               <aside className="booking-art" aria-hidden="true">
                 <Image src={`${basePath}/${editorialImages[room.id]}`} alt="" fill sizes="38vw" />
-                <div><span>{roomId ? room.name : "SoundDistrict"}</span><small>Stadswaag 20 · Antwerpen</small></div>
+                <div><span>{roomId ? room.name : "SoundDistrict"}</span><small>Stadswaag 20 · Antwerp</small></div>
               </aside>
 
               <div className="booking-interface">
                 {step < 3 && (
-                  <ol className="booking-progress" aria-label={`Stap ${step + 1} van ${steps.length}`}>
+                  <ol className="booking-progress" aria-label={`Step ${step + 1} of ${steps.length}`}>
                     {steps.map((label, index) => (
                       <li className={index <= step ? "active" : ""} aria-current={index === step ? "step" : undefined} key={label}>
                         <span>0{index + 1}</span>{label}
@@ -337,22 +338,22 @@ export function BookingFlow() {
                 <div className="booking-scroll" aria-live="polite">
                   {step === 0 && (
                     <div className="booking-step">
-                      <p className="booking-eyebrow">Stap 1 · Jouw sessie</p>
-                      <h2 tabIndex={-1} data-step-heading>Kies je room en moment.</h2>
-                      <p className="booking-intro">Kies een room en voorkeursmoment. We bevestigen de beschikbaarheid persoonlijk.</p>
+                      <p className="booking-eyebrow">Step 1 · Your session</p>
+                      <h2 tabIndex={-1} data-step-heading>Choose your district and time.</h2>
+                      <p className="booking-intro">Choose a district and preferred time. We personally confirm availability.</p>
                       {sessionAttempted && missingSessionFields.length > 0 && (
                         <p className="booking-error-summary" role="alert">
-                          Kies nog {naturalList(missingSessionFields)}.
+                          Choose {naturalList(missingSessionFields)}.
                         </p>
                       )}
 
                       <fieldset data-booking-missing={sessionAttempted && !roomId ? "true" : undefined}>
-                        <legend>Room</legend>
+                        <legend>District</legend>
                         {roomId && !roomChooserOpen ? (
                           <div className="booking-room-selected">
                             <span className="booking-room-thumb" style={{ backgroundImage: `url(${basePath}/${editorialImages[roomId]})` }} />
-                            <span><small>Gekozen room</small><strong>{room.name}</strong></span>
-                            <button type="button" onClick={() => setRoomChooserOpen(true)}>Wijzig</button>
+                            <span><small>Selected district</small><strong>{room.name}</strong></span>
+                            <button type="button" onClick={() => setRoomChooserOpen(true)}>Change</button>
                           </div>
                         ) : (
                           <div className="booking-room-grid">
@@ -377,7 +378,7 @@ export function BookingFlow() {
                       </fieldset>
 
                       <fieldset data-booking-missing={sessionAttempted && !date ? "true" : undefined}>
-                        <legend>Voorkeursdatum</legend>
+                        <legend>Preferred date</legend>
                         <div className="date-options">
                           {dateOptions.map((item) => (
                             <button
@@ -393,7 +394,7 @@ export function BookingFlow() {
                           ))}
                         </div>
                         <label className="custom-date">
-                          <span>Of kies een latere datum</span>
+                          <span>Or choose a later date</span>
                           <input
                             type="date"
                             min={dateOptions[0]?.value}
@@ -405,7 +406,7 @@ export function BookingFlow() {
 
                       <div className="moment-grid">
                         <fieldset data-booking-missing={sessionAttempted && !time ? "true" : undefined}>
-                          <legend>Startuur</legend>
+                          <legend>Start time</legend>
                           <div className="choice-grid times">
                             {TIME_SLOTS.map((slot) => (
                               <button type="button" className={time === slot ? "selected" : ""} aria-pressed={time === slot} onClick={() => setTime(slot)} key={slot}>{slot}</button>
@@ -413,10 +414,10 @@ export function BookingFlow() {
                           </div>
                         </fieldset>
                         <fieldset>
-                          <legend>Duur</legend>
+                          <legend>Duration</legend>
                           <div className="choice-grid duration">
                             {[1, 2, 3, 4].map((hours) => (
-                              <button type="button" className={duration === hours ? "selected" : ""} aria-pressed={duration === hours} onClick={() => setDuration(hours)} key={hours}>{hours}u</button>
+                              <button type="button" className={duration === hours ? "selected" : ""} aria-pressed={duration === hours} onClick={() => setDuration(hours)} key={hours}>{hours}h</button>
                             ))}
                           </div>
                         </fieldset>
@@ -426,11 +427,11 @@ export function BookingFlow() {
 
                   {step === 1 && (
                     <div className="booking-step">
-                      <p className="booking-eyebrow">Stap 2 · Details</p>
-                      <h2 tabIndex={-1} data-step-heading>Vertel ons wat je komt maken.</h2>
+                      <p className="booking-eyebrow">Step 2 · Details</p>
+                      <h2 tabIndex={-1} data-step-heading>Tell us what you are making.</h2>
                       <div className="form-grid">
                         <label className="field-label">
-                          Volledige naam *
+                          Full name *
                           <input
                             value={name}
                             onChange={(event) => setName(event.target.value)}
@@ -440,10 +441,10 @@ export function BookingFlow() {
                             aria-describedby={nameInvalid ? nameErrorId : undefined}
                             data-booking-invalid={nameInvalid ? "true" : undefined}
                           />
-                          {nameInvalid && <span className="field-error" id={nameErrorId} role="alert">Vul minstens 2 tekens in.</span>}
+                          {nameInvalid && <span className="field-error" id={nameErrorId} role="alert">Enter at least 2 characters.</span>}
                         </label>
                         <label className="field-label">
-                          E-mail *
+                          Email *
                           <input
                             value={email}
                             onChange={(event) => setEmail(event.target.value)}
@@ -454,14 +455,14 @@ export function BookingFlow() {
                             aria-describedby={emailInvalid ? emailErrorId : undefined}
                             data-booking-invalid={emailInvalid ? "true" : undefined}
                           />
-                          {emailInvalid && <span className="field-error" id={emailErrorId} role="alert">Vul een geldig e-mailadres in.</span>}
+                          {emailInvalid && <span className="field-error" id={emailErrorId} role="alert">Enter a valid email address.</span>}
                         </label>
-                        <label className="field-label full">Telefoon <span>optioneel</span><input value={phone} onChange={(event) => setPhone(event.target.value)} type="tel" autoComplete="tel" /></label>
-                        <label className="field-label full">Over je sessie <span>optioneel</span><textarea value={note} onChange={(event) => setNote(event.target.value)} placeholder="Wat wil je opnemen of maken?" maxLength={500} rows={4} /></label>
+                        <label className="field-label full">Phone <span>optional</span><input value={phone} onChange={(event) => setPhone(event.target.value)} type="tel" autoComplete="tel" /></label>
+                        <label className="field-label full">About your session <span>optional</span><textarea value={note} onChange={(event) => setNote(event.target.value)} placeholder="What would you like to record or create?" maxLength={500} rows={4} /></label>
                       </div>
 
                       <details className="extras-disclosure">
-                        <summary>Extra support toevoegen <span>{addOnIds.length ? `${addOnIds.length} gekozen` : "Optioneel"}</span></summary>
+                        <summary>Add extra support <span>{addOnIds.length ? `${addOnIds.length} selected` : "Optional"}</span></summary>
                         <div className="addon-list">
                           {ADD_ONS.map((addOn) => (
                             <button type="button" className={addOnIds.includes(addOn.id) ? "selected" : ""} aria-pressed={addOnIds.includes(addOn.id)} onClick={() => toggleAddOn(addOn.id)} key={addOn.id}>
@@ -476,38 +477,38 @@ export function BookingFlow() {
 
                   {step === 2 && (
                     <div className="booking-step review-step">
-                      <p className="booking-eyebrow">Stap 3 · Controle</p>
-                      <h2 tabIndex={-1} data-step-heading>Klaar om aan te vragen.</h2>
+                      <p className="booking-eyebrow">Step 3 · Review</p>
+                      <h2 tabIndex={-1} data-step-heading>Ready to request.</h2>
                       <div className="booking-summary">
-                        <div><span>Room</span><strong>{room.name}</strong><button type="button" onClick={() => goToStep(0)}>Wijzig</button></div>
-                        <div><span>Moment</span><strong>{selectedDate?.fullLabel} · {time} · {duration} uur</strong><button type="button" onClick={() => goToStep(0)}>Wijzig</button></div>
-                        <div><span>Support</span><strong>{addOnIds.length ? ADD_ONS.filter((item) => addOnIds.includes(item.id)).map((item) => item.name).join(", ") : "Geen extra support"}</strong><button type="button" onClick={() => goToStep(1)}>Wijzig</button></div>
-                        <div><span>Contact</span><strong>{name} · {email}</strong><button type="button" onClick={() => goToStep(1)}>Wijzig</button></div>
+                        <div><span>District</span><strong>{room.name}</strong><button type="button" onClick={() => goToStep(0)}>Change</button></div>
+                        <div><span>Date &amp; time</span><strong>{selectedDate?.fullLabel} · {time} · {durationLabel}</strong><button type="button" onClick={() => goToStep(0)}>Change</button></div>
+                        <div><span>Support</span><strong>{addOnIds.length ? ADD_ONS.filter((item) => addOnIds.includes(item.id)).map((item) => item.name).join(", ") : "No extra support"}</strong><button type="button" onClick={() => goToStep(1)}>Change</button></div>
+                        <div><span>Contact</span><strong>{name} · {email}</strong><button type="button" onClick={() => goToStep(1)}>Change</button></div>
                       </div>
                       <div className="booking-truth">
-                        <strong>Wat gebeurt hierna?</strong>
-                        <p>Je aanvraag is pas verstuurd nadat jij de ingevulde e-mail verzendt. Daarna bevestigt het team beschikbaarheid en prijs.</p>
+                        <strong>What happens next?</strong>
+                        <p>Your request is sent only after you send the pre-filled email. The team then confirms availability and price.</p>
                       </div>
                       <label className="terms-check">
                         <input type="checkbox" checked={termsAccepted} onChange={(event) => setTermsAccepted(event.target.checked)} />
                         <span>
-                          Ik ga akkoord dat mijn gegevens worden gebruikt om deze boekingsaanvraag te beantwoorden.{" "}
-                          <a href={`${basePath}/privacy/`} target="_blank" rel="noreferrer">Lees de privacy-info.</a>
+                          I agree that my details may be used to respond to this booking request.{" "}
+                          <a href={`${basePath}/privacy/`} target="_blank" rel="noreferrer">Read the privacy information.</a>
                         </span>
                       </label>
-                      {termsAttempted && !termsAccepted && <p className="terms-error" role="alert">Vink dit aan om je aanvraag voor te bereiden.</p>}
+                      {termsAttempted && !termsAccepted && <p className="terms-error" role="alert">Check this box to prepare your request.</p>}
                     </div>
                   )}
 
                   {step === 3 && (
                     <div className="booking-success" role="status">
-                      <span className="success-index">Aanvraag voorbereid</span>
-                      <h2 tabIndex={-1} data-step-heading>Rond af in je e-mailapp.</h2>
-                      <p>Als je e-mailapp opende, hoef je de aanvraag alleen nog te versturen. Niets gebeurd? Probeer opnieuw of mail rechtstreeks naar <a href="mailto:team@sounddistrict.be">team@sounddistrict.be</a>.</p>
-                      <div className="success-card"><span>{room.name}</span><span>{selectedDate?.fullLabel} · {time}</span><span>{duration} uur</span></div>
+                      <span className="success-index">Request prepared</span>
+                      <h2 tabIndex={-1} data-step-heading>Complete it in your email app.</h2>
+                      <p>If your email app opened, simply send the request. Nothing happened? Try again or email <a href="mailto:team@sounddistrict.be">team@sounddistrict.be</a> directly.</p>
+                      <div className="success-card"><span>{room.name}</span><span>{selectedDate?.fullLabel} · {time}</span><span>{durationLabel}</span></div>
                       <div className="success-actions">
-                        <button type="button" className="button button-dark" onClick={retryEmailRequest}>Open e-mail opnieuw</button>
-                        <button type="button" className="quiet-action" onClick={closeBooking}>Terug naar de website</button>
+                        <button type="button" className="button button-dark" onClick={retryEmailRequest}>Open email again</button>
+                        <button type="button" className="quiet-action" onClick={closeBooking}>Back to the website</button>
                       </div>
                     </div>
                   )}
@@ -516,17 +517,17 @@ export function BookingFlow() {
                 {step < 3 && (
                   <footer className="booking-footer">
                     <div>
-                      <span>{step === 0 ? "Voorkeursmoment" : "Jouw sessie"}</span>
-                      <strong>{roomId ? room.name : "Kies een room"}{date && time ? ` · ${selectedDate?.day} ${selectedDate?.month} · ${time}` : ""}</strong>
+                      <span>{step === 0 ? "Preferred date & time" : "Your session"}</span>
+                      <strong>{roomId ? room.name : "Choose a district"}{date && time ? ` · ${selectedDate?.day} ${selectedDate?.month} · ${time}` : ""}</strong>
                     </div>
                     <div>
-                      {step > 0 && <button className="back-button" type="button" onClick={() => goToStep(step - 1)}>Terug</button>}
+                      {step > 0 && <button className="back-button" type="button" onClick={() => goToStep(step - 1)}>Back</button>}
                       <button
                         className="next-button"
                         type="button"
                         onClick={continueBooking}
                       >
-                        {step === 0 ? "Naar je gegevens" : step === 1 ? "Controleer je aanvraag" : "Open ingevulde e-mail"} <span aria-hidden="true">→</span>
+                        {step === 0 ? "Your details" : step === 1 ? "Review your request" : "Open pre-filled email"} <span aria-hidden="true">→</span>
                       </button>
                     </div>
                   </footer>
