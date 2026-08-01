@@ -30,7 +30,7 @@ export const NOCTURNE_BOOKING_OFFERS: Record<RoomId, readonly NocturneBookingOff
       name: "Studio only",
       description: "Book the studio by the hour.",
       defaultDuration: 2,
-      durationOptions: [1, 2, 3, 4],
+      durationOptions: [1, 2, 3, 4, 8],
       pricePerHour: 30
     },
     {
@@ -38,7 +38,7 @@ export const NOCTURNE_BOOKING_OFFERS: Record<RoomId, readonly NocturneBookingOff
       name: "With producer",
       description: "Studio time with a producer throughout your session.",
       defaultDuration: 2,
-      durationOptions: [1, 2, 3, 4],
+      durationOptions: [1, 2, 3, 4, 8],
       pricePerHour: 50
     },
     {
@@ -66,7 +66,7 @@ export const NOCTURNE_BOOKING_OFFERS: Record<RoomId, readonly NocturneBookingOff
       name: "Studio only",
       description: "Book the studio by the hour.",
       defaultDuration: 2,
-      durationOptions: [1, 2, 3, 4],
+      durationOptions: [1, 2, 3, 4, 8],
       pricePerHour: 25
     },
     {
@@ -74,7 +74,7 @@ export const NOCTURNE_BOOKING_OFFERS: Record<RoomId, readonly NocturneBookingOff
       name: "With producer",
       description: "Studio time with a producer throughout your session.",
       defaultDuration: 2,
-      durationOptions: [1, 2, 3, 4],
+      durationOptions: [1, 2, 3, 4, 8],
       pricePerHour: 45
     },
     {
@@ -102,7 +102,7 @@ export const NOCTURNE_BOOKING_OFFERS: Record<RoomId, readonly NocturneBookingOff
       name: "Studio by the hour",
       description: "Opening-month rate for a flexible visual session.",
       defaultDuration: 1,
-      durationOptions: [1, 2, 4],
+      durationOptions: [1, 2, 4, 8],
       pricePerHour: 50,
       standardPrice: 60,
       promoLabel: "Opening month"

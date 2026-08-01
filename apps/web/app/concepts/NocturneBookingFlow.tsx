@@ -127,6 +127,10 @@ export function NocturneBookingFlow({ basePath }: { basePath: string }) {
   const saving = quotedPrice !== undefined && standardPrice !== undefined
     ? Math.max(0, standardPrice - quotedPrice)
     : 0;
+  const tenHourUpgrade = roomId && roomId !== "infinity"
+    && offer?.id === "studio-hourly" && duration === 8
+    ? getNocturneOffer(roomId, "ten-hour")
+    : null;
 
   useEffect(() => {
     function handleBookingClick(event: MouseEvent) {
@@ -502,6 +506,20 @@ export function NocturneBookingFlow({ basePath }: { basePath: string }) {
                         </button>
                       ))}
                     </div>
+                    {tenHourUpgrade && (
+                      <button
+                        className={styles.nocturneBookingUpgrade}
+                        type="button"
+                        onClick={() => chooseOffer(tenHourUpgrade)}
+                      >
+                        <span>
+                          <small>Better value · same total</small>
+                          <strong>Get 10 hours instead</strong>
+                          <em>8 hours + 2 hours free</em>
+                        </span>
+                        <b>{formatPrice(calculateNocturnePrice(tenHourUpgrade, 10))}<i aria-hidden="true">→</i></b>
+                      </button>
+                    )}
                   </fieldset>
                 )}
 

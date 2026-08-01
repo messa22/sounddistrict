@@ -6793,6 +6793,63 @@
   color: rgba(9, 9, 11, .66);
 }
 
+.nocturneBookingUpgrade {
+  width: 100%;
+  min-height: 82px;
+  margin-top: 9px;
+  padding: 14px 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  border: 1px solid rgba(var(--booking-accent-rgb), .5);
+  border-radius: 13px;
+  background:
+    linear-gradient(100deg, rgba(var(--booking-accent-rgb), .14), rgba(var(--booking-accent-rgb), .04)),
+    #111114;
+  color: #f1ece5;
+  text-align: left;
+  cursor: pointer;
+}
+
+.nocturneBookingUpgrade > span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nocturneBookingUpgrade small {
+  color: var(--booking-accent);
+  font-size: 7px;
+  font-weight: 780;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.nocturneBookingUpgrade strong {
+  font-size: 15px;
+  font-weight: 680;
+}
+
+.nocturneBookingUpgrade em {
+  color: #aaa39b;
+  font-size: 9px;
+  font-style: normal;
+}
+
+.nocturneBookingUpgrade > b {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  color: var(--booking-accent);
+  font-size: 17px;
+}
+
+.nocturneBookingUpgrade > b > i {
+  font-size: 16px;
+  font-style: normal;
+}
+
 .nocturneBookingDates {
   padding-bottom: 7px;
   display: grid;
@@ -7511,6 +7568,27 @@
   .nocturneBookingTimes small {
     color: #aaa39b;
     font-size: 10px;
+  }
+
+  .nocturneBookingUpgrade {
+    min-height: 96px;
+    padding: 16px;
+  }
+
+  .nocturneBookingUpgrade small {
+    font-size: 9px;
+  }
+
+  .nocturneBookingUpgrade strong {
+    font-size: 17px;
+  }
+
+  .nocturneBookingUpgrade em {
+    font-size: 12px;
+  }
+
+  .nocturneBookingUpgrade > b {
+    font-size: 18px;
   }
 
   .nocturneBookingForm {
