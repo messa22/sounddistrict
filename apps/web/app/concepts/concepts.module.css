@@ -5424,6 +5424,849 @@
   }
 }
 
+/* Nocturne pricing — compact mobile rate console */
+.nocturnePricing {
+  position: relative;
+  z-index: 2;
+  padding: clamp(92px, 10vw, 148px) 20px clamp(104px, 11vw, 162px);
+  overflow: hidden;
+  scroll-margin-top: 24px;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(80, 124, 255, .13), transparent 28%),
+    radial-gradient(circle at 86% 76%, rgba(166, 58, 86, .12), transparent 32%),
+    linear-gradient(180deg, #070708 0%, #0b0b0e 54%, #070708 100%);
+}
+
+.nocturnePricing::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  opacity: .42;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, .022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .018) 1px, transparent 1px);
+  background-size: 68px 68px;
+  mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent);
+  pointer-events: none;
+}
+
+.nocturnePricingHead,
+.nocturneRateConsole,
+.nocturnePricingServices,
+.nocturneProjectContact {
+  width: min(1240px, 100%);
+  margin-inline: auto;
+}
+
+.nocturnePricingHead {
+  position: relative;
+  z-index: 1;
+  margin-bottom: clamp(34px, 5vw, 62px);
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, .65fr);
+  gap: clamp(34px, 7vw, 104px);
+  align-items: end;
+}
+
+.nocturnePricingHead > div:first-child > p {
+  margin: 0 0 18px;
+  color: #f2d85f;
+  font-size: 9px;
+  font-weight: 760;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+
+.nocturnePricingHead h2 {
+  max-width: 760px;
+  margin: 0;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 .2em;
+  color: #f2eee7;
+  font-family: var(--font-sans);
+  font-size: clamp(46px, 6vw, 78px);
+  font-weight: 620;
+  line-height: .92;
+  letter-spacing: -.065em;
+}
+
+.nocturnePricingHead h2 > span {
+  display: inline-block;
+}
+
+.nocturnePricingHead h2 > span:last-child {
+  color: #f2d85f;
+}
+
+.nocturnePricingIntro > p {
+  max-width: 360px;
+  margin: 0 0 22px;
+  color: #aaa39b;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.nocturnePricingIntro > i {
+  position: relative;
+  width: 100%;
+  height: 1px;
+  display: block;
+  background: linear-gradient(90deg, #507cff, #a63a56 56%, rgba(247, 244, 238, .76));
+  box-shadow: 0 0 18px rgba(80, 124, 255, .2);
+  transform-origin: 0 50%;
+}
+
+.nocturnePricingIntro > i::after {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  content: "";
+  background: #f2d85f;
+  box-shadow: 0 0 16px rgba(242, 216, 95, .62);
+  transform: translateY(-50%);
+}
+
+.nocturneRateConsole {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .15);
+  border-radius: 28px;
+  background: rgba(9, 9, 11, .94);
+  box-shadow:
+    0 42px 110px rgba(0, 0, 0, .38),
+    inset 0 1px rgba(255, 255, 255, .04);
+}
+
+.nocturneRateTabs {
+  min-height: 84px;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, .1);
+  background: rgba(4, 4, 5, .78);
+}
+
+.nocturneRateTabs button {
+  --tab-accent: #507cff;
+  position: relative;
+  min-width: 0;
+  min-height: 62px;
+  padding: 0 18px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 13px;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .025);
+  color: #817c76;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    color .35s cubic-bezier(.16, 1, .3, 1),
+    background .35s cubic-bezier(.16, 1, .3, 1),
+    border-color .35s cubic-bezier(.16, 1, .3, 1),
+    transform .35s cubic-bezier(.16, 1, .3, 1);
+}
+
+.nocturneRateTabs button:nth-child(2) {
+  --tab-accent: #a63a56;
+}
+
+.nocturneRateTabs button:nth-child(3) {
+  --tab-accent: #f7f4ee;
+}
+
+.nocturneRateTabs button > span {
+  color: var(--tab-accent);
+  font-size: 9px;
+  font-weight: 780;
+  letter-spacing: .14em;
+}
+
+.nocturneRateTabs button > strong {
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 720;
+  letter-spacing: .09em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.nocturneRateTabs button > i {
+  position: absolute;
+  right: 14px;
+  bottom: 0;
+  left: 14px;
+  height: 2px;
+  background: var(--tab-accent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--tab-accent) 48%, transparent);
+  transform: scaleX(0);
+  transform-origin: 50% 50%;
+  transition: transform .42s cubic-bezier(.16, 1, .3, 1);
+}
+
+.nocturneRateTabs button:hover,
+.nocturneRateTabs button[data-active="true"] {
+  border-color: color-mix(in srgb, var(--tab-accent) 30%, transparent);
+  background: color-mix(in srgb, var(--tab-accent) 9%, rgba(255, 255, 255, .025));
+  color: #f4f0ea;
+}
+
+.nocturneRateTabs button[data-active="true"] > i {
+  transform: scaleX(1);
+}
+
+.nocturneRateTabs button:focus-visible {
+  outline: 2px solid #f2d85f;
+  outline-offset: -3px;
+}
+
+.nocturneRatePanel {
+  --rate-accent: #507cff;
+  --rate-accent-rgb: 80, 124, 255;
+  min-height: 620px;
+  display: grid;
+  grid-template-columns: minmax(0, .93fr) minmax(440px, 1.07fr);
+  background:
+    radial-gradient(circle at 82% 18%, rgba(var(--rate-accent-rgb), .09), transparent 30%),
+    #0a0a0c;
+}
+
+.nocturneRatePanel[data-district="red"] {
+  --rate-accent: #a63a56;
+  --rate-accent-rgb: 166, 58, 86;
+}
+
+.nocturneRatePanel[data-district="white"] {
+  --rate-accent: #f7f4ee;
+  --rate-accent-rgb: 247, 244, 238;
+}
+
+.nocturneRateMedia {
+  position: relative;
+  min-height: 620px;
+  overflow: hidden;
+  background: #111;
+  isolation: isolate;
+}
+
+.nocturneRateMedia::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  content: "";
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, .04) 32%, rgba(0, 0, 0, .82) 100%),
+    linear-gradient(90deg, transparent 55%, rgba(5, 5, 7, .4));
+  pointer-events: none;
+}
+
+.nocturneRateMedia img {
+  object-fit: cover;
+  transform: scale(1.04);
+}
+
+.nocturneRatePanel[data-district="white"] .nocturneRateMedia img {
+  object-position: 64% center;
+}
+
+.nocturneRateMediaLabel {
+  position: absolute;
+  z-index: 2;
+  right: 28px;
+  bottom: 28px;
+  left: 28px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: end;
+  color: #f5f1eb;
+}
+
+.nocturneRateMediaLabel b,
+.nocturneRateMediaLabel small {
+  color: var(--rate-accent);
+  font-size: 8px;
+  font-weight: 780;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.nocturneRateMediaLabel strong {
+  font-size: 19px;
+  font-weight: 620;
+  letter-spacing: -.025em;
+}
+
+.nocturneRateScan {
+  position: absolute;
+  z-index: 3;
+  top: -12%;
+  bottom: -12%;
+  left: 50%;
+  width: 32%;
+  opacity: 0;
+  background: linear-gradient(90deg, transparent, rgba(var(--rate-accent-rgb), .5), transparent);
+  mix-blend-mode: screen;
+  transform: skewX(-12deg);
+  pointer-events: none;
+}
+
+.nocturneRateBody {
+  min-width: 0;
+  padding: clamp(34px, 4vw, 58px);
+  display: flex;
+  flex-direction: column;
+}
+
+.nocturneRateBody > header {
+  margin-bottom: 30px;
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.nocturneRateBody > header p {
+  margin: 0 0 10px;
+  color: var(--rate-accent);
+  font-size: 8px;
+  font-weight: 780;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+}
+
+.nocturneRateBody > header h3 {
+  margin: 0;
+  color: #f4f0e9;
+  font-family: var(--font-sans);
+  font-size: clamp(32px, 3.5vw, 48px);
+  font-weight: 610;
+  line-height: .98;
+  letter-spacing: -.055em;
+}
+
+.nocturnePromoPill,
+.nocturnePricingServices article header > span {
+  width: max-content;
+  min-height: 28px;
+  padding: 0 11px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 99px;
+  background: #f2d85f;
+  color: #09090a;
+  font-size: 7px;
+  font-weight: 850;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.nocturneRateLead {
+  padding: 0 0 25px;
+  border-bottom: 1px solid rgba(255, 255, 255, .12);
+}
+
+.nocturneRateLead > span {
+  display: block;
+  color: #aaa39b;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.nocturneRateLead > div {
+  margin-top: 4px;
+  overflow: hidden;
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.nocturneRateLead strong {
+  display: inline-block;
+  color: #f4f0e9;
+  font-size: clamp(46px, 5.2vw, 68px);
+  font-weight: 650;
+  line-height: 1;
+  letter-spacing: -.065em;
+}
+
+.nocturneRateLead small {
+  color: #aaa39b;
+  font-size: 12px;
+}
+
+.nocturneRateLead del {
+  margin-top: 7px;
+  display: block;
+  color: #77716b;
+  font-size: 11px;
+  text-decoration-color: #a63a56;
+  text-decoration-thickness: 1px;
+}
+
+.nocturneProducerRate {
+  min-height: 63px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, .12);
+}
+
+.nocturneProducerRate span {
+  color: #bbb4ac;
+  font-size: 12px;
+}
+
+.nocturneProducerRate strong {
+  display: inline-block;
+  color: var(--rate-accent);
+  font-size: 18px;
+  font-weight: 690;
+  letter-spacing: -.025em;
+}
+
+.nocturnePackageList {
+  border-bottom: 1px solid rgba(255, 255, 255, .12);
+}
+
+.nocturnePackageRow {
+  min-height: 78px;
+  padding: 14px 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+
+.nocturnePackageRow:last-child {
+  border-bottom: 0;
+}
+
+.nocturnePackageRow > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.nocturnePackageRow > div:last-child {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.nocturnePackageRow strong {
+  color: #f0ebe4;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.nocturnePackageRow b {
+  display: inline-block;
+  color: var(--rate-accent);
+  font-size: 17px;
+  font-weight: 720;
+}
+
+.nocturnePackageRow small {
+  color: #77716b;
+  font-size: 9px;
+  line-height: 1.35;
+}
+
+.nocturneRateNote {
+  margin: 18px 0 22px;
+  color: #7d7771;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.nocturneRateCta,
+.nocturnePricingServices article > a {
+  min-height: 56px;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid rgba(var(--rate-accent-rgb), .46);
+  border-radius: 14px;
+  background: var(--rate-accent);
+  color: #070708;
+  font-size: 9px;
+  font-weight: 820;
+  letter-spacing: .12em;
+  text-align: left;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform .3s cubic-bezier(.16, 1, .3, 1), box-shadow .3s ease;
+}
+
+.nocturneRateCta {
+  margin-top: auto;
+}
+
+.nocturneRateCta:hover,
+.nocturnePricingServices article > a:hover {
+  box-shadow: 0 14px 32px rgba(var(--rate-accent-rgb), .18);
+  transform: translateY(-2px);
+}
+
+.nocturnePricingServices {
+  position: relative;
+  z-index: 1;
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.nocturnePricingServices article {
+  min-height: 310px;
+  padding: clamp(26px, 3.2vw, 42px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, .13);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 90% 4%, rgba(80, 124, 255, .13), transparent 35%),
+    #0b0b0d;
+  box-shadow: 0 26px 72px rgba(0, 0, 0, .24);
+}
+
+.nocturnePricingServices article:nth-child(2) {
+  background:
+    radial-gradient(circle at 90% 4%, rgba(166, 58, 86, .16), transparent 35%),
+    #0b0b0d;
+}
+
+.nocturnePricingServices article header {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nocturnePricingServices article header > small {
+  color: #706b66;
+  font-size: 8px;
+  font-weight: 680;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.nocturnePricingServices article h3 {
+  margin: 42px 0 14px;
+  color: #f2eee7;
+  font-family: var(--font-sans);
+  font-size: clamp(30px, 3.5vw, 44px);
+  font-weight: 610;
+  line-height: 1;
+  letter-spacing: -.055em;
+}
+
+.nocturnePricingServices article > div {
+  margin-bottom: 28px;
+  overflow: hidden;
+  display: flex;
+  gap: 13px;
+  align-items: baseline;
+}
+
+.nocturnePricingServices article > div strong {
+  display: inline-block;
+  color: #f2d85f;
+  font-size: 42px;
+  font-weight: 670;
+  line-height: 1;
+  letter-spacing: -.055em;
+}
+
+.nocturnePricingServices article > div del {
+  color: #77716b;
+  font-size: 14px;
+  text-decoration-color: #a63a56;
+}
+
+.nocturnePricingServices article > p {
+  max-width: 420px;
+  margin: 0 0 28px;
+  color: #aaa39b;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.nocturnePricingServices article > a {
+  --rate-accent-rgb: 242, 216, 95;
+  margin-top: auto;
+  border-color: rgba(242, 216, 95, .4);
+  background: transparent;
+  color: #f2eee7;
+}
+
+.nocturnePricingServices article > a b {
+  color: #f2d85f;
+}
+
+.nocturneProjectContact {
+  position: relative;
+  z-index: 1;
+  min-height: 100px;
+  margin-top: 18px;
+  padding: 20px 22px 20px 28px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, .82fr) 52px;
+  gap: 24px;
+  align-items: center;
+  border: 1px solid rgba(242, 216, 95, .3);
+  border-radius: 22px;
+  background:
+    linear-gradient(100deg, rgba(242, 216, 95, .11), transparent 52%),
+    #0b0b0d;
+  color: #f1ede6;
+  box-shadow: 0 26px 72px rgba(0, 0, 0, .24);
+}
+
+.nocturneProjectContact > span {
+  color: #aaa39b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.nocturneProjectContact > strong {
+  font-size: clamp(18px, 2vw, 28px);
+  font-weight: 620;
+  line-height: 1.05;
+  letter-spacing: -.035em;
+}
+
+.nocturneProjectContact > b {
+  width: 50px;
+  height: 50px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #f2d85f;
+  color: #070708;
+  transition: transform .32s cubic-bezier(.16, 1, .3, 1);
+}
+
+.nocturneProjectContact:hover > b {
+  transform: rotate(8deg) scale(1.06);
+}
+
+@media (max-width: 800px) {
+  .nocturnePricing {
+    padding: 88px 14px calc(112px + env(safe-area-inset-bottom));
+  }
+
+  .nocturnePricingHead {
+    margin-bottom: 30px;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .nocturnePricingHead > div:first-child > p {
+    margin-bottom: 15px;
+  }
+
+  .nocturnePricingHead h2 {
+    max-width: 350px;
+    font-size: clamp(39px, 11.3vw, 47px);
+  }
+
+  .nocturnePricingIntro > p {
+    max-width: 330px;
+    margin-bottom: 18px;
+    font-size: 12px;
+  }
+
+  .nocturneRateConsole {
+    border-radius: 22px;
+  }
+
+  .nocturneRateTabs {
+    min-height: 70px;
+    padding: 7px;
+    gap: 6px;
+  }
+
+  .nocturneRateTabs button {
+    min-height: 56px;
+    padding: 0 9px;
+    grid-template-columns: 1fr;
+    gap: 3px;
+    align-content: center;
+  }
+
+  .nocturneRateTabs button > span {
+    font-size: 7px;
+  }
+
+  .nocturneRateTabs button > strong {
+    font-size: 10px;
+    letter-spacing: .06em;
+  }
+
+  .nocturneRateTabs button > i {
+    right: 8px;
+    left: 8px;
+  }
+
+  .nocturneRatePanel {
+    min-height: 0;
+    grid-template-columns: 1fr;
+  }
+
+  .nocturneRateMedia {
+    min-height: 0;
+    aspect-ratio: 1.22;
+  }
+
+  .nocturneRateMediaLabel {
+    right: 18px;
+    bottom: 18px;
+    left: 18px;
+    gap: 9px;
+  }
+
+  .nocturneRateMediaLabel strong {
+    font-size: 16px;
+  }
+
+  .nocturneRateMediaLabel small {
+    display: none;
+  }
+
+  .nocturneRateBody {
+    padding: 24px 19px 20px;
+  }
+
+  .nocturneRateBody > header {
+    margin-bottom: 24px;
+    gap: 14px;
+  }
+
+  .nocturneRateBody > header h3 {
+    font-size: clamp(30px, 9vw, 38px);
+  }
+
+  .nocturnePromoPill {
+    min-height: 26px;
+    padding-inline: 9px;
+    font-size: 6px;
+  }
+
+  .nocturneRateLead {
+    padding-bottom: 21px;
+  }
+
+  .nocturneRateLead strong {
+    font-size: clamp(46px, 14vw, 58px);
+  }
+
+  .nocturneProducerRate {
+    min-height: 58px;
+  }
+
+  .nocturnePackageRow {
+    min-height: 76px;
+    gap: 12px;
+  }
+
+  .nocturnePackageRow strong {
+    font-size: 12px;
+  }
+
+  .nocturnePackageRow b {
+    font-size: 15px;
+  }
+
+  .nocturnePackageRow small {
+    max-width: 165px;
+    font-size: 8px;
+  }
+
+  .nocturneRateCta,
+  .nocturnePricingServices article > a {
+    min-height: 58px;
+  }
+
+  .nocturnePricingServices {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .nocturnePricingServices article {
+    min-height: 284px;
+    padding: 24px 20px 20px;
+    border-radius: 20px;
+  }
+
+  .nocturnePricingServices article h3 {
+    margin-top: 34px;
+    font-size: clamp(30px, 9vw, 38px);
+  }
+
+  .nocturnePricingServices article > div strong {
+    font-size: 40px;
+  }
+
+  .nocturneProjectContact {
+    min-height: 154px;
+    padding: 20px;
+    grid-template-columns: 1fr 48px;
+    gap: 10px 16px;
+    border-radius: 20px;
+  }
+
+  .nocturneProjectContact > span {
+    grid-column: 1 / -1;
+  }
+
+  .nocturneProjectContact > strong {
+    font-size: 23px;
+  }
+
+  .nocturneProjectContact > b {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nocturnePricingHead h2 > span,
+  .nocturnePricingIntro > i,
+  .nocturneRateConsole,
+  .nocturneRateTabs button,
+  .nocturneRatePanel,
+  .nocturneRateMedia,
+  .nocturneRateMedia img,
+  .nocturneRateScan,
+  .nocturneRateBody [data-nocturne-price-number],
+  .nocturneRateBody [data-nocturne-price-row],
+  .nocturnePricingServices article,
+  .nocturnePricingServices article > *,
+  .nocturneProjectContact {
+    opacity: 1 !important;
+    clip-path: none !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
 /* Nocturne — Sound District mobile-first district edition */
 .nocturne {
   --district-accent: #507cff;
@@ -6430,6 +7273,636 @@
   .nocturneBeyondCollage > span {
     opacity: 1 !important;
     transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Nocturne — cinematic mobile motion system */
+.nocturne {
+  --dock-accent: #507cff;
+  --dock-accent-rgb: 80, 124, 255;
+}
+
+.nocturne[data-nocturne-motion="cinematic"] .nocturneMedia {
+  transform:
+    translate3d(
+      calc(var(--nocturne-pointer-x) * -14px),
+      calc((var(--nocturne-pointer-y) * -9px) + var(--nocturne-hero-media-y, 0px)),
+      0
+    )
+    scale(var(--nocturne-hero-media-scale, 1.025));
+  transition: none;
+}
+
+.nocturne[data-nocturne-motion="cinematic"] .nocturneFrame {
+  clip-path: inset(0);
+  transform: scale(1.07);
+  animation: none;
+  will-change: auto;
+}
+
+.nocturne[data-nocturne-motion="cinematic"] .nocturneFrameActive {
+  animation: nocturneSceneResolve 1.15s cubic-bezier(.16, 1, .3, 1) both;
+}
+
+.nocturne[data-nocturne-motion="cinematic"] .nocturneGrain {
+  animation-duration: 1.45s;
+}
+
+.nocturne[data-nocturne-motion="cinematic"] .nocturneCopy > p,
+.nocturne[data-nocturne-motion="cinematic"] .nocturneCopy h1 > span,
+.nocturne[data-nocturne-motion="cinematic"] .nocturneCopy h1 > em,
+.nocturne[data-nocturne-motion="cinematic"] .nocturneCopy .nocturnePrimary,
+.nocturne[data-nocturne-motion="cinematic"] .nocturneCopy > a,
+.nocturne[data-nocturne-motion="cinematic"] .nocturneCopy > small {
+  animation: none;
+}
+
+.nocturne[data-nocturne-motion="cinematic"] .nocturneBeyondVideo::before {
+  opacity: .42;
+  animation: none;
+}
+
+.nocturnePortal {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: 0;
+  width: min(92vw, 920px);
+  height: min(26vw, 210px);
+  min-height: 112px;
+  overflow: visible;
+  transform: translate(-50%, 56%);
+  pointer-events: none;
+}
+
+.nocturnePortal > i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 78%;
+  height: 82%;
+  border: 1px solid rgba(var(--district-accent-rgb), .7);
+  border-radius: 50%;
+  opacity: 0;
+  box-shadow:
+    0 0 18px rgba(var(--district-accent-rgb), .14),
+    inset 0 0 22px rgba(var(--district-accent-rgb), .06);
+  transform: translate(-50%, -50%);
+  transform-origin: 50% 50%;
+}
+
+.nocturnePortal > i:nth-child(2) {
+  width: 58%;
+  height: 60%;
+  border-color: rgba(242, 216, 95, .55);
+}
+
+.nocturnePortal > i:nth-child(3) {
+  width: 36%;
+  height: 38%;
+  border-color: rgba(255, 255, 255, .45);
+}
+
+.nocturneRooms {
+  position: relative;
+  z-index: 3;
+  margin-top: -44px;
+  border-top: 1px solid rgba(255, 255, 255, .13);
+  box-shadow: 0 -30px 80px rgba(0, 0, 0, .28);
+}
+
+.nocturneSectionHead {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(80px, 1fr);
+  gap: clamp(24px, 5vw, 78px);
+  align-items: end;
+}
+
+.nocturneSectionHead h2,
+.nocturneBeyondHead h2 {
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 .2em;
+}
+
+.nocturneSectionHead h2 > span,
+.nocturneBeyondHead h2 > span {
+  display: inline-block;
+  will-change: auto;
+}
+
+.nocturneSectionSignal,
+.nocturneBeyondSignal {
+  position: relative;
+  height: 1px;
+  margin-bottom: .15em;
+  display: block;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(80, 124, 255, .9),
+      rgba(166, 58, 86, .76) 54%,
+      rgba(247, 244, 238, .52)
+    );
+  box-shadow: 0 0 14px rgba(80, 124, 255, .2);
+  transform-origin: 0 50%;
+}
+
+.nocturneSectionSignal::after,
+.nocturneBeyondSignal::after {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  content: "";
+  background: #f2d85f;
+  box-shadow: 0 0 15px rgba(242, 216, 95, .58);
+  transform: translateY(-50%);
+}
+
+.nocturneRail {
+  perspective: 900px;
+}
+
+.nocturneRail article {
+  transform-style: preserve-3d;
+}
+
+.nocturne[data-nocturne-motion="cinematic"] .nocturneRail article {
+  transition:
+    border-color .28s ease,
+    box-shadow .34s ease;
+}
+
+.nocturneRoomReveal,
+.nocturneRoomShell {
+  width: 100%;
+  min-height: 100%;
+}
+
+.nocturneRoomReveal {
+  overflow: hidden;
+  border-radius: inherit;
+  background: #09090b;
+}
+
+.nocturneRoomShell {
+  transform-style: preserve-3d;
+}
+
+.nocturneRoomImage {
+  transform: translateZ(0);
+}
+
+.nocturneRoomImage img {
+  transform-origin: 50% 50%;
+  transition: none;
+}
+
+.nocturneRoomImage::after,
+.nocturneBeyondMedia::after,
+.nocturneBeyondCollage::after {
+  display: none;
+}
+
+.nocturneRoomAperture {
+  display: none;
+}
+
+.nocturne[data-nocturne-motion="cinematic"] .nocturneRoomAperture {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(5, 5, 7, .98) 0 49.65%,
+      transparent 49.7% 50.3%,
+      rgba(5, 5, 7, .98) 50.35% 100%
+    );
+  transform-origin: 50% 50%;
+  pointer-events: none;
+}
+
+.nocturneRoomAperture > i {
+  width: 100%;
+  height: 1px;
+  display: block;
+  background: var(--card-accent);
+  box-shadow: 0 0 19px var(--card-accent);
+}
+
+.nocturne[data-nocturne-motion="cinematic"] .nocturneRailProgress > i > b {
+  transition: none;
+}
+
+.nocturne[data-nocturne-motion="cinematic"] .nocturneRail article[data-nocturne-room-active="true"] {
+  border-color: var(--card-accent);
+  box-shadow:
+    0 28px 72px rgba(0, 0, 0, .42),
+    0 0 0 1px color-mix(in srgb, var(--card-accent) 55%, transparent);
+}
+
+.nocturneBeyondHead {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(80px, 1fr);
+  gap: clamp(24px, 5vw, 72px);
+  align-items: end;
+}
+
+.nocturneBeyondHead::after {
+  display: none;
+}
+
+.nocturneBeyondHead h2 {
+  color: #f1ece4;
+  font-size: clamp(40px, 5.2vw, 72px);
+  font-weight: 600;
+  line-height: .9;
+  letter-spacing: -.06em;
+  text-transform: none;
+}
+
+.nocturneBeyondHead h2 > span:last-child {
+  color: #f2d85f;
+}
+
+.nocturneBeyondShell {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  transform-origin: 50% 80%;
+}
+
+.nocturneBeyondCard::after {
+  display: none;
+}
+
+.nocturneBeyondShell::after {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  content: "";
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, .02) 24%, rgba(0, 0, 0, .82) 100%),
+    linear-gradient(90deg, rgba(0, 0, 0, .14), transparent 68%);
+  pointer-events: none;
+}
+
+.nocturneBeyondMedia img,
+.nocturneBeyondCollage img {
+  transform-origin: 50% 50%;
+  transition: none;
+}
+
+.nocturneBeyondOverlay {
+  z-index: 5;
+}
+
+.nocturneBeyondOverlay h3 {
+  overflow: hidden;
+}
+
+.nocturneBeyondOverlay h3 > span {
+  display: block;
+}
+
+.nocturneFeatureDoors,
+.nocturneFeatureScan,
+.nocturneFeatureLight {
+  display: none;
+}
+
+.nocturne[data-nocturne-motion="cinematic"] .nocturneFeatureDoors {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.nocturneFeatureDoors > i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50.5%;
+  display: block;
+  background:
+    linear-gradient(110deg, rgba(21, 20, 23, .98), rgba(6, 6, 8, .99)),
+    #09090b;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06);
+}
+
+.nocturneFeatureDoors > i:first-child {
+  left: 0;
+  border-right: 1px solid rgba(242, 216, 95, .52);
+}
+
+.nocturneFeatureDoors > i:last-child {
+  right: 0;
+  border-left: 1px solid rgba(242, 216, 95, .52);
+}
+
+.nocturne[data-nocturne-motion="cinematic"] .nocturneFeatureScan {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.nocturneFeatureScan > i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -2px;
+  width: 2px;
+  display: block;
+  background: #f2d85f;
+  box-shadow:
+    0 0 18px rgba(242, 216, 95, .94),
+    12px 0 46px rgba(80, 124, 255, .34);
+}
+
+.nocturne[data-nocturne-motion="cinematic"] .nocturneFeatureLight {
+  position: absolute;
+  z-index: 4;
+  inset: -14% -32%;
+  display: block;
+  background:
+    linear-gradient(
+      112deg,
+      transparent 35%,
+      rgba(255, 255, 255, .54) 48%,
+      rgba(80, 124, 255, .32) 51%,
+      transparent 65%
+    );
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.nocturneEndCta {
+  width: min(1380px, 100%);
+  min-height: 104px;
+  margin: 22px auto 0;
+  padding: 18px 20px 18px 24px;
+  display: grid;
+  grid-template-columns: minmax(0, .72fr) minmax(0, 1.6fr) 54px;
+  gap: 18px;
+  align-items: center;
+  border: 1px solid rgba(242, 216, 95, .42);
+  border-radius: 22px;
+  background:
+    linear-gradient(100deg, rgba(242, 216, 95, .12), rgba(255, 255, 255, .035) 55%),
+    #0b0b0d;
+  color: #f4f0e9;
+  text-align: left;
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, .3),
+    inset 0 1px rgba(255, 255, 255, .07);
+  cursor: pointer;
+}
+
+.nocturneEndCta > span {
+  color: #aaa29a;
+  font-size: 8px;
+  font-weight: 750;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.nocturneEndCta > strong {
+  font-size: clamp(24px, 3vw, 42px);
+  font-weight: 590;
+  line-height: 1;
+  letter-spacing: -.045em;
+}
+
+.nocturneEndCta > b {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #f2d85f;
+  color: #080809;
+  font-size: 19px;
+  transition: transform .32s cubic-bezier(.16, 1, .3, 1);
+}
+
+.nocturneEndCta:hover > b {
+  transform: rotate(8deg) scale(1.06);
+}
+
+.nocturneBookingDock,
+.nocturneMobileDock {
+  border-color: rgba(var(--dock-accent-rgb), .36);
+  box-shadow:
+    0 18px 54px rgba(0, 0, 0, .42),
+    0 0 0 1px rgba(var(--dock-accent-rgb), .08);
+}
+
+.nocturne[data-nocturne-motion="cinematic"] .nocturneBookingDock,
+.nocturne[data-nocturne-motion="cinematic"] .nocturneMobileDock {
+  --dock-enter-y: 128%;
+  --dock-exit-y: 0%;
+  --dock-enter-opacity: 0;
+  --dock-exit-opacity: 0;
+  opacity: calc(var(--dock-enter-opacity) - var(--dock-exit-opacity));
+  visibility: visible;
+  transform:
+    translate3d(
+      0,
+      calc(var(--dock-enter-y) + var(--dock-exit-y)),
+      0
+    );
+  transition: none;
+  will-change: transform, opacity;
+}
+
+.nocturneBookingDock > span i {
+  background: var(--dock-accent);
+  box-shadow: 0 0 15px rgba(var(--dock-accent-rgb), .62);
+  animation: none;
+}
+
+.nocturneBookingDock button b,
+.nocturneMobileDock > button:last-child b {
+  color: var(--dock-accent);
+}
+
+.nocturneScrollProgress > i {
+  background:
+    linear-gradient(
+      90deg,
+      #507cff 0 33%,
+      #a63a56 52% 72%,
+      #f7f4ee 88%,
+      #f2d85f 100%
+    );
+  transform: scaleX(0);
+}
+
+@keyframes nocturneSceneResolve {
+  from {
+    opacity: 0;
+    clip-path: inset(0 0 0 12%);
+    transform: scale(1.115);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0);
+    transform: scale(1.07);
+  }
+}
+
+@media (max-width: 800px) {
+  .nocturnePortal {
+    width: 112vw;
+    height: 150px;
+  }
+
+  .nocturneRooms {
+    margin-top: -30px;
+    padding-top: 82px;
+  }
+
+  .nocturneSectionHead {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .nocturneSectionHead h2 {
+    max-width: 350px;
+    gap: 0 .18em;
+    font-size: clamp(40px, 11.5vw, 48px);
+  }
+
+  .nocturneSectionSignal {
+    width: 100%;
+  }
+
+  .nocturneRoomReveal,
+  .nocturneRoomShell {
+    height: 100%;
+  }
+
+  .nocturneRail article {
+    transform-origin: 50% 50%;
+  }
+
+  .nocturneBeyond {
+    padding-bottom: calc(116px + env(safe-area-inset-bottom));
+  }
+
+  .nocturneBeyondHead {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    margin-bottom: 28px;
+  }
+
+  .nocturneBeyondHead h2 {
+    max-width: 330px;
+    gap: 0 .18em;
+    font-size: clamp(38px, 11vw, 47px);
+  }
+
+  .nocturneBeyondCard {
+    aspect-ratio: .86;
+  }
+
+  .nocturneBeyondOverlay h3 {
+    font-size: clamp(30px, 8.8vw, 39px);
+  }
+
+  .nocturneEndCta {
+    min-height: 122px;
+    margin-top: 16px;
+    padding: 18px;
+    grid-template-columns: 1fr 48px;
+    gap: 8px 14px;
+    border-radius: 20px;
+  }
+
+  .nocturneEndCta > span {
+    grid-column: 1 / -1;
+  }
+
+  .nocturneEndCta > strong {
+    font-size: clamp(25px, 7.8vw, 34px);
+  }
+
+  .nocturneEndCta > b {
+    width: 48px;
+    height: 48px;
+  }
+
+  .nocturne[data-nocturne-motion="cinematic"] .nocturneMobileDock {
+    bottom: max(10px, env(safe-area-inset-bottom));
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .nocturne[data-nocturne-motion="cinematic"] .nocturneGrain {
+    animation: none;
+  }
+
+  .nocturne[data-nocturne-motion="cinematic"] .nocturneMobileDock {
+    backdrop-filter: blur(12px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nocturnePortal,
+  .nocturneRoomAperture,
+  .nocturneFeatureDoors,
+  .nocturneFeatureScan,
+  .nocturneFeatureLight {
+    display: none !important;
+  }
+
+  .nocturneRoomReveal,
+  .nocturneRoomShell,
+  .nocturneRoomImage,
+  .nocturneRoomImage img,
+  .nocturneBeyondShell,
+  .nocturneBeyondMedia,
+  .nocturneBeyondMedia img,
+  .nocturneBeyondCollage > span,
+  .nocturneBeyondCollage img,
+  .nocturneSectionHead h2 > span,
+  .nocturneBeyondHead h2 > span,
+  .nocturneBeyondOverlay h3 > span,
+  .nocturneEndCta {
+    opacity: 1 !important;
+    clip-path: none !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .nocturneFrameActive {
+    animation: none !important;
+  }
+
+  .nocturneCopy > p,
+  .nocturneCopy h1 > span,
+  .nocturneCopy h1 > em,
+  .nocturneCopy .nocturnePrimary,
+  .nocturneCopy > a,
+  .nocturneCopy > small {
+    animation: none !important;
     transition: none !important;
   }
 }

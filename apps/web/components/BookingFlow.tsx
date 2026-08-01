@@ -3,9 +3,9 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import {
-  ADD_ONS,
   ROOMS,
   TIME_SLOTS,
+  getAvailableAddOns,
   getRoom,
   type RoomId
 } from "@sounddistrict/booking-core";
@@ -89,6 +89,7 @@ export function BookingFlow() {
 
   const dateOptions = useMemo(upcomingDates, []);
   const room = getRoom(roomId ?? "red");
+  const availableAddOns = getAvailableAddOns(room.id);
   const selectedDate = useMemo(
     () => dateOptions.find((item) => item.value === date) ?? dateDetails(date),
     [date, dateOptions]
@@ -218,7 +219,7 @@ export function BookingFlow() {
   function buildEmailRequest() {
     if (!roomId || !selectedDate) return null;
     const extras = addOnIds.length
-      ? ADD_ONS.filter((item) => addOnIds.includes(item.id)).map((item) => item.name).join(", ")
+      ? availableAddOns.filter((item) => addOnIds.includes(item.id)).map((item) => item.name).join(", ")
       : "No extra support selected";
     const subject = `Booking request ${room.name} — ${selectedDate.fullLabel}`;
     const body = [
@@ -464,7 +465,7 @@ export function BookingFlow() {
                       <details className="extras-disclosure">
                         <summary>Add extra support <span>{addOnIds.length ? `${addOnIds.length} selected` : "Optional"}</span></summary>
                         <div className="addon-list">
-                          {ADD_ONS.map((addOn) => (
+                          {availableAddOns.map((addOn) => (
                             <button type="button" className={addOnIds.includes(addOn.id) ? "selected" : ""} aria-pressed={addOnIds.includes(addOn.id)} onClick={() => toggleAddOn(addOn.id)} key={addOn.id}>
                               <i aria-hidden="true">{addOnIds.includes(addOn.id) ? "✓" : "+"}</i>
                               <span><strong>{addOn.name}</strong><small>{addOn.description}</small></span>
@@ -482,7 +483,7 @@ export function BookingFlow() {
                       <div className="booking-summary">
                         <div><span>District</span><strong>{room.name}</strong><button type="button" onClick={() => goToStep(0)}>Change</button></div>
                         <div><span>Date &amp; time</span><strong>{selectedDate?.fullLabel} · {time} · {durationLabel}</strong><button type="button" onClick={() => goToStep(0)}>Change</button></div>
-                        <div><span>Support</span><strong>{addOnIds.length ? ADD_ONS.filter((item) => addOnIds.includes(item.id)).map((item) => item.name).join(", ") : "No extra support"}</strong><button type="button" onClick={() => goToStep(1)}>Change</button></div>
+                        <div><span>Support</span><strong>{addOnIds.length ? availableAddOns.filter((item) => addOnIds.includes(item.id)).map((item) => item.name).join(", ") : "No extra support"}</strong><button type="button" onClick={() => goToStep(1)}>Change</button></div>
                         <div><span>Contact</span><strong>{name} · {email}</strong><button type="button" onClick={() => goToStep(1)}>Change</button></div>
                       </div>
                       <div className="booking-truth">

@@ -6,6 +6,7 @@ import { ConceptStickyController } from "./ConceptStickyController";
 import { NocturneHeroExperience } from "./NocturneHeroExperience";
 import { NocturneMobileNavigation } from "./NocturneMobileNavigation";
 import { NocturneMotion } from "./NocturneMotion";
+import { NocturnePricing } from "./NocturnePricing";
 import styles from "./concepts.module.css";
 
 export const conceptDirections = [
@@ -54,7 +55,7 @@ const rooms = [
   {
     id: "red",
     number: "02",
-    name: "2000’s District",
+    name: "Red District",
     image: "room-red-editorial.webp",
     use: "Recording · Production · Engineering",
     capacity: "Up to 6 people",
@@ -91,23 +92,38 @@ function Nocturne({ asset, basePath }: { asset: (name: string) => string; basePa
 
       <section className={styles.nocturneRooms} id="nocturne-rooms">
         <div className={styles.nocturneSectionHead} data-nocturne-reveal="copy">
-          <h2><span>Choose your district.</span></h2>
+          <h2 aria-label="Choose your district.">
+            <span aria-hidden="true" data-nocturne-heading-word>Choose</span>
+            <span aria-hidden="true" data-nocturne-heading-word>your</span>
+            <span aria-hidden="true" data-nocturne-heading-word>district.</span>
+          </h2>
+          <i className={styles.nocturneSectionSignal} data-nocturne-room-signal aria-hidden="true" />
         </div>
         <div className={styles.nocturneRail}>
-          {rooms.map((room) => (
+          {rooms.map((room, index) => (
             <article
               key={room.id}
               data-nocturne-reveal="card"
               data-nocturne-cursor-label="View district"
+              data-nocturne-room-card={index}
             >
-              <div className={styles.nocturneRoomImage} data-nocturne-parallax="room">
-                <Image src={asset(room.image)} alt={room.name} fill sizes="(max-width: 800px) 84vw, 38vw" />
-              </div>
-              <div className={styles.nocturneRoomMeta}>
-                <span>{room.number} · {room.use}</span>
-                <h3>{room.name}</h3>
-                <p>{room.focus}</p>
-                <button type="button" data-booking={room.id} data-nocturne-magnetic>Book {room.name} <b>↗</b></button>
+              <div className={styles.nocturneRoomReveal} data-nocturne-room-reveal>
+                <div className={styles.nocturneRoomShell} data-nocturne-room-shell>
+                  <div
+                    className={styles.nocturneRoomImage}
+                    data-nocturne-room-media
+                    data-nocturne-district-reel={room.id}
+                  >
+                    <Image src={asset(room.image)} alt={room.name} fill sizes="(max-width: 800px) 84vw, 38vw" />
+                    <span className={styles.nocturneRoomAperture} data-nocturne-room-aperture aria-hidden="true"><i /></span>
+                  </div>
+                  <div className={styles.nocturneRoomMeta} data-nocturne-room-meta>
+                    <span>{room.number} · {room.use}</span>
+                    <h3>{room.name}</h3>
+                    <p>{room.focus}</p>
+                    <button type="button" data-booking={room.id} data-nocturne-magnetic>Book {room.name} <b>↗</b></button>
+                  </div>
+                </div>
               </div>
             </article>
           ))}
@@ -122,58 +138,77 @@ function Nocturne({ asset, basePath }: { asset: (name: string) => string; basePa
         </div>
       </section>
 
+      <NocturnePricing basePath={basePath} />
+
       <section className={styles.nocturneBeyond} id="nocturne-beyond">
         <div className={styles.nocturneBeyondHead} data-nocturne-reveal="copy">
-          <h2><span>Beyond the district</span></h2>
+          <h2 aria-label="Beyond the district">
+            <span aria-hidden="true" data-nocturne-beyond-word>Beyond</span>
+            <span aria-hidden="true" data-nocturne-beyond-word>the</span>
+            <span aria-hidden="true" data-nocturne-beyond-word>district</span>
+          </h2>
+          <i className={styles.nocturneBeyondSignal} data-nocturne-beyond-signal aria-hidden="true" />
         </div>
         <div className={styles.nocturneBeyondGrid}>
-          <article className={styles.nocturneBeyondCard} data-nocturne-reveal="card" data-nocturne-cursor-label="Explore">
-            <div className={styles.nocturneBeyondMedia} data-nocturne-parallax="feature">
-              <Image
-                src={asset("feature-management-distribution.webp")}
-                alt="Sound District management and distribution meeting"
-                fill
-                sizes="(max-width: 800px) 90vw, 32vw"
-              />
-            </div>
-            <div className={styles.nocturneBeyondOverlay}>
-              <h3><span>Management</span><span>&amp; distribution</span></h3>
+          <article className={styles.nocturneBeyondCard} data-nocturne-feature-card="doors" data-nocturne-cursor-label="Explore">
+            <div className={styles.nocturneBeyondShell} data-nocturne-feature-shell>
+              <div className={styles.nocturneBeyondMedia} data-nocturne-feature-media>
+                <Image
+                  src={asset("feature-management-distribution.webp")}
+                  alt="Sound District management and distribution meeting"
+                  fill
+                  sizes="(max-width: 800px) 90vw, 32vw"
+                />
+              </div>
+              <span className={styles.nocturneFeatureDoors} data-nocturne-feature-doors aria-hidden="true"><i /><i /></span>
+              <div className={styles.nocturneBeyondOverlay}>
+                <h3><span data-nocturne-feature-line>Management</span><span data-nocturne-feature-line>&amp; distribution</span></h3>
+              </div>
             </div>
           </article>
 
-          <article className={styles.nocturneBeyondCard} data-nocturne-reveal="card" data-nocturne-cursor-label="Explore">
-            <div className={styles.nocturneBeyondMedia} data-nocturne-parallax="feature">
-              <Image
-                src={asset("feature-quality-process.webp")}
-                alt="Producer refining a music project at Sound District"
-                fill
-                sizes="(max-width: 800px) 90vw, 32vw"
-              />
-            </div>
-            <div className={styles.nocturneBeyondOverlay}>
-              <h3><span>Quality</span><span>&amp; process</span></h3>
+          <article className={styles.nocturneBeyondCard} data-nocturne-feature-card="scan" data-nocturne-cursor-label="Explore">
+            <div className={styles.nocturneBeyondShell} data-nocturne-feature-shell>
+              <div className={styles.nocturneBeyondMedia} data-nocturne-feature-media>
+                <Image
+                  src={asset("feature-quality-process.webp")}
+                  alt="Producer refining a music project at Sound District"
+                  fill
+                  sizes="(max-width: 800px) 90vw, 32vw"
+                />
+              </div>
+              <span className={styles.nocturneFeatureScan} data-nocturne-feature-scan aria-hidden="true"><i /></span>
+              <div className={styles.nocturneBeyondOverlay}>
+                <h3><span data-nocturne-feature-line>Quality</span><span data-nocturne-feature-line>&amp; process</span></h3>
+              </div>
             </div>
           </article>
 
           <article
             className={`${styles.nocturneBeyondCard} ${styles.nocturneBeyondVideo}`}
-            data-nocturne-reveal="card"
+            data-nocturne-feature-card="strips"
             data-nocturne-final
           >
-            <div className={styles.nocturneBeyondCollage} data-nocturne-parallax="feature" aria-hidden="true">
-              <span><Image src={asset("room-blue-editorial.webp")} alt="" fill sizes="(max-width: 800px) 30vw, 11vw" /></span>
-              <span><Image src={asset("room-red-editorial.webp")} alt="" fill sizes="(max-width: 800px) 30vw, 11vw" /></span>
-              <span><Image src={asset("room-infinity-editorial.webp")} alt="" fill sizes="(max-width: 800px) 30vw, 11vw" /></span>
-            </div>
-            <div className={styles.nocturneBeyondOverlay}>
-              <span>03 · Compilation video · Coming soon</span>
-              <h3><span>Sound District,</span><span>more than just</span><span>a studio!</span></h3>
+            <div className={styles.nocturneBeyondShell} data-nocturne-feature-shell>
+              <div className={styles.nocturneBeyondCollage} aria-hidden="true">
+                <span data-nocturne-collage-strip><Image src={asset("room-blue-editorial.webp")} alt="" fill sizes="(max-width: 800px) 30vw, 11vw" /></span>
+                <span data-nocturne-collage-strip><Image src={asset("room-red-editorial.webp")} alt="" fill sizes="(max-width: 800px) 30vw, 11vw" /></span>
+                <span data-nocturne-collage-strip><Image src={asset("room-infinity-editorial.webp")} alt="" fill sizes="(max-width: 800px) 30vw, 11vw" /></span>
+              </div>
+              <span className={styles.nocturneFeatureLight} data-nocturne-feature-light aria-hidden="true" />
+              <div className={styles.nocturneBeyondOverlay}>
+                <span>03 · Compilation video · Coming soon</span>
+                <h3><span data-nocturne-feature-line>Sound District,</span><span data-nocturne-feature-line>more than just</span><span data-nocturne-feature-line>a studio!</span></h3>
+              </div>
             </div>
           </article>
         </div>
+        <button className={styles.nocturneEndCta} type="button" data-nocturne-end-cta data-booking="open">
+          <span>Ready when you are</span><strong>Book your district</strong><b>↗</b>
+        </button>
       </section>
 
-      <aside className={styles.nocturneBookingDock} aria-label="Quick booking">
+      <aside className={styles.nocturneBookingDock} data-nocturne-booking-dock aria-label="Quick booking">
         <span><i /> Session request</span>
         <button type="button" data-booking="open" data-nocturne-magnetic>Book your district <b>↗</b></button>
       </aside>

@@ -6,7 +6,8 @@ import styles from "./concepts.module.css";
 const mobileLinks = [
   ["Home", "#nocturne-home", "01"],
   ["Districts", "#nocturne-rooms", "02"],
-  ["Beyond", "#nocturne-beyond", "03"]
+  ["Rates", "#nocturne-pricing", "03"],
+  ["Beyond", "#nocturne-beyond", "04"]
 ] as const;
 
 export function NocturneMobileNavigation() {
@@ -98,7 +99,7 @@ export function NocturneMobileNavigation() {
         </footer>
       </section>
 
-      <aside className={styles.nocturneMobileDock} aria-label="Mobile quick actions">
+      <aside className={styles.nocturneMobileDock} data-nocturne-booking-dock aria-label="Mobile quick actions">
         <button
           className={styles.nocturneMobileMenuTrigger}
           type="button"

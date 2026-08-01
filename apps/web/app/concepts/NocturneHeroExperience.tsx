@@ -14,8 +14,8 @@ const scenes = [
   },
   {
     id: "red",
-    name: "2000’s",
-    fullName: "2000’s District",
+    name: "Red",
+    fullName: "Red District",
     image: "room-red-editorial.webp",
     eyebrow: "Recording · Production · Engineering"
   },
@@ -34,6 +34,8 @@ export function NocturneHeroExperience({ basePath }: { basePath: string }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [manualSelection, setManualSelection] = useState(false);
   const [inView, setInView] = useState(true);
+  const [hasStartedScrolling, setHasStartedScrolling] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const activeScene = scenes[activeIndex];
 
   useEffect(() => {
@@ -49,17 +51,40 @@ export function NocturneHeroExperience({ basePath }: { basePath: string }) {
   }, []);
 
   useEffect(() => {
+    function updateScrollState() {
+      const next = window.scrollY > 24;
+      setHasStartedScrolling((current) => current === next ? current : next);
+    }
+
+    updateScrollState();
+    window.addEventListener("scroll", updateScrollState, { passive: true });
+    return () => window.removeEventListener("scroll", updateScrollState);
+  }, []);
+
+  useEffect(() => {
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    function updateMotionPreference() {
+      setPrefersReducedMotion(preference.matches);
+    }
+
+    updateMotionPreference();
+    preference.addEventListener("change", updateMotionPreference);
+    return () => preference.removeEventListener("change", updateMotionPreference);
+  }, []);
+
+  useEffect(() => {
     if (
       manualSelection
       || !inView
-      || window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      || hasStartedScrolling
+      || prefersReducedMotion
     ) return;
 
     const interval = window.setInterval(() => {
       setActiveIndex((current) => (current + 1) % scenes.length);
     }, 5200);
     return () => window.clearInterval(interval);
-  }, [inView, manualSelection]);
+  }, [hasStartedScrolling, inView, manualSelection, prefersReducedMotion]);
 
   function selectScene(index: number) {
     setManualSelection(true);
@@ -114,6 +139,7 @@ export function NocturneHeroExperience({ basePath }: { basePath: string }) {
         <span className={styles.wordmark}>Sound District</span>
         <nav aria-label="Nocturne navigation">
           <a href="#nocturne-rooms">Districts</a>
+          <a href="#nocturne-pricing">Rates</a>
           <a href="#nocturne-beyond">Beyond</a>
         </nav>
         <button type="button" data-booking={activeScene.id} data-nocturne-magnetic>
@@ -138,7 +164,7 @@ export function NocturneHeroExperience({ basePath }: { basePath: string }) {
       </div>
 
       <div className={styles.nocturneCopy}>
-        <p key={`${activeScene.id}-eyebrow`}>{activeScene.eyebrow}</p>
+        <p>{activeScene.eyebrow}</p>
         <h1><span>Build around what</span><em>You make</em></h1>
         <button
           className={styles.nocturnePrimary}
@@ -155,6 +181,9 @@ export function NocturneHeroExperience({ basePath }: { basePath: string }) {
 
       <div className={styles.nocturneScrollCue} aria-hidden="true">
         <span>Scroll to explore</span><i />
+      </div>
+      <div className={styles.nocturnePortal} data-nocturne-portal aria-hidden="true">
+        <i /><i /><i />
       </div>
     </section>
   );

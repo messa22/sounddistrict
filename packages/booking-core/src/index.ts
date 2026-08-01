@@ -16,6 +16,8 @@ export type AddOn = {
   name: string;
   description: string;
   price: number;
+  billing?: "flat" | "hourly";
+  roomIds?: RoomId[];
 };
 
 export type BookingDraft = {
@@ -43,17 +45,17 @@ export const ROOMS: Room[] = [
     name: "Blue District",
     eyebrow: "District 01 · Recording",
     description: "XL, high end, modern music studio with an underwater touch.",
-    pricePerHour: 55,
+    pricePerHour: 30,
     image: "blueroom-new1.jpg",
     accent: "#3C72FF",
     features: ["XL studio", "Sound engineer optional", "Up to 5 people"]
   },
   {
     id: "red",
-    name: "2000’s District",
+    name: "Red District",
     eyebrow: "District 02 · Recording",
     description: "high end, retro, warm music studio with a separate booth",
-    pricePerHour: 65,
+    pricePerHour: 25,
     image: "space2-new.jpg",
     accent: "#FF4B3E",
     features: ["Separate booth", "Producer setup", "Up to 6 people"]
@@ -63,7 +65,7 @@ export const ROOMS: Room[] = [
     name: "White District",
     eyebrow: "District 03 · Visuals",
     description: "endless, white, clean photo studio for creators",
-    pricePerHour: 75,
+    pricePerHour: 60,
     image: "Untitled-2.jpg",
     accent: "#C8A955",
     features: ["Infinity wall", "Basic lighting", "Up to 10 people"]
@@ -73,9 +75,11 @@ export const ROOMS: Room[] = [
 export const ADD_ONS: AddOn[] = [
   {
     id: "engineer",
-    name: "Sound engineer",
-    description: "Technical support throughout your session.",
-    price: 35
+    name: "Producer",
+    description: "Production support throughout your music session.",
+    price: 20,
+    billing: "hourly",
+    roomIds: ["blue", "red"]
   },
   {
     id: "mix",
@@ -97,10 +101,17 @@ export function getRoom(roomId: RoomId): Room {
   return ROOMS.find((room) => room.id === roomId) ?? ROOMS[0];
 }
 
+export function getAvailableAddOns(roomId: RoomId): AddOn[] {
+  return ADD_ONS.filter((addOn) => !addOn.roomIds || addOn.roomIds.includes(roomId));
+}
+
 export function calculateQuote(roomId: RoomId, duration: number, addOnIds: string[]): number {
   const room = getRoom(roomId);
-  const addOns = ADD_ONS.filter((addOn) => addOnIds.includes(addOn.id));
-  return room.pricePerHour * duration + addOns.reduce((total, addOn) => total + addOn.price, 0);
+  const addOns = getAvailableAddOns(roomId).filter((addOn) => addOnIds.includes(addOn.id));
+  return room.pricePerHour * duration + addOns.reduce(
+    (total, addOn) => total + addOn.price * (addOn.billing === "hourly" ? duration : 1),
+    0
+  );
 }
 
 export function formatCurrency(value: number): string {

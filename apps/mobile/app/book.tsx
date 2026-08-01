@@ -4,12 +4,12 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useMemo, useState } from "react";
 import { ImageBackground, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import {
-  ADD_ONS,
   ROOMS,
   TIME_SLOTS,
   buildBookingReference,
   calculateQuote,
   formatCurrency,
+  getAvailableAddOns,
   getRoom,
   type RoomId,
   type StoredBooking
@@ -52,6 +52,7 @@ export default function BookScreen() {
   const [saving, setSaving] = useState(false);
 
   const room = getRoom(roomId);
+  const availableAddOns = getAvailableAddOns(roomId);
   const total = calculateQuote(roomId, duration, addOnIds);
 
   function toggleAddOn(id: string) {
@@ -136,11 +137,11 @@ export default function BookScreen() {
             <Text style={styles.eyebrow}>Step 3 · Extra support</Text>
             <Text style={styles.title}>Make the session complete.</Text>
             <Text style={styles.intro}>Optional. You can still discuss these with the team later.</Text>
-            {ADD_ONS.map((addOn) => (
+            {availableAddOns.map((addOn) => (
               <Pressable key={addOn.id} onPress={() => toggleAddOn(addOn.id)} style={[styles.addOn, addOnIds.includes(addOn.id) && styles.selectedBorder]}>
                 <View style={[styles.addIcon, addOnIds.includes(addOn.id) && styles.radioSelected]}><Text style={[styles.addIconText, addOnIds.includes(addOn.id) && styles.selectedText]}>{addOnIds.includes(addOn.id) ? "✓" : "+"}</Text></View>
                 <View style={styles.addCopy}><Text style={styles.addTitle}>{addOn.name}</Text><Text style={styles.addDescription}>{addOn.description}</Text></View>
-                <Text style={styles.addPrice}>+{formatCurrency(addOn.price)}</Text>
+                <Text style={styles.addPrice}>+{formatCurrency(addOn.price)}{addOn.billing === "hourly" ? " / hour" : ""}</Text>
               </Pressable>
             ))}
           </View>
@@ -163,7 +164,7 @@ export default function BookScreen() {
             <View style={styles.summary}>
               <SummaryRow label="Room" value={room.name} onEdit={() => setStep(0)} />
               <SummaryRow label="Moment" value={`${date} · ${time} · ${duration}h`} onEdit={() => setStep(1)} />
-              <SummaryRow label="Extras" value={addOnIds.length ? ADD_ONS.filter((item) => addOnIds.includes(item.id)).map((item) => item.name).join(", ") : "None"} onEdit={() => setStep(2)} />
+              <SummaryRow label="Extras" value={addOnIds.length ? availableAddOns.filter((item) => addOnIds.includes(item.id)).map((item) => item.name).join(", ") : "None"} onEdit={() => setStep(2)} />
               <SummaryRow label="Contact" value={`${name} · ${email}`} onEdit={() => setStep(3)} />
             </View>
             <View style={styles.totalCard}><View><Text style={styles.totalLabel}>Estimated total</Text><Text style={styles.totalHint}>Final after team confirmation</Text></View><Text style={styles.totalValue}>{formatCurrency(total)}</Text></View>
