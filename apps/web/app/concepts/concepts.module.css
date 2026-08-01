@@ -6875,7 +6875,7 @@
 }
 
 .nocturneBookingTimes {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
 }
 
 .nocturneBookingForm {
@@ -7483,11 +7483,23 @@
   }
 
   .nocturneBookingTimes {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding-bottom: 8px;
+    grid-template-columns: none;
+    grid-template-rows: repeat(2, 66px);
+    grid-auto-columns: 112px;
+    grid-auto-flow: column;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .nocturneBookingTimes::-webkit-scrollbar {
+    display: none;
   }
 
   .nocturneBookingTimes > button {
     min-height: 66px;
+    scroll-snap-align: start;
   }
 
   .nocturneBookingDurations strong,

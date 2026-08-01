@@ -176,7 +176,7 @@ export function NocturneHeroExperience({ basePath }: { basePath: string }) {
           Book your district <span>↗</span>
         </button>
         <a href="#nocturne-rooms">Compare districts <span>↓</span></a>
-        <small>Request in ±2 minutes · Personal confirmation</small>
+        <small>Open 24/7 · Request in ±2 minutes · Personal confirmation</small>
       </div>
 
       <div className={styles.nocturneScrollCue} aria-hidden="true">

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { gsap } from "gsap";
-import { ROOMS, TIME_SLOTS, getRoom, type RoomId } from "@sounddistrict/booking-core";
+import { ROOMS, getRoom, type RoomId } from "@sounddistrict/booking-core";
 import {
   calculateNocturnePrice,
   calculateNocturneStandardPrice,
@@ -15,6 +15,10 @@ import {
 import styles from "./concepts.module.css";
 
 const steps = ["Session", "Moment", "Details"] as const;
+const allDayTimeSlots = Array.from(
+  { length: 24 },
+  (_, hour) => `${String(hour).padStart(2, "0")}:00`
+);
 
 const districtImages: Record<RoomId, string> = {
   blue: "room-blue-editorial.webp",
@@ -123,10 +127,6 @@ export function NocturneBookingFlow({ basePath }: { basePath: string }) {
   const saving = quotedPrice !== undefined && standardPrice !== undefined
     ? Math.max(0, standardPrice - quotedPrice)
     : 0;
-  const availableTimeSlots = useMemo(() => TIME_SLOTS.filter((slot) => {
-    const [hours, minutes] = slot.split(":").map(Number);
-    return hours * 60 + minutes + duration * 60 <= 24 * 60;
-  }), [duration]);
 
   useEffect(() => {
     function handleBookingClick(event: MouseEvent) {
@@ -513,7 +513,7 @@ export function NocturneBookingFlow({ basePath }: { basePath: string }) {
               <div>
                 <p className={styles.nocturneBookingEyebrow}>02 · Preferred moment</p>
                 <h2 tabIndex={-1} data-booking-heading>Choose a date and time.</h2>
-                <p className={styles.nocturneBookingIntro}>We personally confirm availability after receiving your request.</p>
+                <p className={styles.nocturneBookingIntro}>Open 24/7. Choose any preferred start time; we personally confirm availability after receiving your request.</p>
 
                 <fieldset data-booking-row>
                   <legend>Date</legend>
@@ -544,9 +544,9 @@ export function NocturneBookingFlow({ basePath }: { basePath: string }) {
                 </fieldset>
 
                 <fieldset data-booking-row>
-                  <legend>Start time</legend>
+                  <legend>Start time · Open 24/7</legend>
                   <div className={styles.nocturneBookingTimes}>
-                    {availableTimeSlots.map((slot) => (
+                    {allDayTimeSlots.map((slot) => (
                       <button
                         type="button"
                         data-selected={time === slot}
@@ -560,6 +560,16 @@ export function NocturneBookingFlow({ basePath }: { basePath: string }) {
                       </button>
                     ))}
                   </div>
+                  <label className={styles.nocturneBookingCustomDate}>
+                    <span>Exact start time</span>
+                    <input
+                      type="time"
+                      step={900}
+                      value={time}
+                      onChange={(event) => setTime(event.target.value)}
+                      data-booking-invalid={attempted && !time ? "true" : undefined}
+                    />
+                  </label>
                 </fieldset>
                 {attempted && (!date || !time) && <p className={styles.nocturneBookingError} role="alert">Choose a preferred date and start time.</p>}
               </div>
