@@ -6267,6 +6267,1276 @@
   }
 }
 
+/* Nocturne booking — district-aware session sheet */
+.nocturneBookingOverlay {
+  --booking-accent: #f2d85f;
+  --booking-accent-rgb: 242, 216, 95;
+  position: fixed;
+  z-index: 500;
+  top: var(--booking-viewport-top, 0);
+  right: 0;
+  left: 0;
+  height: var(--booking-viewport-height, 100dvh);
+  padding: 24px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(0, 0, 0, .74);
+  backdrop-filter: blur(10px);
+}
+
+.nocturneBookingOverlay[data-district="blue"] {
+  --booking-accent: #507cff;
+  --booking-accent-rgb: 80, 124, 255;
+}
+
+.nocturneBookingOverlay[data-district="red"] {
+  --booking-accent: #a63a56;
+  --booking-accent-rgb: 166, 58, 86;
+}
+
+.nocturneBookingOverlay[data-district="infinity"] {
+  --booking-accent: #f7f4ee;
+  --booking-accent-rgb: 247, 244, 238;
+}
+
+.nocturneBookingSheet {
+  width: min(1220px, 100%);
+  height: min(920px, calc(var(--booking-viewport-height, 100dvh) - 48px));
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(var(--booking-accent-rgb), .3);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 8% 0, rgba(var(--booking-accent-rgb), .1), transparent 25%),
+    #09090b;
+  color: #f3efe8;
+  box-shadow:
+    0 44px 140px rgba(0, 0, 0, .62),
+    inset 0 1px rgba(255, 255, 255, .05);
+}
+
+.nocturneBookingTopbar {
+  min-height: 76px;
+  padding: 0 22px 0 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, .1);
+  background: rgba(7, 7, 8, .74);
+}
+
+.nocturneBookingTopbar > div {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 3px 11px;
+  align-items: center;
+}
+
+.nocturneBookingTopbar > div > i {
+  width: 7px;
+  height: 7px;
+  grid-row: 1 / 3;
+  border-radius: 50%;
+  background: var(--booking-accent);
+  box-shadow: 0 0 16px rgba(var(--booking-accent-rgb), .68);
+}
+
+.nocturneBookingTopbar > div > span {
+  color: #f2d85f;
+  font-size: 8px;
+  font-weight: 780;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.nocturneBookingTopbar > div > strong {
+  color: #f3efe8;
+  font-size: 17px;
+  font-weight: 630;
+  letter-spacing: -.025em;
+}
+
+.nocturneBookingTopbar > button {
+  min-width: 76px;
+  min-height: 46px;
+  padding: 0 3px 0 12px;
+  display: flex;
+  gap: 11px;
+  align-items: center;
+  justify-content: flex-end;
+  border: 0;
+  background: transparent;
+  color: #a9a29a;
+  font-size: 8px;
+  font-weight: 760;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.nocturneBookingTopbar > button > span {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, .17);
+  border-radius: 50%;
+  color: #f3efe8;
+  font-size: 20px;
+  font-weight: 300;
+}
+
+.nocturneBookingProgress {
+  min-height: 62px;
+  padding: 0 26px;
+  display: grid;
+  grid-template-columns: minmax(160px, .45fr) minmax(180px, 1fr) minmax(250px, .72fr);
+  gap: 28px;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+  background: #0c0c0e;
+}
+
+.nocturneBookingProgress > span {
+  color: var(--booking-accent);
+  font-size: 8px;
+  font-weight: 780;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.nocturneBookingProgress > div {
+  height: 2px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, .12);
+}
+
+.nocturneBookingProgress > div > i {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background: var(--booking-accent);
+  box-shadow: 0 0 12px rgba(var(--booking-accent-rgb), .55);
+  transform-origin: 0 50%;
+  transition: transform .5s cubic-bezier(.16, 1, .3, 1);
+}
+
+.nocturneBookingProgress > ol {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  list-style: none;
+}
+
+.nocturneBookingProgress li {
+  color: #57534f;
+  font-size: 7px;
+  font-weight: 720;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.nocturneBookingProgress li[data-active="true"] {
+  color: #bbb4ac;
+}
+
+.nocturneBookingContext {
+  min-height: 82px;
+  padding: 10px 26px;
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr) auto;
+  gap: 15px;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, .1);
+  background:
+    linear-gradient(90deg, rgba(var(--booking-accent-rgb), .09), transparent 46%),
+    #0a0a0c;
+}
+
+.nocturneBookingThumb {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(var(--booking-accent-rgb), .4);
+  border-radius: 13px;
+  background: #121215;
+  color: var(--booking-accent);
+  font-size: 12px;
+  font-weight: 780;
+  letter-spacing: .08em;
+}
+
+.nocturneBookingThumb img {
+  object-fit: cover;
+}
+
+.nocturneBookingContext > div:nth-child(2),
+.nocturneBookingContext > div:last-child {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.nocturneBookingContext > div:nth-child(2) > span,
+.nocturneBookingContext > div:last-child > small {
+  color: var(--booking-accent);
+  font-size: 7px;
+  font-weight: 760;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.nocturneBookingContext > div:nth-child(2) > strong {
+  overflow: hidden;
+  color: #f0ebe4;
+  font-size: 13px;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nocturneBookingContext > div:nth-child(2) > small {
+  color: #77716b;
+  font-size: 9px;
+}
+
+.nocturneBookingContext > div:last-child {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.nocturneBookingContext > div:last-child > strong {
+  color: #f3efe8;
+  font-size: 25px;
+  font-weight: 680;
+  line-height: 1;
+  letter-spacing: -.045em;
+}
+
+.nocturneBookingContext > div:last-child > del {
+  color: #716b65;
+  font-size: 9px;
+  text-decoration-color: #a63a56;
+}
+
+.nocturneBookingScroll {
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: rgba(var(--booking-accent-rgb), .4) transparent;
+}
+
+.nocturneBookingStep {
+  width: min(900px, calc(100% - 44px));
+  min-height: 100%;
+  margin: 0 auto;
+  padding: 42px 0 54px;
+}
+
+.nocturneBookingEyebrow {
+  margin: 0 0 14px;
+  color: var(--booking-accent);
+  font-size: 8px;
+  font-weight: 780;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+}
+
+.nocturneBookingStep h2 {
+  max-width: 720px;
+  margin: 0;
+  color: #f3efe8;
+  font-family: var(--font-sans);
+  font-size: clamp(38px, 4.6vw, 58px);
+  font-weight: 630;
+  line-height: .94;
+  letter-spacing: -.06em;
+}
+
+.nocturneBookingIntro {
+  max-width: 600px;
+  margin: 17px 0 34px;
+  color: #918a83;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.nocturneBookingStep fieldset {
+  min-width: 0;
+  margin: 30px 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.nocturneBookingStep legend,
+.nocturneBookingForm label {
+  margin-bottom: 11px;
+  color: #918a83;
+  font-size: 8px;
+  font-weight: 760;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.nocturneBookingDistricts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.nocturneBookingDistricts > button {
+  min-width: 0;
+  min-height: 76px;
+  padding: 7px 12px 7px 7px;
+  display: grid;
+  grid-template-columns: 62px 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0 12px;
+  align-items: end;
+  border: 1px solid rgba(255, 255, 255, .11);
+  border-radius: 14px;
+  background: #111114;
+  color: #9e9790;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .3s ease, background .3s ease, transform .3s cubic-bezier(.16, 1, .3, 1);
+}
+
+.nocturneBookingDistricts > button > span {
+  position: relative;
+  width: 62px;
+  height: 60px;
+  grid-row: 1 / 3;
+  overflow: hidden;
+  border-radius: 9px;
+}
+
+.nocturneBookingDistricts img {
+  object-fit: cover;
+}
+
+.nocturneBookingDistricts strong {
+  align-self: end;
+  color: #eee9e2;
+  font-size: 13px;
+  font-weight: 660;
+}
+
+.nocturneBookingDistricts small {
+  align-self: start;
+  font-size: 7px;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.nocturneBookingDistricts > button[data-selected="true"],
+.nocturneBookingDistricts > button:hover {
+  border-color: rgba(var(--booking-accent-rgb), .72);
+  background: rgba(var(--booking-accent-rgb), .09);
+  transform: translateY(-2px);
+}
+
+.nocturneBookingOffers {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.nocturneBookingOffers > button {
+  position: relative;
+  min-width: 0;
+  min-height: 92px;
+  padding: 15px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  border: 1px solid rgba(255, 255, 255, .11);
+  border-radius: 15px;
+  background: #111114;
+  color: #f1ece5;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .3s ease, background .3s ease, transform .3s cubic-bezier(.16, 1, .3, 1);
+}
+
+.nocturneBookingOffers > button::after {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  content: "";
+  background: transparent;
+}
+
+.nocturneBookingOffers > button[data-selected="true"] {
+  border-color: rgba(var(--booking-accent-rgb), .74);
+  background: rgba(var(--booking-accent-rgb), .09);
+  box-shadow: inset 0 0 0 1px rgba(var(--booking-accent-rgb), .12);
+}
+
+.nocturneBookingOffers > button[data-selected="true"]::after {
+  background: var(--booking-accent);
+  box-shadow: 0 0 12px rgba(var(--booking-accent-rgb), .7);
+}
+
+.nocturneBookingOffers > button:hover {
+  transform: translateY(-2px);
+}
+
+.nocturneBookingOffers > button > span {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nocturneBookingOffers > button > span:first-child {
+  padding-left: 10px;
+}
+
+.nocturneBookingOffers > button > span:last-child {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.nocturneBookingOffers strong {
+  font-size: 13px;
+  font-weight: 660;
+}
+
+.nocturneBookingOffers small {
+  color: #817b74;
+  font-size: 9px;
+  line-height: 1.35;
+}
+
+.nocturneBookingOffers b {
+  color: var(--booking-accent);
+  font-size: 14px;
+  font-weight: 690;
+}
+
+.nocturneBookingOffers em {
+  width: max-content;
+  padding: 5px 7px;
+  border-radius: 99px;
+  background: #f2d85f;
+  color: #09090b;
+  font-size: 6px;
+  font-style: normal;
+  font-weight: 840;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.nocturneBookingOffers del {
+  color: #69635d;
+  font-size: 8px;
+  text-decoration-color: #a63a56;
+}
+
+.nocturneBookingDurations,
+.nocturneBookingTimes {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.nocturneBookingDurations > button,
+.nocturneBookingTimes > button {
+  min-height: 58px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, .11);
+  border-radius: 12px;
+  background: #111114;
+  color: #ebe6df;
+  cursor: pointer;
+}
+
+.nocturneBookingDurations > button[data-selected="true"],
+.nocturneBookingTimes > button[data-selected="true"] {
+  border-color: var(--booking-accent);
+  background: var(--booking-accent);
+  color: #09090b;
+}
+
+.nocturneBookingDurations strong,
+.nocturneBookingTimes strong {
+  font-size: 13px;
+}
+
+.nocturneBookingDurations small,
+.nocturneBookingTimes small {
+  color: #7d7770;
+  font-size: 7px;
+}
+
+.nocturneBookingDurations > button[data-selected="true"] small,
+.nocturneBookingTimes > button[data-selected="true"] small {
+  color: rgba(9, 9, 11, .66);
+}
+
+.nocturneBookingDates {
+  padding-bottom: 7px;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(66px, 1fr));
+  gap: 7px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.nocturneBookingDates::-webkit-scrollbar {
+  display: none;
+}
+
+.nocturneBookingDates > button {
+  min-height: 76px;
+  padding: 8px 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, .11);
+  border-radius: 12px;
+  background: #111114;
+  color: #8b847d;
+  scroll-snap-align: start;
+  cursor: pointer;
+}
+
+.nocturneBookingDates > button strong {
+  margin: 3px 0;
+  color: #eee9e2;
+  font-size: 20px;
+}
+
+.nocturneBookingDates > button small,
+.nocturneBookingDates > button span {
+  font-size: 7px;
+  text-transform: uppercase;
+}
+
+.nocturneBookingDates > button[data-selected="true"] {
+  border-color: var(--booking-accent);
+  background: var(--booking-accent);
+  color: #09090b;
+}
+
+.nocturneBookingDates > button[data-selected="true"] strong {
+  color: #09090b;
+}
+
+.nocturneBookingCustomDate {
+  min-height: 52px;
+  margin-top: 9px;
+  padding: 0 12px 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 12px;
+  background: #111114;
+  color: #918a83;
+  font-size: 8px;
+  font-weight: 720;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.nocturneBookingCustomDate input {
+  min-width: 178px;
+  min-height: 40px;
+  padding: 0 9px;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 9px;
+  background: #0a0a0c;
+  color: #eee9e2;
+  color-scheme: dark;
+  font: inherit;
+}
+
+.nocturneBookingTimes {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.nocturneBookingForm {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 10px;
+}
+
+.nocturneBookingForm label {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nocturneBookingForm label > span {
+  color: #625d58;
+  font-size: 7px;
+}
+
+.nocturneBookingForm input,
+.nocturneBookingForm textarea {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 12px;
+  background: #111114;
+  color: #f1ece5;
+  font-size: 14px;
+  outline: 0;
+}
+
+.nocturneBookingForm input {
+  min-height: 54px;
+  padding: 0 14px;
+}
+
+.nocturneBookingForm textarea {
+  min-height: 106px;
+  padding: 14px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.nocturneBookingForm input:focus,
+.nocturneBookingForm textarea:focus {
+  border-color: var(--booking-accent);
+  box-shadow: 0 0 0 1px rgba(var(--booking-accent-rgb), .28);
+}
+
+.nocturneBookingForm [data-booking-invalid="true"] {
+  border-color: #c95868;
+}
+
+.nocturneBookingForm label > small,
+.nocturneBookingError {
+  color: #e47d8c;
+  font-size: 9px;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.nocturneBookingProject {
+  grid-column: 1 / -1;
+}
+
+.nocturneBookingReview,
+.nocturneBookingTruth {
+  margin-top: 20px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  border: 1px solid rgba(var(--booking-accent-rgb), .25);
+  border-radius: 14px;
+  background: rgba(var(--booking-accent-rgb), .07);
+}
+
+.nocturneBookingReview > span {
+  color: var(--booking-accent);
+  font-size: 7px;
+  font-weight: 780;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.nocturneBookingReview > strong {
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.nocturneBookingReview > small,
+.nocturneBookingTruth > p {
+  margin: 0;
+  color: #8f8881;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.nocturneBookingReview > em {
+  width: max-content;
+  color: #f2d85f;
+  font-size: 8px;
+  font-style: normal;
+  font-weight: 740;
+  text-transform: uppercase;
+}
+
+.nocturneBookingTruth {
+  border-color: rgba(255, 255, 255, .1);
+  background: #111114;
+}
+
+.nocturneBookingTruth > strong {
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.nocturneBookingTerms {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 11px;
+  align-items: start;
+  color: #8d867f;
+  font-size: 9px;
+  line-height: 1.55;
+  cursor: pointer;
+}
+
+.nocturneBookingTerms input {
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  accent-color: var(--booking-accent);
+}
+
+.nocturneBookingTerms a {
+  color: #d7d1c9;
+  border-bottom: 1px solid #716b65;
+}
+
+.nocturneBookingError {
+  margin: 14px 0 0;
+}
+
+.nocturneBookingPrepared {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.nocturneBookingPrepared > p:not(.nocturneBookingEyebrow) {
+  max-width: 560px;
+  margin: 18px 0 28px;
+  color: #918a83;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.nocturneBookingPrepared > div {
+  width: min(620px, 100%);
+  margin-bottom: 24px;
+  padding: 18px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 22px;
+  border: 1px solid rgba(var(--booking-accent-rgb), .28);
+  border-radius: 14px;
+  background: rgba(var(--booking-accent-rgb), .07);
+}
+
+.nocturneBookingPrepared > div > span {
+  color: #8d867f;
+  font-size: 9px;
+}
+
+.nocturneBookingPrepared > div > b {
+  grid-column: 2;
+  grid-row: 1 / 4;
+  align-self: center;
+  color: var(--booking-accent);
+  font-size: 24px;
+}
+
+.nocturneBookingPrepared > button {
+  min-height: 54px;
+  padding: 0 18px;
+  display: flex;
+  gap: 28px;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--booking-accent);
+  border-radius: 13px;
+  background: var(--booking-accent);
+  color: #09090b;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.nocturneBookingPrepared > button:last-child {
+  min-height: 38px;
+  margin-top: 12px;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid #716b65;
+  border-radius: 0;
+  background: transparent;
+  color: #918a83;
+}
+
+.nocturneBookingFooter {
+  min-height: 88px;
+  padding: 12px 18px 12px 26px;
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, .1);
+  background: rgba(9, 9, 11, .96);
+  box-shadow: 0 -18px 40px rgba(0, 0, 0, .18);
+}
+
+.nocturneBookingFooter > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nocturneBookingFooter > div:first-child > span {
+  color: var(--booking-accent);
+  font-size: 7px;
+  font-weight: 760;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.nocturneBookingFooter > div:first-child > strong {
+  color: #f3efe8;
+  font-size: 22px;
+  font-weight: 680;
+  line-height: 1;
+  letter-spacing: -.04em;
+}
+
+.nocturneBookingFooter > div:last-child {
+  display: flex;
+  gap: 8px;
+}
+
+.nocturneBookingFooter > div:last-child > button {
+  min-height: 56px;
+  padding: 0 18px;
+  border: 1px solid rgba(255, 255, 255, .13);
+  border-radius: 13px;
+  background: #151518;
+  color: #aaa39b;
+  font-size: 8px;
+  font-weight: 780;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.nocturneBookingFooter > div:last-child > button:last-child {
+  min-width: 230px;
+  display: flex;
+  gap: 26px;
+  align-items: center;
+  justify-content: space-between;
+  border-color: var(--booking-accent);
+  background: var(--booking-accent);
+  color: #09090b;
+}
+
+.nocturneBookingFooter > div:last-child > button:last-child > span {
+  font-size: 16px;
+}
+
+:global(body.nocturne-booking-active) .nocturneMobileDock,
+:global(body.nocturne-booking-active) .nocturneBookingDock {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translate3d(0, 130%, 0) !important;
+}
+
+/* Pricing choices now carry their full session into booking. */
+.nocturneRateLead,
+.nocturneProducerRate,
+.nocturnePackageRow {
+  width: 100%;
+  color: inherit;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.nocturneRateLead {
+  position: relative;
+  padding-right: 78px;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, .12);
+  background: transparent;
+}
+
+.nocturneRateLead > i,
+.nocturneProducerRate > i,
+.nocturnePackageRow > i {
+  color: #77716b;
+  font-size: 7px;
+  font-style: normal;
+  font-weight: 760;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  transition: color .25s ease, transform .3s cubic-bezier(.16, 1, .3, 1);
+}
+
+.nocturneRateLead > i {
+  position: absolute;
+  right: 0;
+  bottom: 27px;
+}
+
+.nocturneRateLead > i b,
+.nocturneProducerRate > i b,
+.nocturnePackageRow > i b {
+  color: var(--rate-accent);
+}
+
+.nocturneProducerRate {
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, .12);
+  background: transparent;
+}
+
+.nocturnePackageRow {
+  grid-template-columns: minmax(0, 1fr) auto 58px;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+  background: transparent;
+}
+
+.nocturnePackageRow:last-child {
+  border-bottom: 0;
+}
+
+.nocturneRateLead:hover,
+.nocturneProducerRate:hover,
+.nocturnePackageRow:hover {
+  background: rgba(var(--rate-accent-rgb), .055);
+}
+
+.nocturneRateLead:hover > i,
+.nocturneProducerRate:hover > i,
+.nocturnePackageRow:hover > i {
+  color: #eee9e2;
+  transform: translateX(3px);
+}
+
+@media (max-width: 800px) {
+  .nocturneBookingOverlay {
+    padding: max(8px, env(safe-area-inset-top)) 0 0;
+    backdrop-filter: blur(8px);
+  }
+
+  .nocturneBookingSheet {
+    width: 100%;
+    height: calc(var(--booking-viewport-height, 100dvh) - max(8px, env(safe-area-inset-top)));
+    border-right: 0;
+    border-bottom: 0;
+    border-left: 0;
+    border-radius: 26px 26px 0 0;
+  }
+
+  .nocturneBookingTopbar {
+    position: relative;
+    min-height: 70px;
+    padding: 6px 14px 0 18px;
+  }
+
+  .nocturneBookingTopbar::before {
+    position: absolute;
+    top: 7px;
+    left: 50%;
+    width: 38px;
+    height: 4px;
+    border-radius: 99px;
+    content: "";
+    background: rgba(255, 255, 255, .22);
+    transform: translateX(-50%);
+  }
+
+  .nocturneBookingTopbar > div > strong {
+    font-size: 15px;
+  }
+
+  .nocturneBookingTopbar > button {
+    min-width: 44px;
+    font-size: 0;
+  }
+
+  .nocturneBookingTopbar > button > span {
+    width: 42px;
+    height: 42px;
+    font-size: 20px;
+  }
+
+  .nocturneBookingProgress {
+    min-height: 50px;
+    padding: 0 17px;
+    grid-template-columns: minmax(142px, auto) 1fr;
+    gap: 14px;
+  }
+
+  .nocturneBookingProgress > ol {
+    display: none;
+  }
+
+  .nocturneBookingContext {
+    min-height: 72px;
+    padding: 8px 15px;
+    grid-template-columns: 52px minmax(0, 1fr) auto;
+    gap: 11px;
+  }
+
+  .nocturneBookingThumb {
+    width: 52px;
+    height: 52px;
+    border-radius: 11px;
+  }
+
+  .nocturneBookingContext > div:nth-child(2) > strong {
+    font-size: 11px;
+  }
+
+  .nocturneBookingContext > div:nth-child(2) > small {
+    overflow: hidden;
+    max-width: 190px;
+    font-size: 7px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .nocturneBookingContext > div:last-child > strong {
+    font-size: 20px;
+  }
+
+  .nocturneBookingStep {
+    width: calc(100% - 30px);
+    padding: 26px 0 38px;
+  }
+
+  .nocturneBookingStep h2 {
+    max-width: 360px;
+    font-size: clamp(31px, 9vw, 39px);
+  }
+
+  .nocturneBookingIntro {
+    margin: 13px 0 25px;
+    font-size: 11px;
+  }
+
+  .nocturneBookingStep fieldset {
+    margin-top: 24px;
+  }
+
+  .nocturneBookingDistricts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .nocturneBookingDistricts > button {
+    min-height: 96px;
+    padding: 6px;
+    grid-template-columns: 1fr;
+    grid-template-rows: 54px auto auto;
+    gap: 4px;
+    align-items: center;
+    text-align: center;
+  }
+
+  .nocturneBookingDistricts > button > span {
+    width: 100%;
+    height: 54px;
+    grid-row: auto;
+  }
+
+  .nocturneBookingDistricts strong {
+    align-self: auto;
+    font-size: 11px;
+  }
+
+  .nocturneBookingDistricts small {
+    align-self: auto;
+    font-size: 6px;
+  }
+
+  .nocturneBookingOffers {
+    grid-template-columns: 1fr;
+  }
+
+  .nocturneBookingOffers > button {
+    min-height: 82px;
+    padding: 13px;
+  }
+
+  .nocturneBookingDurations {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .nocturneBookingDates {
+    grid-template-columns: repeat(12, 64px);
+  }
+
+  .nocturneBookingDates > button {
+    min-height: 72px;
+  }
+
+  .nocturneBookingCustomDate {
+    min-height: 54px;
+  }
+
+  .nocturneBookingCustomDate input {
+    min-width: 166px;
+    min-height: 42px;
+    font-size: 12px;
+  }
+
+  .nocturneBookingTimes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .nocturneBookingTimes > button {
+    min-height: 56px;
+  }
+
+  .nocturneBookingForm {
+    grid-template-columns: 1fr;
+  }
+
+  .nocturneBookingProject {
+    grid-column: auto;
+  }
+
+  .nocturneBookingForm input,
+  .nocturneBookingForm textarea {
+    font-size: 16px;
+    scroll-margin-bottom: calc(92px + env(safe-area-inset-bottom));
+  }
+
+  .nocturneBookingFooter {
+    min-height: calc(78px + env(safe-area-inset-bottom));
+    padding: 9px 10px max(9px, env(safe-area-inset-bottom));
+    gap: 8px;
+  }
+
+  .nocturneBookingFooter > div:first-child {
+    min-width: 62px;
+  }
+
+  .nocturneBookingFooter > div:first-child > strong {
+    font-size: 18px;
+  }
+
+  .nocturneBookingFooter > div:last-child {
+    min-width: 0;
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  .nocturneBookingFooter > div:last-child > button {
+    min-height: 56px;
+    padding: 0 13px;
+  }
+
+  .nocturneBookingFooter > div:last-child > button:last-child {
+    min-width: 0;
+    flex: 1;
+    gap: 10px;
+    font-size: 7px;
+  }
+
+  .nocturneRateLead {
+    padding-right: 70px;
+  }
+
+  .nocturnePackageRow {
+    grid-template-columns: minmax(0, 1fr) auto 45px;
+  }
+
+  .nocturnePackageRow > i,
+  .nocturneProducerRate > i,
+  .nocturneRateLead > i {
+    font-size: 6px;
+  }
+}
+
+@media (max-width: 420px) {
+  .nocturneBookingContext > div:nth-child(2) > small,
+  .nocturneBookingContext > div:last-child > del,
+  .nocturneBookingContext > div:last-child > small {
+    display: none;
+  }
+
+  .nocturneBookingContext > div:last-child > strong {
+    max-width: 104px;
+    overflow: hidden;
+    font-size: 17px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .nocturneBookingDurations {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .nocturneBookingCustomDate {
+    padding: 9px;
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .nocturneBookingCustomDate input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .nocturneBookingFooter > div:first-child {
+    display: none;
+  }
+
+  .nocturneBookingFooter > div:last-child {
+    width: 100%;
+  }
+
+  .nocturnePackageRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .nocturnePackageRow > i {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nocturneBookingOverlay,
+  .nocturneBookingSheet,
+  .nocturneBookingStep,
+  .nocturneBookingStep [data-booking-row],
+  .nocturneBookingProgress > div > i {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
 /* Nocturne — Sound District mobile-first district edition */
 .nocturne {
   --district-accent: #507cff;

@@ -4,6 +4,7 @@ import { BookingFlow } from "../../components/BookingFlow";
 import { ConciergeExperience } from "./ConciergeExperience";
 import { ConceptStickyController } from "./ConceptStickyController";
 import { NocturneHeroExperience } from "./NocturneHeroExperience";
+import { NocturneBookingFlow } from "./NocturneBookingFlow";
 import { NocturneMobileNavigation } from "./NocturneMobileNavigation";
 import { NocturneMotion } from "./NocturneMotion";
 import { NocturnePricing } from "./NocturnePricing";
@@ -139,6 +140,7 @@ function Nocturne({ asset, basePath }: { asset: (name: string) => string; basePa
       </section>
 
       <NocturnePricing basePath={basePath} />
+      <NocturneBookingFlow basePath={basePath} />
 
       <section className={styles.nocturneBeyond} id="nocturne-beyond">
         <div className={styles.nocturneBeyondHead} data-nocturne-reveal="copy">
@@ -215,7 +217,6 @@ function Nocturne({ asset, basePath }: { asset: (name: string) => string; basePa
       <NocturneMobileNavigation />
       <NocturneMotion />
       <ConceptStickyController />
-      <BookingFlow />
     </main>
   );
 }

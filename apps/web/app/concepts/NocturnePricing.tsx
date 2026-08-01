@@ -3,6 +3,11 @@
 import Image from "next/image";
 import { useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
+import {
+  calculateNocturnePrice,
+  getNocturneOffer,
+  type NocturneOfferId
+} from "./NocturneBookingData";
 import styles from "./concepts.module.css";
 
 const districtRates = [
@@ -14,12 +19,12 @@ const districtRates = [
     name: "Blue District",
     image: "room-blue-editorial.webp",
     eyebrow: "Modern music studio",
-    hourly: "€30",
     hourlyLabel: "Studio only",
-    producer: "€50 / hour",
+    defaultOffer: "studio-hourly" satisfies NocturneOfferId,
+    producerOffer: "with-producer" satisfies NocturneOfferId,
     packages: [
-      { label: "5h + 1h free", price: "€150 total", detail: "6 hours of studio time" },
-      { label: "8h + 2h free", price: "€240 total", detail: "10 hours of studio time" }
+      { label: "5h + 1h free", detail: "6 hours of studio time", offer: "six-hour" satisfies NocturneOfferId },
+      { label: "8h + 2h free", detail: "10 hours of studio time", offer: "ten-hour" satisfies NocturneOfferId }
     ],
     note: "Free-hour packages apply to studio-only bookings."
   },
@@ -31,12 +36,12 @@ const districtRates = [
     name: "Red District",
     image: "room-red-editorial.webp",
     eyebrow: "Warm recording studio",
-    hourly: "€25",
     hourlyLabel: "Studio only",
-    producer: "€45 / hour",
+    defaultOffer: "studio-hourly" satisfies NocturneOfferId,
+    producerOffer: "with-producer" satisfies NocturneOfferId,
     packages: [
-      { label: "5h + 1h free", price: "€125 total", detail: "6 hours of studio time" },
-      { label: "8h + 2h free", price: "€200 total", detail: "10 hours of studio time" }
+      { label: "5h + 1h free", detail: "6 hours of studio time", offer: "six-hour" satisfies NocturneOfferId },
+      { label: "8h + 2h free", detail: "10 hours of studio time", offer: "ten-hour" satisfies NocturneOfferId }
     ],
     note: "Free-hour packages apply to studio-only bookings."
   },
@@ -48,16 +53,23 @@ const districtRates = [
     name: "White District",
     image: "room-infinity-editorial.webp",
     eyebrow: "Infinite photo studio",
-    hourly: "€50",
     hourlyLabel: "Opening month",
-    standardHourly: "€60 standard",
+    defaultOffer: "white-hourly" satisfies NocturneOfferId,
     packages: [
-      { label: "3-hour package", price: "€120", detail: "Opening month", standard: "€150 package · €180 hourly value" },
-      { label: "5-hour package", price: "€200", detail: "Opening month", standard: "€250 package · €300 hourly value" }
+      { label: "3-hour package", detail: "Opening month", offer: "white-three" satisfies NocturneOfferId },
+      { label: "5-hour package", detail: "Opening month", offer: "white-five" satisfies NocturneOfferId }
     ],
     note: "Opening prices are personally confirmed with your request."
   }
 ] as const;
+
+function formatPrice(value: number) {
+  return new Intl.NumberFormat("en-BE", {
+    style: "currency",
+    currency: "EUR",
+    maximumFractionDigits: 0
+  }).format(value);
+}
 
 export function NocturnePricing({ basePath }: { basePath: string }) {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -66,6 +78,10 @@ export function NocturnePricing({ basePath }: { basePath: string }) {
   const previousIndexRef = useRef(0);
   const hasMountedRef = useRef(false);
   const active = districtRates[activeIndex];
+  const hourlyOffer = getNocturneOffer(active.bookingId, active.defaultOffer);
+  const producerOffer = "producerOffer" in active
+    ? getNocturneOffer(active.bookingId, active.producerOffer)
+    : null;
 
   useLayoutEffect(() => {
     if (!hasMountedRef.current) {
@@ -235,29 +251,62 @@ export function NocturnePricing({ basePath }: { basePath: string }) {
               {active.id === "white" && <span className={styles.nocturnePromoPill}>Opening month</span>}
             </header>
 
-            <div className={styles.nocturneRateLead} data-nocturne-price-row>
+            <button
+              className={styles.nocturneRateLead}
+              type="button"
+              data-booking={active.bookingId}
+              data-booking-offer={active.defaultOffer}
+              data-nocturne-price-row
+              data-nocturne-rate-choice
+            >
               <span>{active.hourlyLabel}</span>
               <div>
-                <strong data-nocturne-price-number>{active.hourly}</strong>
+                <strong data-nocturne-price-number>{formatPrice(calculateNocturnePrice(hourlyOffer, 1))}</strong>
                 <small>/ hour</small>
               </div>
-              {"standardHourly" in active && <del>{active.standardHourly}</del>}
-            </div>
+              {hourlyOffer.standardPrice !== undefined && <del>{formatPrice(hourlyOffer.standardPrice)} standard</del>}
+              <i>Choose <b aria-hidden="true">↗</b></i>
+            </button>
 
-            {"producer" in active && (
-              <div className={styles.nocturneProducerRate} data-nocturne-price-row>
+            {producerOffer && (
+              <button
+                className={styles.nocturneProducerRate}
+                type="button"
+                data-booking={active.bookingId}
+                data-booking-offer={producerOffer.id}
+                data-nocturne-price-row
+                data-nocturne-rate-choice
+              >
                 <span>With producer</span>
-                <strong data-nocturne-price-number>{active.producer}</strong>
-              </div>
+                <strong data-nocturne-price-number>{formatPrice(calculateNocturnePrice(producerOffer, 1))} / hour</strong>
+                <i>Choose <b aria-hidden="true">↗</b></i>
+              </button>
             )}
 
             <div className={styles.nocturnePackageList}>
-              {active.packages.map((item) => (
-                <div className={styles.nocturnePackageRow} data-nocturne-price-row key={item.label}>
-                  <div><strong>{item.label}</strong><small>{item.detail}</small></div>
-                  <div><b data-nocturne-price-number>{item.price}</b>{"standard" in item && <small>{item.standard}</small>}</div>
-                </div>
-              ))}
+              {active.packages.map((item) => {
+                const packageOffer = getNocturneOffer(active.bookingId, item.offer);
+                return (
+                  <button
+                    className={styles.nocturnePackageRow}
+                    type="button"
+                    data-booking={active.bookingId}
+                    data-booking-offer={item.offer}
+                    data-nocturne-price-row
+                    data-nocturne-rate-choice
+                    key={item.label}
+                  >
+                    <div><strong>{item.label}</strong><small>{item.detail}</small></div>
+                    <div>
+                      <b data-nocturne-price-number>{formatPrice(calculateNocturnePrice(packageOffer, packageOffer.defaultDuration))}{active.id === "white" ? "" : " total"}</b>
+                      {packageOffer.valuePrice !== undefined && packageOffer.standardPrice !== undefined && (
+                        <small>{formatPrice(packageOffer.standardPrice)} package · {formatPrice(packageOffer.valuePrice)} hourly value</small>
+                      )}
+                    </div>
+                    <i>Choose <b aria-hidden="true">↗</b></i>
+                  </button>
+                );
+              })}
             </div>
 
             <p className={styles.nocturneRateNote} data-nocturne-price-row>{active.note}</p>
@@ -265,6 +314,7 @@ export function NocturnePricing({ basePath }: { basePath: string }) {
               className={styles.nocturneRateCta}
               type="button"
               data-booking={active.bookingId}
+              data-booking-offer={active.defaultOffer}
               data-nocturne-pricing-cta
               data-nocturne-magnetic
             >
