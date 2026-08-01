@@ -461,7 +461,8 @@ export function NocturneBookingFlow({ basePath }: { basePath: string }) {
                     <legend>Session plan</legend>
                     <div className={styles.nocturneBookingOffers}>
                       {offers.map((item) => {
-                        const itemPrice = calculateNocturnePrice(item, item.defaultDuration);
+                        const itemPrice = item.pricePerHour
+                          ?? calculateNocturnePrice(item, item.defaultDuration);
                         return (
                           <button
                             type="button"
