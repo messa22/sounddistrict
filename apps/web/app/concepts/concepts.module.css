@@ -6793,6 +6793,23 @@
   color: rgba(9, 9, 11, .66);
 }
 
+.nocturneBookingDurations > button:has(em) {
+  min-height: 70px;
+}
+
+.nocturneBookingDurations em {
+  color: #f2d85f;
+  font-size: 6px;
+  font-style: normal;
+  font-weight: 820;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.nocturneBookingDurations > button[data-selected="true"] em {
+  color: rgba(9, 9, 11, .72);
+}
+
 .nocturneBookingUpgrade {
   width: 100%;
   min-height: 82px;
@@ -6929,6 +6946,383 @@
   color: #eee9e2;
   color-scheme: dark;
   font: inherit;
+}
+
+.nocturneBookingDemoNotice {
+  min-height: 78px;
+  margin: 0 0 28px;
+  padding: 15px 17px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 16px;
+  align-items: center;
+  border: 1px solid rgba(242, 216, 95, .34);
+  border-radius: 14px;
+  background: rgba(242, 216, 95, .07);
+}
+
+.nocturneBookingDemoNotice > span {
+  width: max-content;
+  padding: 7px 9px;
+  border-radius: 99px;
+  background: #f2d85f;
+  color: #09090b;
+  font-size: 7px;
+  font-weight: 850;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.nocturneBookingDemoNotice > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nocturneBookingDemoNotice strong {
+  color: #f3efe8;
+  font-size: 13px;
+  font-weight: 680;
+}
+
+.nocturneBookingDemoNotice p {
+  margin: 0;
+  color: #a9a29a;
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+.nocturneBookingCalendar {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 18px;
+  background: #0e0e11;
+  box-shadow: inset 0 1px rgba(255, 255, 255, .035);
+}
+
+.nocturneBookingCalendar > header {
+  min-height: 74px;
+  padding: 10px 14px;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 48px;
+  gap: 12px;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, .09);
+  background: linear-gradient(90deg, rgba(var(--booking-accent-rgb), .09), transparent 55%);
+}
+
+.nocturneBookingCalendar > header > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  text-align: center;
+}
+
+.nocturneBookingCalendar > header small {
+  color: var(--booking-accent);
+  font-size: 7px;
+  font-weight: 780;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.nocturneBookingCalendar > header strong {
+  color: #f3efe8;
+  font-size: 18px;
+  font-weight: 660;
+  letter-spacing: -.025em;
+}
+
+.nocturneBookingCalendar > header > button {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, .13);
+  border-radius: 12px;
+  background: #151518;
+  color: #eee9e2;
+  font-size: 17px;
+  cursor: pointer;
+}
+
+.nocturneBookingCalendar > header > button:disabled {
+  opacity: .28;
+  cursor: default;
+}
+
+.nocturneBookingWeekdays,
+.nocturneBookingMonthGrid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.nocturneBookingWeekdays {
+  padding: 13px 14px 8px;
+  gap: 6px;
+}
+
+.nocturneBookingWeekdays > span {
+  color: #77716b;
+  font-size: 7px;
+  font-weight: 760;
+  letter-spacing: .08em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.nocturneBookingMonthGrid {
+  padding: 0 14px 14px;
+  gap: 6px;
+}
+
+.nocturneBookingMonthGrid > i,
+.nocturneBookingMonthGrid > button {
+  min-width: 0;
+  min-height: 62px;
+  border-radius: 11px;
+}
+
+.nocturneBookingMonthGrid > button {
+  position: relative;
+  padding: 8px 4px 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, .1);
+  background: #151518;
+  color: #f0ebe4;
+  cursor: pointer;
+  transition: border-color .22s ease, background .22s ease, transform .22s ease;
+}
+
+.nocturneBookingMonthGrid > button:hover:not(:disabled) {
+  border-color: rgba(var(--booking-accent-rgb), .58);
+  transform: translateY(-1px);
+}
+
+.nocturneBookingMonthGrid > button:disabled {
+  border-color: rgba(255, 255, 255, .04);
+  background: #101012;
+  color: #514d49;
+  cursor: default;
+}
+
+.nocturneBookingMonthGrid > button[data-selected="true"] {
+  border-color: var(--booking-accent);
+  background: var(--booking-accent);
+  color: #09090b;
+  box-shadow: 0 0 22px rgba(var(--booking-accent-rgb), .18);
+}
+
+.nocturneBookingMonthGrid strong {
+  font-size: 15px;
+  font-weight: 690;
+}
+
+.nocturneBookingMonthGrid small {
+  color: #918a83;
+  font-size: 6px;
+  font-weight: 650;
+}
+
+.nocturneBookingMonthGrid > button[data-selected="true"] small {
+  color: rgba(9, 9, 11, .64);
+}
+
+.nocturneBookingMonthGrid > button > span {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--booking-accent);
+  box-shadow: 0 0 8px rgba(var(--booking-accent-rgb), .7);
+}
+
+.nocturneBookingMonthGrid > button[data-selected="true"] > span {
+  background: #09090b;
+  box-shadow: none;
+}
+
+.nocturneBookingCalendar > footer {
+  min-height: 42px;
+  padding: 9px 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px 18px;
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, .08);
+  color: #817b74;
+  font-size: 7px;
+}
+
+.nocturneBookingCalendar > footer > span {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.nocturneBookingCalendar > footer i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--booking-accent);
+}
+
+.nocturneBookingCalendar > footer > span:nth-child(2) i {
+  width: 10px;
+  height: 10px;
+  border: 3px solid var(--booking-accent);
+  background: transparent;
+}
+
+.nocturneBookingAvailabilityHead {
+  margin-bottom: 12px;
+  padding: 17px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border: 1px solid rgba(var(--booking-accent-rgb), .24);
+  border-radius: 14px;
+  background: rgba(var(--booking-accent-rgb), .07);
+}
+
+.nocturneBookingAvailabilityHead > span {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  color: var(--booking-accent);
+  font-size: 7px;
+  font-weight: 780;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.nocturneBookingAvailabilityHead > span > i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--booking-accent);
+  box-shadow: 0 0 9px rgba(var(--booking-accent-rgb), .65);
+}
+
+.nocturneBookingAvailabilityHead > strong {
+  color: #f3efe8;
+  font-size: 18px;
+  font-weight: 660;
+}
+
+.nocturneBookingAvailabilityHead > small {
+  color: #aaa39b;
+  font-size: 9px;
+}
+
+.nocturneBookingTimeGroups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.nocturneBookingTimeGroups > section {
+  min-width: 0;
+  padding: 13px;
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 14px;
+  background: #111114;
+}
+
+.nocturneBookingTimeGroups > section > header {
+  margin-bottom: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nocturneBookingTimeGroups > section > header strong {
+  color: #f0ebe4;
+  font-size: 12px;
+  font-weight: 670;
+}
+
+.nocturneBookingTimeGroups > section > header small {
+  color: #77716b;
+  font-size: 7px;
+}
+
+.nocturneBookingTimeGroups > section > div {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.nocturneBookingTimeGroups button {
+  min-width: 0;
+  min-height: 58px;
+  padding: 7px 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, .11);
+  border-radius: 10px;
+  background: #17171a;
+  color: #f0ebe4;
+  cursor: pointer;
+}
+
+.nocturneBookingTimeGroups button[data-selected="true"] {
+  border-color: var(--booking-accent);
+  background: var(--booking-accent);
+  color: #09090b;
+}
+
+.nocturneBookingTimeGroups button strong {
+  font-size: 13px;
+}
+
+.nocturneBookingTimeGroups button small {
+  color: #8f8881;
+  font-size: 7px;
+}
+
+.nocturneBookingTimeGroups button[data-selected="true"] small {
+  color: rgba(9, 9, 11, .64);
+}
+
+.nocturneBookingAgendaPrompt {
+  min-height: 114px;
+  margin-top: 24px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed rgba(255, 255, 255, .14);
+  border-radius: 14px;
+  color: #aaa39b;
+  text-align: center;
+}
+
+.nocturneBookingAgendaPrompt > span {
+  color: var(--booking-accent);
+  font-size: 18px;
+}
+
+.nocturneBookingAgendaPrompt > strong {
+  color: #e9e4dd;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.nocturneBookingAgendaPrompt > small {
+  font-size: 9px;
 }
 
 .nocturneBookingTimes {
@@ -7539,6 +7933,132 @@
     font-size: 16px;
   }
 
+  .nocturneBookingDemoNotice {
+    min-height: 96px;
+    margin-bottom: 30px;
+    padding: 16px;
+  }
+
+  .nocturneBookingDemoNotice > span {
+    font-size: 9px;
+  }
+
+  .nocturneBookingDemoNotice strong {
+    font-size: 15px;
+  }
+
+  .nocturneBookingDemoNotice p {
+    color: #b8b1a9;
+    font-size: 12px;
+  }
+
+  .nocturneBookingCalendar > header {
+    min-height: 74px;
+    padding-inline: 10px;
+    grid-template-columns: 48px minmax(0, 1fr) 48px;
+    gap: 8px;
+  }
+
+  .nocturneBookingCalendar > header small {
+    font-size: 9px;
+  }
+
+  .nocturneBookingCalendar > header strong {
+    font-size: 18px;
+  }
+
+  .nocturneBookingWeekdays {
+    padding: 13px 8px 8px;
+    gap: 4px;
+  }
+
+  .nocturneBookingWeekdays > span {
+    font-size: 8px;
+  }
+
+  .nocturneBookingMonthGrid {
+    padding: 0 8px 10px;
+    gap: 4px;
+  }
+
+  .nocturneBookingMonthGrid > i,
+  .nocturneBookingMonthGrid > button {
+    min-height: 54px;
+    border-radius: 9px;
+  }
+
+  .nocturneBookingMonthGrid strong {
+    font-size: 16px;
+  }
+
+  .nocturneBookingMonthGrid small {
+    display: none;
+  }
+
+  .nocturneBookingCalendar > footer {
+    padding: 11px;
+    gap: 8px 14px;
+    font-size: 9px;
+  }
+
+  .nocturneBookingAvailabilityHead {
+    padding: 18px;
+  }
+
+  .nocturneBookingAvailabilityHead > span {
+    font-size: 9px;
+  }
+
+  .nocturneBookingAvailabilityHead > strong {
+    font-size: 18px;
+  }
+
+  .nocturneBookingAvailabilityHead > small {
+    font-size: 11px;
+  }
+
+  .nocturneBookingTimeGroups {
+    grid-template-columns: 1fr;
+  }
+
+  .nocturneBookingTimeGroups > section {
+    padding: 15px;
+  }
+
+  .nocturneBookingTimeGroups > section > header strong {
+    font-size: 14px;
+  }
+
+  .nocturneBookingTimeGroups > section > header small {
+    font-size: 10px;
+  }
+
+  .nocturneBookingTimeGroups > section > div {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .nocturneBookingTimeGroups button {
+    min-height: 70px;
+  }
+
+  .nocturneBookingTimeGroups button strong {
+    font-size: 16px;
+  }
+
+  .nocturneBookingTimeGroups button small {
+    color: #aaa39b;
+    font-size: 11px;
+  }
+
+  .nocturneBookingAgendaPrompt > strong {
+    font-size: 15px;
+  }
+
+  .nocturneBookingAgendaPrompt > small {
+    font-size: 11px;
+  }
+
   .nocturneBookingTimes {
     padding-bottom: 8px;
     grid-template-columns: none;
@@ -7568,6 +8088,14 @@
   .nocturneBookingTimes small {
     color: #aaa39b;
     font-size: 10px;
+  }
+
+  .nocturneBookingDurations > button:has(em) {
+    min-height: 82px;
+  }
+
+  .nocturneBookingDurations em {
+    font-size: 8px;
   }
 
   .nocturneBookingUpgrade {

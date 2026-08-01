@@ -15,6 +15,7 @@ export type NocturneBookingOffer = {
   description: string;
   defaultDuration: number;
   durationOptions?: readonly number[];
+  durationPrices?: Readonly<Partial<Record<number, number>>>;
   pricePerHour?: number;
   fixedPrice?: number;
   standardPrice?: number;
@@ -30,7 +31,8 @@ export const NOCTURNE_BOOKING_OFFERS: Record<RoomId, readonly NocturneBookingOff
       name: "Studio only",
       description: "Book the studio by the hour.",
       defaultDuration: 2,
-      durationOptions: [1, 2, 3, 4, 8],
+      durationOptions: [1, 2, 3, 4, 5, 6, 7, 8],
+      durationPrices: { 6: 150 },
       pricePerHour: 30
     },
     {
@@ -38,7 +40,7 @@ export const NOCTURNE_BOOKING_OFFERS: Record<RoomId, readonly NocturneBookingOff
       name: "With producer",
       description: "Studio time with a producer throughout your session.",
       defaultDuration: 2,
-      durationOptions: [1, 2, 3, 4, 8],
+      durationOptions: [1, 2, 3, 4, 5, 6, 7, 8],
       pricePerHour: 50
     },
     {
@@ -66,7 +68,8 @@ export const NOCTURNE_BOOKING_OFFERS: Record<RoomId, readonly NocturneBookingOff
       name: "Studio only",
       description: "Book the studio by the hour.",
       defaultDuration: 2,
-      durationOptions: [1, 2, 3, 4, 8],
+      durationOptions: [1, 2, 3, 4, 5, 6, 7, 8],
+      durationPrices: { 6: 125 },
       pricePerHour: 25
     },
     {
@@ -74,7 +77,7 @@ export const NOCTURNE_BOOKING_OFFERS: Record<RoomId, readonly NocturneBookingOff
       name: "With producer",
       description: "Studio time with a producer throughout your session.",
       defaultDuration: 2,
-      durationOptions: [1, 2, 3, 4, 8],
+      durationOptions: [1, 2, 3, 4, 5, 6, 7, 8],
       pricePerHour: 45
     },
     {
@@ -102,7 +105,8 @@ export const NOCTURNE_BOOKING_OFFERS: Record<RoomId, readonly NocturneBookingOff
       name: "Studio by the hour",
       description: "Opening-month rate for a flexible visual session.",
       defaultDuration: 1,
-      durationOptions: [1, 2, 4, 8],
+      durationOptions: [1, 2, 3, 4, 5, 6, 7, 8],
+      durationPrices: { 3: 120, 5: 200 },
       pricePerHour: 50,
       standardPrice: 60,
       promoLabel: "Opening month"
@@ -146,7 +150,9 @@ export function calculateNocturnePrice(
   offer: NocturneBookingOffer,
   duration: number
 ): number {
-  return offer.fixedPrice ?? (offer.pricePerHour ?? 0) * duration;
+  return offer.durationPrices?.[duration]
+    ?? offer.fixedPrice
+    ?? (offer.pricePerHour ?? 0) * duration;
 }
 
 export function calculateNocturneStandardPrice(
@@ -156,6 +162,9 @@ export function calculateNocturneStandardPrice(
   if (offer.fixedPrice !== undefined) return offer.standardPrice;
   if (offer.standardPrice !== undefined && offer.pricePerHour !== undefined) {
     return offer.standardPrice * duration;
+  }
+  if (offer.durationPrices?.[duration] !== undefined && offer.pricePerHour !== undefined) {
+    return offer.pricePerHour * duration;
   }
   return undefined;
 }

@@ -12,13 +12,19 @@ import {
   type NocturneBookingOffer,
   type NocturneOfferId
 } from "./NocturneBookingData";
+import {
+  getDemoAvailableTimes,
+  getDemoCalendarMonth
+} from "./NocturneAvailabilityDemo";
 import styles from "./concepts.module.css";
 
-const steps = ["Session", "Moment", "Details"] as const;
-const allDayTimeSlots = Array.from(
-  { length: 24 },
-  (_, hour) => `${String(hour).padStart(2, "0")}:00`
-);
+const steps = ["Session", "Agenda", "Details"] as const;
+const timeGroups = [
+  { label: "Night", range: "00–05", from: 0, to: 6 },
+  { label: "Morning", range: "06–11", from: 6, to: 12 },
+  { label: "Afternoon", range: "12–17", from: 12, to: 18 },
+  { label: "Evening", range: "18–23", from: 18, to: 24 }
+] as const;
 
 const districtImages: Record<RoomId, string> = {
   blue: "room-blue-editorial.webp",
@@ -31,26 +37,6 @@ const districtLabels: Record<RoomId, string> = {
   red: "Red",
   infinity: "White"
 };
-
-function nextDates() {
-  return Array.from({ length: 12 }, (_, index) => {
-    const date = new Date();
-    date.setHours(12, 0, 0, 0);
-    date.setDate(date.getDate() + index + 1);
-    return {
-      value: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`,
-      weekday: new Intl.DateTimeFormat("en-GB", { weekday: "short" }).format(date),
-      day: date.getDate(),
-      month: new Intl.DateTimeFormat("en-GB", { month: "short" }).format(date),
-      fullLabel: new Intl.DateTimeFormat("en-GB", {
-        weekday: "long",
-        day: "numeric",
-        month: "long",
-        year: "numeric"
-      }).format(date)
-    };
-  });
-}
 
 function laterDate(value: string) {
   if (!value) return undefined;
@@ -105,6 +91,7 @@ export function NocturneBookingFlow({ basePath }: { basePath: string }) {
   const [roomId, setRoomId] = useState<RoomId | null>(null);
   const [offerId, setOfferId] = useState<NocturneOfferId | null>(null);
   const [duration, setDuration] = useState(2);
+  const [monthOffset, setMonthOffset] = useState(0);
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [name, setName] = useState("");
@@ -114,23 +101,38 @@ export function NocturneBookingFlow({ basePath }: { basePath: string }) {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [attempted, setAttempted] = useState(false);
 
-  const dateOptions = useMemo(nextDates, []);
   const room = roomId ? getRoom(roomId) : null;
   const offers = roomId ? getNocturneOffers(roomId) : [];
   const offer = roomId && offerId ? getNocturneOffer(roomId, offerId) : null;
-  const selectedDate = useMemo(
-    () => dateOptions.find((item) => item.value === date) ?? laterDate(date),
-    [date, dateOptions]
+  const selectedDate = useMemo(() => laterDate(date), [date]);
+  const calendarMonth = useMemo(() => getDemoCalendarMonth(monthOffset), [monthOffset]);
+  const calendarAvailability = useMemo(() => new Map(
+    calendarMonth.days.flatMap((item) => item && roomId && !item.isPast
+      ? [[item.value, getDemoAvailableTimes(roomId, item.value, duration).length] as const]
+      : [])
+  ), [calendarMonth, duration, roomId]);
+  const availableTimeSlots = useMemo(
+    () => roomId && date ? getDemoAvailableTimes(roomId, date, duration) : [],
+    [date, duration, roomId]
   );
   const quotedPrice = offer ? calculateNocturnePrice(offer, duration) : undefined;
   const standardPrice = offer ? calculateNocturneStandardPrice(offer, duration) : undefined;
   const saving = quotedPrice !== undefined && standardPrice !== undefined
     ? Math.max(0, standardPrice - quotedPrice)
     : 0;
-  const tenHourUpgrade = roomId && roomId !== "infinity"
-    && offer?.id === "studio-hourly" && duration === 8
-    ? getNocturneOffer(roomId, "ten-hour")
+  const valueUpgrade = roomId && roomId !== "infinity" && offer?.id === "studio-hourly"
+    ? duration === 5
+      ? getNocturneOffer(roomId, "six-hour")
+      : duration === 7 || duration === 8
+        ? getNocturneOffer(roomId, "ten-hour")
+        : null
     : null;
+  const valueUpgradePrice = valueUpgrade
+    ? calculateNocturnePrice(valueUpgrade, valueUpgrade.defaultDuration)
+    : undefined;
+  const valueUpgradeDifference = valueUpgradePrice !== undefined && quotedPrice !== undefined
+    ? Math.max(0, valueUpgradePrice - quotedPrice)
+    : 0;
 
   useEffect(() => {
     function handleBookingClick(event: MouseEvent) {
@@ -155,6 +157,7 @@ export function NocturneBookingFlow({ basePath }: { basePath: string }) {
       setRoomId(nextRoomId);
       setOfferId(nextOffer?.id ?? null);
       setDuration(nextOffer?.defaultDuration ?? 2);
+      setMonthOffset(0);
       setDate("");
       setTime("");
       setName("");
@@ -303,6 +306,7 @@ export function NocturneBookingFlow({ basePath }: { basePath: string }) {
     setRoomId(nextRoomId);
     setOfferId(nextOffer.id);
     setDuration(nextOffer.defaultDuration);
+    setDate("");
     setTime("");
     setAttempted(false);
   }
@@ -310,6 +314,28 @@ export function NocturneBookingFlow({ basePath }: { basePath: string }) {
   function chooseOffer(nextOffer: NocturneBookingOffer) {
     setOfferId(nextOffer.id);
     setDuration(nextOffer.defaultDuration);
+    setDate("");
+    setTime("");
+    setAttempted(false);
+  }
+
+  function chooseDuration(hours: number) {
+    if (!offer) return;
+    setDuration(hours);
+    setDate("");
+    setTime("");
+    setAttempted(false);
+  }
+
+  function moveCalendarMonth(direction: -1 | 1) {
+    setMonthOffset((current) => Math.min(5, Math.max(0, current + direction)));
+    setDate("");
+    setTime("");
+    setAttempted(false);
+  }
+
+  function chooseCalendarDate(nextDate: string) {
+    setDate(nextDate);
     setTime("");
     setAttempted(false);
   }
@@ -362,6 +388,7 @@ export function NocturneBookingFlow({ basePath }: { basePath: string }) {
       `Phone: ${phone.trim() || "Not provided"}`,
       `Project: ${note.trim() || "No additional information"}`,
       "",
+      "Demo note: this preferred time was selected from sample availability; live calendar availability has not been checked.",
       "Please confirm availability and final pricing."
     ].filter(Boolean).join("\n");
     const subject = `Session request · ${room.name} · ${offer.name}`;
@@ -498,26 +525,27 @@ export function NocturneBookingFlow({ basePath }: { basePath: string }) {
                           type="button"
                           data-selected={duration === hours}
                           aria-pressed={duration === hours}
-                          onClick={() => { setDuration(hours); setTime(""); }}
+                          onClick={() => chooseDuration(hours)}
                           key={hours}
                         >
                           <strong>{hours}h</strong>
                           <small>{formatPrice(calculateNocturnePrice(offer, hours))}</small>
+                          {offer.durationPrices?.[hours] !== undefined && <em>Package rate</em>}
                         </button>
                       ))}
                     </div>
-                    {tenHourUpgrade && (
+                    {valueUpgrade && valueUpgradePrice !== undefined && (
                       <button
                         className={styles.nocturneBookingUpgrade}
                         type="button"
-                        onClick={() => chooseOffer(tenHourUpgrade)}
+                        onClick={() => chooseOffer(valueUpgrade)}
                       >
                         <span>
-                          <small>Better value · same total</small>
-                          <strong>Get 10 hours instead</strong>
-                          <em>8 hours + 2 hours free</em>
+                          <small>{valueUpgradeDifference === 0 ? "Better value · same total" : `Better value · ${formatPrice(valueUpgradeDifference)} more`}</small>
+                          <strong>Get {valueUpgrade.defaultDuration} hours instead</strong>
+                          <em>{valueUpgrade.defaultDuration === 6 ? "5 hours + 1 hour free" : "8 hours + 2 hours free"}</em>
                         </span>
-                        <b>{formatPrice(calculateNocturnePrice(tenHourUpgrade, 10))}<i aria-hidden="true">→</i></b>
+                        <b>{formatPrice(valueUpgradePrice)}<i aria-hidden="true">→</i></b>
                       </button>
                     )}
                   </fieldset>
@@ -529,67 +557,103 @@ export function NocturneBookingFlow({ basePath }: { basePath: string }) {
 
             {step === 1 && (
               <div>
-                <p className={styles.nocturneBookingEyebrow}>02 · Preferred moment</p>
-                <h2 tabIndex={-1} data-booking-heading>Choose a date and time.</h2>
-                <p className={styles.nocturneBookingIntro}>Open 24/7. Choose any preferred start time; we personally confirm availability after receiving your request.</p>
+                <p className={styles.nocturneBookingEyebrow}>02 · Agenda example</p>
+                <h2 tabIndex={-1} data-booking-heading>Preview the availability agenda.</h2>
+                <p className={styles.nocturneBookingIntro}>The agenda filters sample openings to times where your complete {durationLabel} session fits.</p>
+
+                <aside className={styles.nocturneBookingDemoNotice} data-booking-row>
+                  <span>Demo agenda</span>
+                  <div>
+                    <strong>Sample openings only</strong>
+                    <p>Google Calendar is not connected yet. These times are an interactive example and no slot is being held.</p>
+                  </div>
+                </aside>
 
                 <fieldset data-booking-row>
-                  <legend>Date</legend>
-                  <div className={styles.nocturneBookingDates}>
-                    {dateOptions.map((item) => (
-                      <button
-                        type="button"
-                        data-selected={date === item.value}
-                        aria-pressed={date === item.value}
-                        aria-label={item.fullLabel}
-                        onClick={() => setDate(item.value)}
-                        key={item.value}
-                      >
-                        <small>{item.weekday}</small><strong>{item.day}</strong><span>{item.month}</span>
-                      </button>
-                    ))}
+                  <legend>Choose a day</legend>
+                  <div className={styles.nocturneBookingCalendar}>
+                    <header>
+                      <button type="button" onClick={() => moveCalendarMonth(-1)} disabled={monthOffset === 0} aria-label="Previous month">←</button>
+                      <div><small>Open 24/7</small><strong>{calendarMonth.label}</strong></div>
+                      <button type="button" onClick={() => moveCalendarMonth(1)} disabled={monthOffset === 5} aria-label="Next month">→</button>
+                    </header>
+                    <div className={styles.nocturneBookingWeekdays} aria-hidden="true">
+                      {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((label) => <span key={label}>{label}</span>)}
+                    </div>
+                    <div className={styles.nocturneBookingMonthGrid}>
+                      {calendarMonth.days.map((item, index) => {
+                        if (!item) return <i aria-hidden="true" key={`empty-${index}`} />;
+                        const sampleCount = calendarAvailability.get(item.value) ?? 0;
+                        const unavailable = item.isPast || sampleCount === 0;
+                        return (
+                          <button
+                            type="button"
+                            disabled={unavailable}
+                            data-selected={date === item.value}
+                            aria-pressed={date === item.value}
+                            aria-label={`${item.fullLabel}. ${item.isPast ? "Past date" : sampleCount ? `${sampleCount} sample start times` : "No sample opening"}`}
+                            onClick={() => chooseCalendarDate(item.value)}
+                            data-booking-invalid={attempted && !date && !unavailable ? "true" : undefined}
+                            key={item.value}
+                          >
+                            <strong>{item.day}</strong>
+                            {!item.isPast && <small>{sampleCount ? `${sampleCount} slots` : "No sample"}</small>}
+                            {sampleCount > 0 && <span aria-hidden="true" />}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <footer><span><i /> Sample opening</span><span><i /> Selected</span><span>Dimmed · unavailable in demo</span></footer>
                   </div>
-                  <label className={styles.nocturneBookingCustomDate}>
-                    <span>Later date</span>
-                    <input
-                      type="date"
-                      min={dateOptions[0]?.value}
-                      value={date}
-                      onChange={(event) => setDate(event.target.value)}
-                      data-booking-invalid={attempted && !date ? "true" : undefined}
-                    />
-                  </label>
                 </fieldset>
 
-                <fieldset data-booking-row>
-                  <legend>Start time · Open 24/7</legend>
-                  <div className={styles.nocturneBookingTimes}>
-                    {allDayTimeSlots.map((slot) => (
-                      <button
-                        type="button"
-                        data-selected={time === slot}
-                        aria-pressed={time === slot}
-                        onClick={() => setTime(slot)}
-                        data-booking-invalid={attempted && !time ? "true" : undefined}
-                        key={slot}
-                      >
-                        <strong>{slot}</strong>
-                        <small>until {sessionEnd(slot, duration)}</small>
-                      </button>
-                    ))}
+                {selectedDate ? (
+                  <fieldset data-booking-row>
+                    <legend>Sample start times</legend>
+                    <div className={styles.nocturneBookingAvailabilityHead}>
+                      <span><i aria-hidden="true" /> {availableTimeSlots.length} sample openings</span>
+                      <strong>{selectedDate.fullLabel}</strong>
+                      <small>{durationLabel} session · Starts every hour · Open 24/7</small>
+                    </div>
+                    <div className={styles.nocturneBookingTimeGroups}>
+                      {timeGroups.map((group) => {
+                        const groupSlots = availableTimeSlots.filter((slot) => {
+                          const hour = Number(slot.slice(0, 2));
+                          return hour >= group.from && hour < group.to;
+                        });
+                        if (!groupSlots.length) return null;
+                        return (
+                          <section key={group.label}>
+                            <header><strong>{group.label}</strong><small>{group.range}</small></header>
+                            <div>
+                              {groupSlots.map((slot) => (
+                                <button
+                                  type="button"
+                                  data-selected={time === slot}
+                                  aria-pressed={time === slot}
+                                  aria-label={`${slot} until ${sessionEnd(slot, duration)}. Suggested in demo.`}
+                                  onClick={() => setTime(slot)}
+                                  data-booking-invalid={attempted && !time ? "true" : undefined}
+                                  key={slot}
+                                >
+                                  <strong>{slot}</strong>
+                                  <small>to {sessionEnd(slot, duration)}</small>
+                                </button>
+                              ))}
+                            </div>
+                          </section>
+                        );
+                      })}
+                    </div>
+                  </fieldset>
+                ) : (
+                  <div className={styles.nocturneBookingAgendaPrompt} data-booking-row>
+                    <span aria-hidden="true">↓</span>
+                    <strong>Select a day to see sample start times</strong>
+                    <small>Only suggestions that fit the full session will appear.</small>
                   </div>
-                  <label className={styles.nocturneBookingCustomDate}>
-                    <span>Exact start time</span>
-                    <input
-                      type="time"
-                      step={900}
-                      value={time}
-                      onChange={(event) => setTime(event.target.value)}
-                      data-booking-invalid={attempted && !time ? "true" : undefined}
-                    />
-                  </label>
-                </fieldset>
-                {attempted && (!date || !time) && <p className={styles.nocturneBookingError} role="alert">Choose a preferred date and start time.</p>}
+                )}
+                {attempted && (!date || !time) && <p className={styles.nocturneBookingError} role="alert">Choose a sample day and preferred start time.</p>}
               </div>
             )}
 
@@ -628,8 +692,8 @@ export function NocturneBookingFlow({ basePath }: { basePath: string }) {
                 </div>
 
                 <div className={styles.nocturneBookingTruth} data-booking-row>
-                  <strong>One transparent final step</strong>
-                  <p>The website prepares your complete request. Send the pre-filled email so the team can confirm availability and final pricing.</p>
+                  <strong>Demo timing · personal confirmation</strong>
+                  <p>This preferred time comes from sample availability and is not being held. The live version will check the district’s Google Calendar before booking.</p>
                 </div>
 
                 <label className={styles.nocturneBookingTerms} data-booking-row>
@@ -662,7 +726,15 @@ export function NocturneBookingFlow({ basePath }: { basePath: string }) {
             <div>
               {step > 0 && <button type="button" onClick={() => goToStep(step - 1)}>Back</button>}
               <button type="button" onClick={continueBooking}>
-                {step === 0 ? `Choose a moment · ${currentPrice}` : step === 1 ? "Your details" : `Continue in email · ${currentPrice}`}
+                {step === 0
+                  ? `View sample agenda · ${currentPrice}`
+                  : step === 1
+                    ? !date
+                      ? "Choose a sample day"
+                      : !time
+                        ? "Choose a sample time"
+                        : `Use preferred time · ${time}`
+                    : `Continue in email · ${currentPrice}`}
                 <span aria-hidden="true">→</span>
               </button>
             </div>
