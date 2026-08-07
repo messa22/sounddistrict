@@ -95,15 +95,18 @@ function Nocturne({ asset, basePath }: { asset: (name: string) => string; basePa
       <NocturneBookingFlow basePath={basePath} />
 
       <section className={styles.nocturneBeyond} id="nocturne-beyond">
-        <div className={styles.nocturneBeyondHead} data-nocturne-reveal="copy">
-          <h2 aria-label="Beyond the district">
-            <span aria-hidden="true" data-nocturne-beyond-word>Beyond</span>
-            <span aria-hidden="true" data-nocturne-beyond-word>the</span>
-            <span aria-hidden="true" data-nocturne-beyond-word>district</span>
-          </h2>
-          <i className={styles.nocturneBeyondSignal} data-nocturne-beyond-signal aria-hidden="true" />
-        </div>
-        <div className={styles.nocturneBeyondGrid}>
+        <details className={styles.nocturneBeyondDisclosure} open data-nocturne-beyond-disclosure>
+          <summary className={styles.nocturneBeyondHead} data-nocturne-reveal="copy">
+            <h2 aria-label="Beyond the district">
+              <span aria-hidden="true" data-nocturne-beyond-word>Beyond</span>
+              <span aria-hidden="true" data-nocturne-beyond-word>the</span>
+              <span aria-hidden="true" data-nocturne-beyond-word>district</span>
+            </h2>
+            <i className={styles.nocturneBeyondSignal} data-nocturne-beyond-signal aria-hidden="true" />
+            <span className={styles.nocturneBeyondToggle} aria-hidden="true"><i /><i /></span>
+          </summary>
+          <div className={styles.nocturneBeyondContent}>
+            <div className={styles.nocturneBeyondGrid}>
           <article className={styles.nocturneBeyondCard} data-nocturne-feature-card="doors" data-nocturne-cursor-label="Explore">
             <div className={styles.nocturneBeyondShell} data-nocturne-feature-shell>
               <div className={styles.nocturneBeyondMedia} data-nocturne-feature-media>
@@ -156,10 +159,12 @@ function Nocturne({ asset, basePath }: { asset: (name: string) => string; basePa
               </div>
             </div>
           </article>
-        </div>
-        <button className={styles.nocturneEndCta} type="button" data-nocturne-end-cta data-booking="open">
-          <span>Ready when you are</span><strong>Book your district</strong><b>↗</b>
-        </button>
+            </div>
+            <button className={styles.nocturneEndCta} type="button" data-nocturne-end-cta data-booking="open">
+              <span>Ready when you are</span><strong>Book your district</strong><b>↗</b>
+            </button>
+          </div>
+        </details>
       </section>
 
       <aside className={styles.nocturneBookingDock} data-nocturne-booking-dock aria-label="Quick booking">

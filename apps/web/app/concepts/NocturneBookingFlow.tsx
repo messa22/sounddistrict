@@ -440,12 +440,17 @@ export function NocturneBookingFlow({ basePath }: { basePath: string }) {
           {step < 3 && <ol>{steps.map((label, index) => <li data-active={index <= step} key={label}>{label}</li>)}</ol>}
         </div>
 
-        <div className={styles.nocturneBookingContext}>
-          <div className={styles.nocturneBookingThumb}>
+        <div className={styles.nocturneBookingContext} data-logo={!roomId ? "true" : "false"}>
+          <div className={`${styles.nocturneBookingThumb} ${!roomId ? styles.nocturneBookingLogoThumb : ""}`}>
             {roomId ? (
               <Image src={`${basePath}/${districtImages[roomId]}`} alt="" fill sizes="72px" />
             ) : (
-              <span aria-hidden="true">SD</span>
+              <Image
+                src={`${basePath}/sounddistrict-logo-hq.png`}
+                alt="Sound District Antwerp"
+                fill
+                sizes="112px"
+              />
             )}
           </div>
           <div>

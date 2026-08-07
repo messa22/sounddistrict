@@ -70,6 +70,7 @@ export function NocturneMotion() {
       motionRoot.querySelectorAll<HTMLElement>("[data-nocturne-service-card]")
     );
     const projectContact = motionRoot.querySelector<HTMLElement>("[data-nocturne-project-contact]");
+    const beyondDisclosure = motionRoot.querySelector<HTMLDetailsElement>("[data-nocturne-beyond-disclosure]");
     const beyondHead = motionRoot.querySelector<HTMLElement>(`.${styles.nocturneBeyondHead}`);
     const beyondWords = Array.from(
       motionRoot.querySelectorAll<HTMLElement>("[data-nocturne-beyond-word]")
@@ -310,6 +311,10 @@ export function NocturneMotion() {
       if (target?.closest("[data-nocturne-room-card]") && roomRevealTimeline) {
         roomRevealTimeline.progress(1).pause();
       }
+    }
+
+    function handleBeyondToggle() {
+      window.requestAnimationFrame(() => ScrollTrigger.refresh());
     }
 
     function createHeroChoreography(isMobile: boolean) {
@@ -966,6 +971,7 @@ export function NocturneMotion() {
     roomRail?.addEventListener("scroll", requestRoomRailUpdate, { passive: true });
     roomPrevious?.addEventListener("click", showPreviousRoom);
     roomNext?.addEventListener("click", showNextRoom);
+    beyondDisclosure?.addEventListener("toggle", handleBeyondToggle);
     motionRoot.addEventListener("pointermove", handlePointerMove);
     motionRoot.addEventListener("pointerout", handlePointerOut);
     motionRoot.addEventListener("focusin", handleFocusIn);
@@ -983,6 +989,7 @@ export function NocturneMotion() {
       roomRail?.removeEventListener("scroll", requestRoomRailUpdate);
       roomPrevious?.removeEventListener("click", showPreviousRoom);
       roomNext?.removeEventListener("click", showNextRoom);
+      beyondDisclosure?.removeEventListener("toggle", handleBeyondToggle);
       motionRoot.removeEventListener("pointermove", handlePointerMove);
       motionRoot.removeEventListener("pointerout", handlePointerOut);
       motionRoot.removeEventListener("focusin", handleFocusIn);
