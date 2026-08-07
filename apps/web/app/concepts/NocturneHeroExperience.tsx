@@ -140,6 +140,7 @@ export function NocturneHeroExperience({ basePath }: { basePath: string }) {
         <nav aria-label="Nocturne navigation">
           <a href="#nocturne-rooms">Choose a district</a>
           <a href="#nocturne-beyond">Beyond</a>
+          <a href="#nocturne-contact">Contact</a>
         </nav>
         <button type="button" data-booking={activeScene.id} data-nocturne-magnetic>
           Book a space <span>↗</span>

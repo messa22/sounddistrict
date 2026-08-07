@@ -6,7 +6,8 @@ import styles from "./concepts.module.css";
 const mobileLinks = [
   ["Home", "#nocturne-home", "01"],
   ["Choose a district", "#nocturne-rooms", "02"],
-  ["Beyond", "#nocturne-beyond", "03"]
+  ["Beyond", "#nocturne-beyond", "03"],
+  ["Contact", "#nocturne-contact", "04"]
 ] as const;
 
 export function NocturneMobileNavigation() {

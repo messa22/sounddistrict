@@ -167,6 +167,52 @@ function Nocturne({ asset, basePath }: { asset: (name: string) => string; basePa
         </details>
       </section>
 
+      <footer className={styles.nocturneSiteFooter} id="nocturne-contact">
+        <div className={styles.nocturneFooterMain}>
+          <div className={styles.nocturneFooterBrand}>
+            <Image
+              src={`${basePath}/sounddistrict-logo-hq.png`}
+              alt="Sound District Antwerp"
+              width={1900}
+              height={400}
+              sizes="(max-width: 800px) 62vw, 290px"
+            />
+            <p>A private creative house for sound, production and visuals in the heart of Antwerp.</p>
+            <button type="button" data-booking="open" data-nocturne-magnetic>
+              Book your district <b aria-hidden="true">↗</b>
+            </button>
+          </div>
+
+          <div className={styles.nocturneFooterDetails}>
+            <section>
+              <span>Contact</span>
+              <a href="mailto:team@sounddistrict.be">team@sounddistrict.be</a>
+              <small>Bookings &amp; project inquiries</small>
+            </section>
+            <section>
+              <span>Visit</span>
+              <address>Stadswaag 20<br />2000 Antwerp, Belgium</address>
+              <small>Open 24/7 · By appointment</small>
+            </section>
+            <nav aria-label="Footer navigation">
+              <span>Explore</span>
+              <a href="#nocturne-rooms">Choose your district</a>
+              <a href="#nocturne-beyond">Beyond the district</a>
+              <button type="button" data-booking="open">Book a session</button>
+            </nav>
+          </div>
+        </div>
+
+        <div className={styles.nocturneFooterBottom}>
+          <span>© 2026 Sound District</span>
+          <div>
+            <Link href="/privacy">Privacy</Link>
+            <a href="mailto:team@sounddistrict.be">Contact</a>
+            <a href="#nocturne-home">Back to top <b aria-hidden="true">↑</b></a>
+          </div>
+        </div>
+      </footer>
+
       <aside className={styles.nocturneBookingDock} data-nocturne-booking-dock aria-label="Quick booking">
         <span><i /> Session request</span>
         <button type="button" data-booking="open" data-nocturne-magnetic>Book your district <b>↗</b></button>
