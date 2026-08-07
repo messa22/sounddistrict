@@ -138,8 +138,7 @@ export function NocturneHeroExperience({ basePath }: { basePath: string }) {
       <header className={styles.nocturneHeader}>
         <span className={styles.wordmark}>Sound District</span>
         <nav aria-label="Nocturne navigation">
-          <a href="#nocturne-rooms">Districts</a>
-          <a href="#nocturne-pricing">Rates</a>
+          <a href="#nocturne-rooms">Choose a district</a>
           <a href="#nocturne-beyond">Beyond</a>
         </nav>
         <button type="button" data-booking={activeScene.id} data-nocturne-magnetic>

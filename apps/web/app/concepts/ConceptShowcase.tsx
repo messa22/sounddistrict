@@ -60,7 +60,7 @@ const rooms = [
     image: "room-red-editorial.webp",
     use: "Recording · Production · Engineering",
     capacity: "Up to 6 people",
-    focus: "high end, retro, warm music studio with a separate booth"
+    focus: "High end, retro, warm music studio with a separate booth."
   },
   {
     id: "infinity",
@@ -69,7 +69,7 @@ const rooms = [
     image: "room-infinity-editorial.webp",
     use: "Visuals · Shoots · Content",
     capacity: "Up to 10 people",
-    focus: "endless, white, clean photo studio for creators"
+    focus: "Endless, white, clean photo studio for creators."
   }
 ] as const;
 
@@ -90,54 +90,6 @@ function Nocturne({ asset, basePath }: { asset: (name: string) => string; basePa
   return (
     <main className={`${styles.preview} ${styles.nocturne}`} data-nocturne-root>
       <NocturneHeroExperience basePath={basePath} />
-
-      <section className={styles.nocturneRooms} id="nocturne-rooms">
-        <div className={styles.nocturneSectionHead} data-nocturne-reveal="copy">
-          <h2 aria-label="Choose your district.">
-            <span aria-hidden="true" data-nocturne-heading-word>Choose</span>
-            <span aria-hidden="true" data-nocturne-heading-word>your</span>
-            <span aria-hidden="true" data-nocturne-heading-word>district.</span>
-          </h2>
-          <i className={styles.nocturneSectionSignal} data-nocturne-room-signal aria-hidden="true" />
-        </div>
-        <div className={styles.nocturneRail}>
-          {rooms.map((room, index) => (
-            <article
-              key={room.id}
-              data-nocturne-reveal="card"
-              data-nocturne-cursor-label="View district"
-              data-nocturne-room-card={index}
-            >
-              <div className={styles.nocturneRoomReveal} data-nocturne-room-reveal>
-                <div className={styles.nocturneRoomShell} data-nocturne-room-shell>
-                  <div
-                    className={styles.nocturneRoomImage}
-                    data-nocturne-room-media
-                    data-nocturne-district-reel={room.id}
-                  >
-                    <Image src={asset(room.image)} alt={room.name} fill sizes="(max-width: 800px) 84vw, 38vw" />
-                    <span className={styles.nocturneRoomAperture} data-nocturne-room-aperture aria-hidden="true"><i /></span>
-                  </div>
-                  <div className={styles.nocturneRoomMeta} data-nocturne-room-meta>
-                    <span>{room.number} · {room.use}</span>
-                    <h3>{room.name}</h3>
-                    <p>{room.focus}</p>
-                    <button type="button" data-booking={room.id} data-nocturne-magnetic>Book {room.name} <b>↗</b></button>
-                  </div>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-        <div className={styles.nocturneRailProgress} aria-label="District gallery controls">
-          <span><b data-nocturne-room-current>01</b> / 03</span>
-          <i><b /></i>
-          <div>
-            <button type="button" data-nocturne-room-previous aria-label="Previous district">←</button>
-            <button type="button" data-nocturne-room-next aria-label="Next district">→</button>
-          </div>
-        </div>
-      </section>
 
       <NocturnePricing basePath={basePath} />
       <NocturneBookingFlow basePath={basePath} />

@@ -1,8 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { useLayoutEffect, useRef, useState } from "react";
-import { gsap } from "gsap";
 import {
   calculateNocturnePrice,
   getNocturneOffer,
@@ -15,10 +13,11 @@ const districtRates = [
     id: "blue",
     bookingId: "blue",
     number: "01",
-    shortName: "Blue",
     name: "Blue District",
     image: "room-blue-editorial.webp",
+    services: "Recording · Production · Engineering",
     eyebrow: "Modern music studio",
+    description: "XL, high end, modern music studio with an underwater touch.",
     hourlyLabel: "Studio only",
     defaultOffer: "studio-hourly" satisfies NocturneOfferId,
     producerOffer: "with-producer" satisfies NocturneOfferId,
@@ -32,10 +31,11 @@ const districtRates = [
     id: "red",
     bookingId: "red",
     number: "02",
-    shortName: "Red",
     name: "Red District",
     image: "room-red-editorial.webp",
+    services: "Recording · Production · Engineering",
     eyebrow: "Warm recording studio",
+    description: "High end, retro, warm music studio with a separate booth.",
     hourlyLabel: "Studio only",
     defaultOffer: "studio-hourly" satisfies NocturneOfferId,
     producerOffer: "with-producer" satisfies NocturneOfferId,
@@ -49,10 +49,11 @@ const districtRates = [
     id: "white",
     bookingId: "infinity",
     number: "03",
-    shortName: "White",
     name: "White District",
     image: "room-infinity-editorial.webp",
+    services: "Visuals · Shoots · Content",
     eyebrow: "Infinite photo studio",
+    description: "Endless, white, clean photo studio for creators.",
     hourlyLabel: "Opening month",
     defaultOffer: "white-hourly" satisfies NocturneOfferId,
     packages: [
@@ -72,256 +73,162 @@ function formatPrice(value: number) {
 }
 
 export function NocturnePricing({ basePath }: { basePath: string }) {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const panelRef = useRef<HTMLElement>(null);
-  const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
-  const previousIndexRef = useRef(0);
-  const hasMountedRef = useRef(false);
-  const active = districtRates[activeIndex];
-  const hourlyOffer = getNocturneOffer(active.bookingId, active.defaultOffer);
-  const producerOffer = "producerOffer" in active
-    ? getNocturneOffer(active.bookingId, active.producerOffer)
-    : null;
-
-  useLayoutEffect(() => {
-    if (!hasMountedRef.current) {
-      hasMountedRef.current = true;
-      return;
-    }
-
-    const panel = panelRef.current;
-    if (!panel || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      previousIndexRef.current = activeIndex;
-      return;
-    }
-
-    const direction = activeIndex >= previousIndexRef.current ? 1 : -1;
-    previousIndexRef.current = activeIndex;
-    const media = panel.querySelector<HTMLElement>("[data-nocturne-price-media]");
-    const image = media?.querySelector<HTMLElement>("img") ?? null;
-    const scan = panel.querySelector<HTMLElement>("[data-nocturne-price-scan]");
-    const numbers = Array.from(panel.querySelectorAll<HTMLElement>("[data-nocturne-price-number]"));
-    const rows = Array.from(panel.querySelectorAll<HTMLElement>("[data-nocturne-price-row]"));
-    const cta = panel.querySelector<HTMLElement>("[data-nocturne-pricing-cta]");
-
-    const context = gsap.context(() => {
-      const timeline = gsap.timeline();
-      timeline.fromTo(
-        panel,
-        { x: 16 * direction, autoAlpha: 0.68 },
-        { x: 0, autoAlpha: 1, duration: 0.44, ease: "power3.out" },
-        0
-      );
-      if (media) {
-        timeline.fromTo(
-          media,
-          { clipPath: direction > 0 ? "inset(0 100% 0 0)" : "inset(0 0 0 100%)" },
-          { clipPath: "inset(0 0 0 0)", duration: 0.62, ease: "power4.inOut" },
-          0
-        );
-      }
-      if (image) {
-        timeline.fromTo(
-          image,
-          { scale: 1.13, xPercent: direction * 2.5 },
-          { scale: 1.04, xPercent: 0, duration: 0.78, ease: "power3.out" },
-          0
-        );
-      }
-      if (scan) {
-        timeline.fromTo(
-          scan,
-          { xPercent: direction > 0 ? -120 : 120, autoAlpha: 0 },
-          { xPercent: direction > 0 ? 120 : -120, autoAlpha: 0.85, duration: 0.58, ease: "power2.inOut" },
-          0.03
-        ).to(scan, { autoAlpha: 0, duration: 0.12 }, 0.55);
-      }
-      timeline.fromTo(
-        numbers,
-        { yPercent: 65, autoAlpha: 0 },
-        { yPercent: 0, autoAlpha: 1, stagger: 0.045, duration: 0.42, ease: "power4.out" },
-        0.18
-      ).fromTo(
-        rows,
-        { y: 14, autoAlpha: 0 },
-        { y: 0, autoAlpha: 1, stagger: 0.055, duration: 0.4, ease: "power3.out" },
-        0.24
-      );
-      if (cta) {
-        timeline.fromTo(
-          cta,
-          { y: 10, autoAlpha: 0 },
-          { y: 0, autoAlpha: 1, duration: 0.36, ease: "power3.out" },
-          0.43
-        );
-      }
-    }, panel);
-
-    return () => context.revert();
-  }, [activeIndex]);
-
-  function selectDistrict(index: number, moveFocus = false) {
-    setActiveIndex(index);
-    if (moveFocus) tabRefs.current[index]?.focus();
-  }
-
-  function handleTabKeys(event: React.KeyboardEvent<HTMLDivElement>) {
-    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
-    event.preventDefault();
-    const direction = event.key === "ArrowRight" ? 1 : -1;
-    const next = (activeIndex + direction + districtRates.length) % districtRates.length;
-    selectDistrict(next, true);
-  }
-
   return (
-    <section className={styles.nocturnePricing} id="nocturne-pricing" data-nocturne-pricing>
+    <section
+      className={`${styles.nocturnePricing} ${styles.nocturneDistricts}`}
+      id="nocturne-rooms"
+      data-nocturne-pricing
+    >
+      <span className={styles.nocturneAnchor} id="nocturne-pricing" aria-hidden="true" />
+
       <div className={styles.nocturnePricingHead} data-nocturne-pricing-head>
         <div>
-          <p>Rates · Opening offers</p>
-          <h2 aria-label="Choose your session.">
+          <p>Districts · Rates · Opening offers</p>
+          <h2 aria-label="Choose your district.">
             <span aria-hidden="true" data-nocturne-pricing-word>Choose</span>
             <span aria-hidden="true" data-nocturne-pricing-word>your</span>
-            <span aria-hidden="true" data-nocturne-pricing-word>session.</span>
+            <span aria-hidden="true" data-nocturne-pricing-word>district.</span>
           </h2>
         </div>
         <div className={styles.nocturnePricingIntro}>
-          <p>Clear hourly rates. Better value when you stay longer.</p>
+          <p>Swipe through the districts. Compare the atmosphere, rates and offers in one place.</p>
           <i data-nocturne-pricing-signal aria-hidden="true" />
         </div>
       </div>
 
-      <div className={styles.nocturneRateConsole} data-nocturne-pricing-console>
-        <div
-          className={styles.nocturneRateTabs}
-          role="tablist"
-          aria-label="District pricing"
-          data-nocturne-pricing-tabs
-          onKeyDown={handleTabKeys}
-        >
-          {districtRates.map((district, index) => (
-            <button
-              type="button"
-              role="tab"
-              aria-selected={index === activeIndex}
-              aria-controls="nocturne-rate-panel"
-              id={`nocturne-rate-tab-${district.id}`}
-              tabIndex={index === activeIndex ? 0 : -1}
-              data-active={index === activeIndex ? "true" : "false"}
-              onClick={() => selectDistrict(index)}
-              ref={(element) => { tabRefs.current[index] = element; }}
+      <div className={`${styles.nocturneRail} ${styles.nocturneDistrictRail}`} aria-label="Districts and rates">
+        {districtRates.map((district, index) => {
+          const hourlyOffer = getNocturneOffer(district.bookingId, district.defaultOffer);
+          const producerOffer = "producerOffer" in district
+            ? getNocturneOffer(district.bookingId, district.producerOffer)
+            : null;
+
+          return (
+            <article
+              className={styles.nocturneDistrictCard}
+              data-district={district.id}
+              data-nocturne-room-card={index}
+              data-nocturne-cursor-label="Swipe district"
               key={district.id}
             >
-              <span>{district.number}</span>
-              <strong>{district.shortName}</strong>
-              <i aria-hidden="true" />
-            </button>
-          ))}
-        </div>
+              <div className={styles.nocturneRoomReveal} data-nocturne-room-reveal>
+                <div className={styles.nocturneRoomShell} data-nocturne-room-shell>
+                  <div className={styles.nocturneDistrictMedia} data-nocturne-room-media>
+                    <Image
+                      src={`${basePath}/${district.image}`}
+                      alt={`${district.name} interior`}
+                      fill
+                      sizes="(max-width: 800px) 88vw, 470px"
+                    />
+                    <span className={styles.nocturneDistrictImageLabel}>
+                      <b>{district.number}</b>
+                      <strong>{district.name}</strong>
+                    </span>
+                    <span className={styles.nocturneRoomAperture} data-nocturne-room-aperture aria-hidden="true"><i /></span>
+                  </div>
 
-        <article
-          className={styles.nocturneRatePanel}
-          id="nocturne-rate-panel"
-          role="tabpanel"
-          aria-labelledby={`nocturne-rate-tab-${active.id}`}
-          data-district={active.id}
-          data-nocturne-pricing-panel
-          ref={panelRef}
-        >
-          <div className={styles.nocturneRateMedia} data-nocturne-price-media>
-            <Image
-              src={`${basePath}/${active.image}`}
-              alt={`${active.name} interior`}
-              fill
-              sizes="(max-width: 800px) 100vw, 48vw"
-            />
-            <span className={styles.nocturneRateMediaLabel}>
-              <b>{active.number}</b>
-              <strong>{active.name}</strong>
-              <small>Antwerp</small>
-            </span>
-            <i className={styles.nocturneRateScan} data-nocturne-price-scan aria-hidden="true" />
-          </div>
-
-          <div className={styles.nocturneRateBody}>
-            <header>
-              <div>
-                <p>{active.eyebrow}</p>
-                <h3>{active.name}</h3>
-              </div>
-              {active.id === "white" && <span className={styles.nocturnePromoPill}>Opening month</span>}
-            </header>
-
-            <button
-              className={styles.nocturneRateLead}
-              type="button"
-              data-booking={active.bookingId}
-              data-booking-offer={active.defaultOffer}
-              data-nocturne-price-row
-              data-nocturne-rate-choice
-            >
-              <span>{active.hourlyLabel}</span>
-              <div>
-                <strong data-nocturne-price-number>{formatPrice(calculateNocturnePrice(hourlyOffer, 1))}</strong>
-                <small>/ hour</small>
-              </div>
-              {hourlyOffer.standardPrice !== undefined && <del>{formatPrice(hourlyOffer.standardPrice)} standard</del>}
-              <i>Choose <b aria-hidden="true">↗</b></i>
-            </button>
-
-            {producerOffer && (
-              <button
-                className={styles.nocturneProducerRate}
-                type="button"
-                data-booking={active.bookingId}
-                data-booking-offer={producerOffer.id}
-                data-nocturne-price-row
-                data-nocturne-rate-choice
-              >
-                <span>With producer</span>
-                <strong data-nocturne-price-number>{formatPrice(calculateNocturnePrice(producerOffer, 1))} / hour</strong>
-                <i>Choose <b aria-hidden="true">↗</b></i>
-              </button>
-            )}
-
-            <div className={styles.nocturnePackageList}>
-              {active.packages.map((item) => {
-                const packageOffer = getNocturneOffer(active.bookingId, item.offer);
-                return (
-                  <button
-                    className={styles.nocturnePackageRow}
-                    type="button"
-                    data-booking={active.bookingId}
-                    data-booking-offer={item.offer}
-                    data-nocturne-price-row
-                    data-nocturne-rate-choice
-                    key={item.label}
+                  <div
+                    className={`${styles.nocturneRateBody} ${styles.nocturneDistrictBody}`}
+                    data-nocturne-room-meta
                   >
-                    <div><strong>{item.label}</strong><small>{item.detail}</small></div>
-                    <div>
-                      <b data-nocturne-price-number>{formatPrice(calculateNocturnePrice(packageOffer, packageOffer.defaultDuration))}{active.id === "white" ? "" : " total"}</b>
-                      {packageOffer.valuePrice !== undefined && packageOffer.standardPrice !== undefined && (
-                        <small>{formatPrice(packageOffer.standardPrice)} package · {formatPrice(packageOffer.valuePrice)} hourly value</small>
-                      )}
-                    </div>
-                    <i>Choose <b aria-hidden="true">↗</b></i>
-                  </button>
-                );
-              })}
-            </div>
+                    <header>
+                      <div>
+                        <p>{district.number} · {district.services}</p>
+                        <h3>{district.name}</h3>
+                      </div>
+                      {district.id === "white" && <span className={styles.nocturnePromoPill}>Opening month</span>}
+                    </header>
 
-            <p className={styles.nocturneRateNote} data-nocturne-price-row>{active.note}</p>
-            <button
-              className={styles.nocturneRateCta}
-              type="button"
-              data-booking={active.bookingId}
-              data-booking-offer={active.defaultOffer}
-              data-nocturne-pricing-cta
-              data-nocturne-magnetic
-            >
-              Book {active.name} <b aria-hidden="true">↗</b>
-            </button>
-          </div>
-        </article>
+                    <p className={styles.nocturneDistrictDescription}>{district.description}</p>
+
+                    <button
+                      className={styles.nocturneRateLead}
+                      type="button"
+                      data-booking={district.bookingId}
+                      data-booking-offer={district.defaultOffer}
+                      data-nocturne-price-row
+                      data-nocturne-rate-choice
+                    >
+                      <span>{district.hourlyLabel}</span>
+                      <div>
+                        <strong data-nocturne-price-number>{formatPrice(calculateNocturnePrice(hourlyOffer, 1))}</strong>
+                        <small>/ hour</small>
+                      </div>
+                      {hourlyOffer.standardPrice !== undefined && <del>{formatPrice(hourlyOffer.standardPrice)} standard</del>}
+                      <i>Choose <b aria-hidden="true">↗</b></i>
+                    </button>
+
+                    {producerOffer && (
+                      <button
+                        className={styles.nocturneProducerRate}
+                        type="button"
+                        data-booking={district.bookingId}
+                        data-booking-offer={producerOffer.id}
+                        data-nocturne-price-row
+                        data-nocturne-rate-choice
+                      >
+                        <span>With producer</span>
+                        <strong data-nocturne-price-number>{formatPrice(calculateNocturnePrice(producerOffer, 1))} / hour</strong>
+                        <i>Choose <b aria-hidden="true">↗</b></i>
+                      </button>
+                    )}
+
+                    <div className={styles.nocturnePackageList}>
+                      {district.packages.map((item) => {
+                        const packageOffer = getNocturneOffer(district.bookingId, item.offer);
+                        return (
+                          <button
+                            className={styles.nocturnePackageRow}
+                            type="button"
+                            data-booking={district.bookingId}
+                            data-booking-offer={item.offer}
+                            data-nocturne-price-row
+                            data-nocturne-rate-choice
+                            key={item.label}
+                          >
+                            <div><strong>{item.label}</strong><small>{item.detail}</small></div>
+                            <div>
+                              <b data-nocturne-price-number>
+                                {formatPrice(calculateNocturnePrice(packageOffer, packageOffer.defaultDuration))}
+                                {district.id === "white" ? "" : " total"}
+                              </b>
+                              {packageOffer.valuePrice !== undefined && packageOffer.standardPrice !== undefined && (
+                                <small>{formatPrice(packageOffer.standardPrice)} package · {formatPrice(packageOffer.valuePrice)} hourly value</small>
+                              )}
+                            </div>
+                            <i>Choose <b aria-hidden="true">↗</b></i>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    <p className={styles.nocturneRateNote} data-nocturne-price-row>{district.note}</p>
+                    <button
+                      className={styles.nocturneRateCta}
+                      type="button"
+                      data-booking={district.bookingId}
+                      data-booking-offer={district.defaultOffer}
+                      data-nocturne-pricing-cta
+                      data-nocturne-magnetic
+                    >
+                      Book {district.name} <b aria-hidden="true">↗</b>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className={`${styles.nocturneRailProgress} ${styles.nocturneDistrictProgress}`} aria-label="District swipe controls">
+        <span><b data-nocturne-room-current>01</b> / 03</span>
+        <i><b /></i>
+        <small>Swipe</small>
+        <div>
+          <button type="button" data-nocturne-room-previous aria-label="Previous district">←</button>
+          <button type="button" data-nocturne-room-next aria-label="Next district">→</button>
+        </div>
       </div>
 
       <div className={styles.nocturnePricingServices} data-nocturne-pricing-services>

@@ -5424,6 +5424,353 @@
   }
 }
 
+/* Unified district gallery + rates. One swipe card now carries the full choice. */
+.nocturneDistricts {
+  padding-inline: 0;
+  overflow: hidden;
+}
+
+.nocturneAnchor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+.nocturneDistricts .nocturnePricingHead,
+.nocturneDistricts .nocturnePricingServices,
+.nocturneDistricts .nocturneProjectContact {
+  width: min(1240px, calc(100% - 40px));
+}
+
+.nocturneDistrictRail {
+  width: min(1380px, calc(100% - 32px));
+  padding: 1px;
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-padding-inline: 1px;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: none;
+  touch-action: pan-x pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+.nocturneDistrictRail::-webkit-scrollbar {
+  display: none;
+}
+
+.nocturneDistrictRail .nocturneDistrictCard {
+  --card-accent: #507cff;
+  --rate-accent: #507cff;
+  --rate-accent-rgb: 80, 124, 255;
+  flex: 0 0 clamp(390px, 39vw, 500px);
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgba(var(--rate-accent-rgb), .36);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 84% 52%, rgba(var(--rate-accent-rgb), .09), transparent 30%),
+    #09090b;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.nocturneDistrictRail .nocturneDistrictCard[data-district="red"] {
+  --card-accent: #a63a56;
+  --rate-accent: #a63a56;
+  --rate-accent-rgb: 166, 58, 86;
+}
+
+.nocturneDistrictRail .nocturneDistrictCard[data-district="white"] {
+  --card-accent: #f7f4ee;
+  --rate-accent: #f7f4ee;
+  --rate-accent-rgb: 247, 244, 238;
+}
+
+.nocturneDistrictMedia {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: #111;
+  transform: translateZ(0);
+  isolation: isolate;
+}
+
+.nocturneDistrictMedia::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  content: "";
+  background: linear-gradient(180deg, transparent 48%, rgba(4, 4, 6, .78) 100%);
+  pointer-events: none;
+}
+
+.nocturneDistrictMedia img {
+  object-fit: cover;
+  transform-origin: 50% 50%;
+}
+
+.nocturneDistrictCard[data-district="white"] .nocturneDistrictMedia img {
+  object-position: 64% center;
+}
+
+.nocturneDistrictImageLabel {
+  position: absolute;
+  z-index: 2;
+  right: 24px;
+  bottom: 22px;
+  left: 24px;
+  display: flex;
+  gap: 11px;
+  align-items: baseline;
+  color: #f5f1eb;
+}
+
+.nocturneDistrictImageLabel b {
+  color: var(--rate-accent);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .15em;
+}
+
+.nocturneDistrictImageLabel strong {
+  font-size: 19px;
+  font-weight: 620;
+  letter-spacing: -.025em;
+}
+
+.nocturneDistrictBody {
+  min-height: 665px;
+  padding: 34px 28px 26px;
+}
+
+.nocturneDistrictBody > header {
+  margin-bottom: 15px;
+}
+
+.nocturneDistrictBody > header p {
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.nocturneDistrictBody > header h3 {
+  font-size: clamp(36px, 3.6vw, 48px);
+}
+
+.nocturneDistrictDescription {
+  min-height: 49px;
+  margin: 0 0 28px;
+  color: #c0b9b1;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.nocturneDistrictBody .nocturneRateLead {
+  padding-top: 0;
+}
+
+.nocturneDistrictBody .nocturneRateCta {
+  margin-top: auto;
+}
+
+.nocturneDistrictProgress {
+  width: min(1380px, calc(100% - 32px));
+  display: grid;
+  grid-template-columns: auto minmax(70px, 1fr) auto auto;
+}
+
+.nocturneDistrictProgress > small {
+  color: #aaa39b;
+  font-size: 8px;
+  font-weight: 760;
+  letter-spacing: .16em;
+}
+
+@media (min-width: 801px) {
+  .nocturneDistrictRail .nocturneDistrictCard:first-child {
+    margin-left: max(0px, calc((100% - 1240px) / 2));
+  }
+
+  .nocturneDistrictRail .nocturneDistrictCard:last-child {
+    margin-right: max(0px, calc((100% - 1240px) / 2));
+  }
+}
+
+@media (max-width: 800px) {
+  .nocturneDistricts {
+    margin-top: -18px;
+    padding-top: 86px;
+  }
+
+  .nocturneDistricts .nocturnePricingHead,
+  .nocturneDistricts .nocturnePricingServices,
+  .nocturneDistricts .nocturneProjectContact {
+    width: calc(100% - 34px);
+  }
+
+  .nocturneDistricts .nocturnePricingHead {
+    margin-bottom: 30px;
+  }
+
+  .nocturneDistricts .nocturnePricingHead h2 {
+    max-width: 360px;
+    font-size: clamp(42px, 12.4vw, 52px);
+    line-height: .9;
+  }
+
+  .nocturneDistricts .nocturnePricingIntro > p {
+    max-width: 350px;
+    color: #b9b2aa;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .nocturneDistrictRail {
+    width: 100%;
+    padding: 1px 17px 5px;
+    gap: 12px;
+    scroll-padding-inline: 17px;
+  }
+
+  .nocturneDistrictRail .nocturneDistrictCard {
+    flex-basis: min(88vw, 390px);
+    border-radius: 22px;
+  }
+
+  .nocturneDistrictMedia {
+    aspect-ratio: 4 / 5;
+  }
+
+  .nocturneDistrictImageLabel {
+    right: 20px;
+    bottom: 19px;
+    left: 20px;
+  }
+
+  .nocturneDistrictImageLabel b {
+    font-size: 9px;
+  }
+
+  .nocturneDistrictImageLabel strong {
+    font-size: 18px;
+  }
+
+  .nocturneDistrictBody {
+    min-height: 670px;
+    padding: 27px 20px 20px;
+  }
+
+  .nocturneDistrictBody > header {
+    margin-bottom: 13px;
+  }
+
+  .nocturneDistrictBody > header p {
+    max-width: 245px;
+    margin-bottom: 11px;
+    font-size: 9px;
+    line-height: 1.55;
+  }
+
+  .nocturneDistrictBody > header h3 {
+    font-size: clamp(35px, 10.5vw, 43px);
+  }
+
+  .nocturneDistrictDescription {
+    min-height: 62px;
+    margin-bottom: 25px;
+    color: #c8c1b9;
+    font-size: 14px;
+    line-height: 1.52;
+  }
+
+  .nocturneDistrictBody .nocturneRateLead > span {
+    font-size: 11px;
+  }
+
+  .nocturneDistrictBody .nocturneRateLead strong {
+    font-size: clamp(52px, 15.5vw, 64px);
+  }
+
+  .nocturneDistrictBody .nocturneRateLead small,
+  .nocturneDistrictBody .nocturneProducerRate span {
+    font-size: 13px;
+  }
+
+  .nocturneDistrictBody .nocturneProducerRate {
+    min-height: 66px;
+  }
+
+  .nocturneDistrictBody .nocturneProducerRate strong {
+    font-size: 18px;
+  }
+
+  .nocturneDistrictBody .nocturnePackageRow {
+    min-height: 84px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+  }
+
+  .nocturneDistrictBody .nocturnePackageRow > i {
+    display: none;
+  }
+
+  .nocturneDistrictBody .nocturnePackageRow strong {
+    font-size: 13px;
+  }
+
+  .nocturneDistrictBody .nocturnePackageRow b {
+    font-size: 16px;
+  }
+
+  .nocturneDistrictBody .nocturnePackageRow small,
+  .nocturneDistrictBody .nocturneRateNote {
+    font-size: 10px;
+  }
+
+  .nocturneDistrictBody .nocturneRateCta {
+    min-height: 62px;
+    border-radius: 15px;
+    font-size: 10px;
+  }
+
+  .nocturneDistrictProgress {
+    width: calc(100% - 34px);
+    margin-top: 18px;
+    grid-template-columns: auto minmax(46px, 1fr) auto;
+    gap: 12px;
+  }
+
+  .nocturneDistrictProgress > small {
+    display: none;
+  }
+
+  .nocturneDistrictProgress button {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+  }
+
+  .nocturneDistricts .nocturnePricingServices {
+    margin-top: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nocturneDistrictMedia,
+  .nocturneDistrictMedia img,
+  .nocturnePricingHead h2 > span {
+    opacity: 1 !important;
+    clip-path: none !important;
+    transform: none !important;
+  }
+}
+
 /* Nocturne pricing — compact mobile rate console */
 .nocturnePricing {
   position: relative;
