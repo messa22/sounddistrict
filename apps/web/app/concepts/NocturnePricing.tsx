@@ -243,7 +243,12 @@ export function NocturnePricing({ basePath }: { basePath: string }) {
         <article data-nocturne-service-card>
           <header><span>Custom quote</span><small>Built around your project</small></header>
           <h3>Production</h3>
-          <p>Production pricing is discussed per project.</p>
+          <p>Customized beats made to your preference.</p>
+          <ul className={styles.nocturneProductionFeatures} aria-label="Production includes">
+            <li>Tailored sound</li>
+            <li>Custom arrangement</li>
+            <li>Creative direction</li>
+          </ul>
           <a href="mailto:team@sounddistrict.be?subject=Production%20inquiry" data-nocturne-pricing-cta>
             Discuss your production <b aria-hidden="true">↗</b>
           </a>
